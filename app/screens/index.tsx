@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet } from "react-native";
 import { Link } from "expo-router";
-import HomeScreen from "@/app/screens/HomeScreen";
+// export { default } from "./app/screens/HomeScreen.tsx";
 
 export default function Index() {
   return (
@@ -11,9 +11,9 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Edit app/index.tsx to edit this scree.</Text>
+      <Text>Edit app/index.tsx to edit this screen.</Text>
 
-      <Link href = "/HomeScreen.tsx" style={styles.link}>
+      <Link href = "/HomeScreen" style={styles.link}>
         <Text>Go to the Home Screen</Text>
       </Link>
     </View>
