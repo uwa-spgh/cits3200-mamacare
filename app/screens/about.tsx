@@ -1,1 +1,0 @@
-//TBD About screen
