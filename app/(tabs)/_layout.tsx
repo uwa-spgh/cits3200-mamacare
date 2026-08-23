@@ -26,11 +26,12 @@ export default function TabsLayout() {
       <Tabs.Screen name="index" 
       options = {{
         headerTitle:"MamaCare",
+        tabBarLabelVisibilityMode:'unlabeled',
         tabBarIcon: (
             {focused, color}) => 
             <Ionicons 
             name ={ focused ? "home-sharp" : "home-outline"}
-            size = {30}
+            size = {30}            
             />,
       }} 
       />
@@ -48,11 +49,6 @@ export default function TabsLayout() {
       }}
       />
 
-      <Tabs.Screen name="languageSelection"
-      options={{
-        headerTitle: "LangugaeSelection",
-      }} 
-      />
       <Tabs.Screen name="about"
       options = {{
         headerTitle:"About",

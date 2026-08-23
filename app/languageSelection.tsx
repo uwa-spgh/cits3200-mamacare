@@ -1,60 +1,69 @@
 import { Text, View, StyleSheet } from "react-native";
-import { Host, Button, Column } from "@expo/ui"; 
-import { useState } from "react";
-import { buttonStyles } from "@/styles/buttonStyles";
+import { router } from "expo-router";
+
+import Button from '@/components/Button';
+import { usePreferences } from "@/context/PreferencesContext";
+
 
 export default function LanguageSelectionScreen() {
-    const [clicked, setClicked] = useState(false);
+    const {setLanguage} = usePreferences();
 
-    return( 
-    <Host matchContents>
-        <Column spacing={16} alignment="center">
-            <Text style={ styles.headerText }>Select Your Language</Text>
+    async function selectLanguage(
+        language: 'en' | 'nepali'
+    ) {
+        await setLanguage(language)
 
-            <Button 
-            label="English" 
-            onPress={() => setClicked(!clicked)}
-            style = { buttonStyles.notClicked }
-            />
+        router.replace('./(tabs)/about')
+    }
 
-            <Button 
-            label="Nepali (नेपाली)" 
-            onPress={() => setClicked(!clicked)}
-            style={ buttonStyles.notClicked }
-            />
-        </Column>
-    </Host>
+    return(
+        <View style = {styles.screen}>            
+            <View style ={styles.container}>
+                <Text style = {styles.headerText}>Language Selection</Text>
+                <Text style = {styles.text}>Select your Preffered Language</Text>
+
+                <Button 
+                label = "English" 
+                onPress = {() => selectLanguage('en')}
+                /> //message="You choose Nepali Language"
+
+                <Button 
+                label = "Nepali (नेपाली)"
+                onPress = {() => selectLanguage('nepali')}  
+                /> //message = "You choose Nepali Language"
+
+            </View>
+        </View>
 )}
 
 const styles = StyleSheet.create({
+    screen: {
+        flex:1,
+        justifyContent:'center',
+        alignItems: 'center',
+    },
+
     container: {
-        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        // padding: 20,
-        // marginTop: 30,
-        // marginHorizontal: 20,
-        rowGap: 10
+        gap: 20,
+        flex:1
     },
 
     buttonContainer: {
-        alignItems: 'center',
-        justifyContent: 'center'
     },
 
     text: {
-        alignItems: "center",
-        justifyContent: "center",
-        flex: 1,
-        color: "#000"
+        textAlign: 'center',
+        color: "#000",
+        fontSize:20,
     },
 
     headerText: {
-        alignItems: "center",
-        justifyContent: "center",
-        flex: 1,
-        
+        fontSize: 28,
+        textAlign:'center',
         color: "#AE214D",
+        fontWeight:"bold",
     },
 
 })
