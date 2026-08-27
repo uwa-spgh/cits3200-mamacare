@@ -7,12 +7,16 @@ import { AppColors } from "./src/styles/colors";
 import MamaCareLogo from "./src/assets/icons";
 import SignInScreen from "./src/screens/auth/SignInScreen";
 import SignUpScreen from "./src/screens/auth/SignUPScreen";
+import AuthStack from "./src/navigation/AuthStak";
+import { NavigationContainer } from "@react-navigation/native";
 
 export default function App() {
   return (
     <>
-      <FlashMessage position="top" />
-      <SignUpScreen/>
+      <NavigationContainer>
+        <FlashMessage position="top" />
+        <AuthStack />
+      </NavigationContainer>
     </>
   );
 }
