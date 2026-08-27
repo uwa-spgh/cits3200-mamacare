@@ -12,6 +12,7 @@ export const AppColors = {
     darkGray: '#A9A9A9',
     background_primary: '#FFF8F7',
     background_checklist: '#FFF0F1',
+    background_bottom_tab: '#FFE9EB',
     disabled: '',
     stroke_primary: '#DFBEC3',
     bg_button_secondary: '#FBE2E5',
