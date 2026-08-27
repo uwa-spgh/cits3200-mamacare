@@ -1,20 +1,27 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
+import AppSafeView from "./src/components/views/AppSafeView";
+import AppButton from "./src/components/buttons/AppButton";
+import FlashMessage, { showMessage } from "react-native-flash-message";
+import { AppColors } from "./src/styles/colors";
+import MamaCareLogo from "./src/assets/icons";
+import SignInScreen from "./src/screens/auth/SignInScreen";
+import SignUpScreen from "./src/screens/auth/SignUPScreen";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      <FlashMessage position="top" />
+      <SignUpScreen/>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: AppColors.background_primary,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
