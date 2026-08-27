@@ -9,11 +9,12 @@ import AppTextInput from "../../components/inputs/AppTextInput";
 import AppButton from "../../components/buttons/AppButton";
 import { AppColors } from "../../styles/colors";
 import { useNavigation } from "@react-navigation/native";
+import MainAppBottomTabs from "../../navigation/MainAppBottomTabs";
 
 const SignInScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   return (
     <AppSafeView style={styles.container}>
@@ -24,7 +25,11 @@ const SignInScreen = () => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <AppButton title="Sing In" style={styles.signInBtn} />
+      <AppButton
+        title="Sing In"
+        style={styles.signInBtn}
+        onPress={() => navigation.navigate("MainAppBottomTabs")}
+      />
       <AppButton
         title="Sing Up"
         style={styles.signUpBtn}
