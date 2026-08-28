@@ -1,25 +1,26 @@
 import { StyleSheet, Text, View } from "react-native";
 import { s, vs } from "react-native-size-matters";
-import React from "react";
+import React, { FC } from "react";
 import { AppColors } from "../../styles/colors";
 import BackBtn from "../buttons/BackBtn";
 import { useNavigation } from "@react-navigation/native";
 import NextBtn from "../buttons/NextBtn";
 import AppButton from "../buttons/AppButton";
 
-const NavFooter = () => {
-  const navigation = useNavigation();
+interface NavFooterProps {
+  onPressBack: () => void;
+  onPressNext: () => void;
+}
 
+const NavFooter: FC<NavFooterProps> = ({ onPressBack, onPressNext }) => {
   return (
     <View style={styles.container}>
       <BackBtn
-        onPress={() => navigation.navigate("MainAppBottomTabs")}
+        onPress={onPressBack}
         iconSize={s(16)}
         color={AppColors.text_secondary}
       />
-      <NextBtn onPress={() => navigation.navigate("MainAppBottomTabs")}
-        iconSize={s(16)}
-        color={AppColors.white}/>
+      <NextBtn onPress={onPressNext} iconSize={s(16)} color={AppColors.white} />
     </View>
   );
 };

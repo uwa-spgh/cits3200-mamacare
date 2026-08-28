@@ -10,36 +10,37 @@ import { useNavigation } from "@react-navigation/native";
 import NavFooter from "../../components/footers/NavFooter";
 
 const LanguageSelectionScreen = () => {
-
   const navigation = useNavigation<any>();
-  
+
   return (
     <>
-    <AppSafeView style={styles.container}>
-      <AppText style={styles.mainHeading}>Language Selection</AppText>
-      <View style={{ paddingHorizontal: s(20) }}>
-        <AppText style={styles.secText}>
-          Please choose your preferred language to continue.
-        </AppText>
-      </View>
+      <AppSafeView style={styles.container}>
+        <AppText style={styles.mainHeading}>Language Selection</AppText>
+        <View style={{ paddingHorizontal: s(20) }}>
+          <AppText style={styles.secText}>
+            Please choose your preferred language to continue.
+          </AppText>
+        </View>
 
-      <View style={styles.btsContainer}>
-        <AppButton
-          title="English"
-          style={styles.btnEnglish}
-          onPress={() => navigation.navigate("MainAppBottomTabs")}
-        />
-        <AppButton
-          title="Nepali (नेपाली)"
-          style={styles.btnNepali}
-          textColor={AppColors.text_secondary}
-          onPress={() => navigation.navigate("MainAppBottomTabs")}
-        />
-      </View>
-    </AppSafeView>
-    <NavFooter/>
+        <View style={styles.btsContainer}>
+          <AppButton
+            title="English"
+            style={styles.btnEnglish}
+            onPress={() => navigation.navigate("MainAppBottomTabs")}
+          />
+          <AppButton
+            title="Nepali (नेपाली)"
+            style={styles.btnNepali}
+            textColor={AppColors.text_secondary}
+            onPress={() => navigation.navigate("MainAppBottomTabs")}
+          />
+        </View>
+      </AppSafeView>
+      <NavFooter
+        onPressBack={() => navigation.navigate("MainAppBottomTabs")}
+        onPressNext={() => navigation.navigate("InitialSetupScreen")}
+      />
     </>
-    
   );
 };
 
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
   },
 
   btsContainer: {
-    width: '100%',
-    paddingHorizontal: s(20)
-  }
+    width: "100%",
+    paddingHorizontal: s(20),
+  },
 });
