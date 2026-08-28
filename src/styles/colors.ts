@@ -13,6 +13,7 @@ export const AppColors = {
     background_primary: '#FFF8F7',
     background_checklist: '#FFF0F1',
     background_bottom_tab: '#FFE9EB',
+    background_light_accent: '#FFD9DE',
     disabled: '',
     stroke_primary: '#DFBEC3',
     bg_button_secondary: '#FBE2E5',

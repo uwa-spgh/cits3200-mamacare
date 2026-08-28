@@ -14,7 +14,7 @@ import MainAppBottomTabs from "../../navigation/MainAppBottomTabs";
 const SignInScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   return (
     <AppSafeView style={styles.container}>

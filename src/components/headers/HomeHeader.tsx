@@ -6,7 +6,7 @@ import AppText from "../texts/AppText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { AppFonts } from "../../styles/fonts";
-import MamaCareTopIcon from "./mamacareTopIcon";
+import MamaCareTopIcon from "./MamaCareTopIcon";
 
 const HomeHeader = () => {
   return (
