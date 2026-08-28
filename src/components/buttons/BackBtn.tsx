@@ -8,14 +8,14 @@ import {s, vs} from 'react-native-size-matters'
 interface BackBtnProps {
     onPress: () => void,
     iconSize: number,
-    iconColor: string
+    color: string
 }
 
-const BackBtn: FC<BackBtnProps> = ({onPress, iconSize, iconColor}) => {
+const BackBtn: FC<BackBtnProps> = ({onPress, iconSize, color}) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-        <Ionicons name="chevron-back" size={iconSize} color={iconColor} />
-      <AppText style={styles.btnText}>Back</AppText>
+        <Ionicons name="chevron-back" size={iconSize} color={color} />
+      <AppText style={[styles.btnText, {color: color}]}>Back</AppText>
     </TouchableOpacity>
   )
 }
@@ -25,7 +25,7 @@ export default BackBtn
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
     },
 
     btnText: {

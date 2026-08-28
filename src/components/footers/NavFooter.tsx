@@ -4,6 +4,8 @@ import React from "react";
 import { AppColors } from "../../styles/colors";
 import BackBtn from "../buttons/BackBtn";
 import { useNavigation } from "@react-navigation/native";
+import NextBtn from "../buttons/NextBtn";
+import AppButton from "../buttons/AppButton";
 
 const NavFooter = () => {
   const navigation = useNavigation();
@@ -13,8 +15,11 @@ const NavFooter = () => {
       <BackBtn
         onPress={() => navigation.navigate("MainAppBottomTabs")}
         iconSize={s(16)}
-        iconColor={AppColors.text_secondary}
+        color={AppColors.text_secondary}
       />
+      <NextBtn onPress={() => navigation.navigate("MainAppBottomTabs")}
+        iconSize={s(16)}
+        color={AppColors.white}/>
     </View>
   );
 };
