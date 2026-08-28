@@ -4,7 +4,7 @@
     "slug": "mamaCare",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/splash-icon.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true
@@ -22,7 +22,12 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "@react-native-vector-icons/material-icons"
+      "@react-native-vector-icons/material-icons",
+      ["expo-splash-screen",
+    {"backgroundColor": "#FFF8F7",
+          "image": "./assets/splash-icon.svg",
+          "imageWidth": 200,
+          "resizeMode": "contain"}]
     ]
   }
 }

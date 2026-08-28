@@ -4,7 +4,7 @@ import { s, vs, ms } from 'react-native-size-matters'
 import { AppColors } from '../../styles/colors'
 
 interface AppTextInputProps {
-    value: string;
+    value?: string;
     onChangeText: (text: string) => void;
     placeholder: string;
     secureTextEntry?: boolean;

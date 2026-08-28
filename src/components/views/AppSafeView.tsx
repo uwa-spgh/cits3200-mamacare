@@ -13,7 +13,7 @@ import { IS_IOS } from "../../constants/constants";
 
 interface AppSafeViewProps {
   children: React.ReactNode;
-  style: ViewStyle;
+  style?: ViewStyle;
 }
 
 const AppSafeView: FC<AppSafeViewProps> = ({ children, style }) => {
@@ -29,7 +29,7 @@ export default AppSafeView;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: AppColors.bg_button_secondary,
+    backgroundColor: AppColors.background_primary,
     paddingTop: IS_IOS ? 0 : StatusBar.currentHeight || 0,
   },
 
