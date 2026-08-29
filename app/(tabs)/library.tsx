@@ -1,11 +1,12 @@
 // Health and Education Screen — Education Library
 // Content below is placeholder
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Link } from "expo-router";
 import { useMemo, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { BottomTabBar } from "@/components/health-education/bottom-tab-bar";
-import { LibraryHeader } from "@/components/health-education/library-header";
+import { AppHeader } from "@/components/health-education/app-header";
 import { SearchBar } from "@/components/health-education/search-bar";
 import { TopicFilterChips } from "@/components/health-education/topic-filter-chips";
 import { TopicGrid } from "@/components/health-education/topic-grid";
@@ -25,13 +26,23 @@ export default function HealthAndEducationScreen() {
   }, [activeFilter, searchQuery]);
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
-      <LibraryHeader />
+    <SafeAreaView style={styles.safeArea} edges={["top"]}>
+      <AppHeader title="MamaCare" />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <View style={styles.titleBlock}>
           <Text style={styles.heading}>Education Library</Text>
           <Text style={styles.subheading}>Find information for your pregnancy journey.</Text>
         </View>
+
+        <Link href="/danger-signs" asChild>
+          <Pressable style={styles.dangerLink} accessibilityRole="button">
+            <View style={styles.dangerLinkIcon}>
+              <Ionicons name="warning-outline" size={18} color={colors.danger} />
+            </View>
+            <Text style={styles.dangerLinkLabel}>Danger Signs</Text>
+            <Ionicons name="chevron-forward" size={18} color={colors.danger} />
+          </Pressable>
+        </Link>
 
         <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
 
@@ -46,7 +57,6 @@ export default function HealthAndEducationScreen() {
           />
         </View>
       </ScrollView>
-      <BottomTabBar activeTab="library" />
     </SafeAreaView>
   );
 }
@@ -74,5 +84,30 @@ const styles = StyleSheet.create({
   },
   section: {
     gap: 10,
+  },
+  dangerLink: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    backgroundColor: colors.dangerBg,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.dangerBorder,
+    borderRadius: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  dangerLinkIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: 10,
+    backgroundColor: colors.surface,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  dangerLinkLabel: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: "700",
+    color: colors.danger,
   },
 });

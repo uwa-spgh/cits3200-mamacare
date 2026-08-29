@@ -53,12 +53,25 @@ export default function TabsLayout() {
       options = {{
         headerTitle:"About",
         tabBarIcon: (
-            {focused, color}) => 
-            <Ionicons 
+            {focused, color}) =>
+            <Ionicons
             name ={ focused ? "information-circle" : "information-outline"}
             size = {30}
             />,
-      }} 
+      }}
+      />
+
+      <Tabs.Screen name="library"
+      options = {{
+        headerShown: false, 
+        tabBarLabel: "Library",
+        tabBarIcon: (
+            {focused, color}) =>
+            <Ionicons
+            name ={ focused ? "book" : "book-outline"}
+            size = {30}
+            />,
+      }}
       />
 
     </Tabs>

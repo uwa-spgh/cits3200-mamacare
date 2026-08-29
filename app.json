@@ -4,7 +4,7 @@
     "slug": "MamaCare-app1",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/ios-icon-default.png",
+    "icon": "./assets/icons/ios-icon-default.png",
     "scheme": "mamacareapp1",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -15,13 +15,12 @@
         "dark": "./assets/icons/ios-icon-dark.png",
         "monochrome": "./assets/icons/ios-icon-monochrome.png",
         "tinted": "./assets/icons/ios-icon-tinted.png"
-      }
+      },
+      "bundleIdentifier": "com.anonymous.MamaCareapp1"
     },
     "android": {
-      "icon": "./assets/icons/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/android-icon-foreground.png",
-        "backgrouondImage": "./assets/icons/android-icon-background.png",
         "backgroundColor": "#FFFFFF"
       },
       "edgeToEdgeEnabled": true,
@@ -30,7 +29,7 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/icons/ios-icon-default.png"
     },
     "plugins": [
       "expo-router",

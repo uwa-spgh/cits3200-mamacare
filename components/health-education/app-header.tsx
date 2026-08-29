@@ -4,17 +4,19 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/health-education";
 
-interface LibraryHeaderProps {
+interface AppHeaderProps {
+  title: string;
   onProfilePress?: () => void;
   onNotificationsPress?: () => void;
   onSettingsPress?: () => void;
 }
 
-export function LibraryHeader({
+export function AppHeader({
+  title,
   onProfilePress,
   onNotificationsPress,
   onSettingsPress,
-}: LibraryHeaderProps) {
+}: AppHeaderProps) {
   const handleBack = () => {
     if (router.canGoBack()) {
       router.back();
@@ -31,7 +33,7 @@ export function LibraryHeader({
       >
         <Ionicons name="arrow-back" size={22} color={colors.primary} />
       </Pressable>
-      <Text style={styles.title}>MamaCare</Text>
+      <Text style={styles.title}>{title}</Text>
       <View style={styles.actions}>
         <Pressable
           onPress={onProfilePress}

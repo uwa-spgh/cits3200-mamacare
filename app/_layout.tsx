@@ -19,18 +19,26 @@ export default function RootLayout() {
           options = {{
             headerTitle:"MamaCare",
             headerShown: false, // hide header
-            headerLeft: () => <></>, // removes the "go back" button that automatically is created
+            headerLeft: () => <></>, 
           }} 
         />
 
-        <Stack.Screen 
+        <Stack.Screen
           name="languageSelection"
           options={{
             headerTitle: "Language Selection",
             headerShown:false,
-          }} 
+          }}
         />
-        
+
+        <Stack.Screen
+          name="danger-signs"
+          options={{
+            headerTitle: "Danger Signs",
+            headerShown: false, 
+          }}
+        />
+
         <Stack.Screen name="+not-found" options = {{}} />
         
       </Stack>

@@ -13,6 +13,9 @@ export const colors = {
   textSecondary: "#8A7B80",
   tagNutrition: "#3F8354",
   tabInactive: "#9A8D91",
+  danger: "#C23B3B",
+  dangerBg: "#FBE7E7",
+  dangerBorder: "#E7B4B4",
 } as const;
 
 export type TopicCategory = "nutrition" | "birth-prep" | "general";
