@@ -68,7 +68,8 @@ const InitialSetupScreen = () => {
       </AppSafeView>
       <NavFooter
         onPressBack={() => navigation.navigate("LanguageSelectionScreen")}
-        onPressNext={() => navigation.navigate("WelcomeScreen")}
+        // onPressNext={() => navigation.navigate("WelcomeScreen")}
+        onPressNext={() => navigation.navigate("MainAppBottomTabs")}
       />
     </>
   );

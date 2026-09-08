@@ -23,7 +23,7 @@ export default function App() {
     "Inter-Bold": require("./src/assets/fonts/inter/Inter_18pt-Bold.ttf"),
     "Inter-Medium": require("./src/assets/fonts/inter/Inter_18pt-Medium.ttf"),
     "Inter-Regular": require("./src/assets/fonts/inter/Inter_18pt-Regular.ttf"),
-    "InterL-ight": require("./src/assets/fonts/inter/Inter_18pt-Light.ttf"),
+    "Inter-Light": require("./src/assets/fonts/inter/Inter_18pt-Light.ttf"),
   })
 
   if(!fontsLoaded){

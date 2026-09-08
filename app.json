@@ -23,11 +23,16 @@
     },
     "plugins": [
       "@react-native-vector-icons/material-icons",
-      ["expo-splash-screen",
-    {"backgroundColor": "#FFF8F7",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FFF8F7",
           "image": "./assets/splash-icon.svg",
           "imageWidth": 200,
-          "resizeMode": "contain"}]
+          "resizeMode": "contain"
+        }
+      ],
+      "expo-font"
     ]
   }
 }
