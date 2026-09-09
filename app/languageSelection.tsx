@@ -1,8 +1,8 @@
 import { Text, View, StyleSheet } from "react-native";
 import { router } from "expo-router";
 
-import Button from '@/components/Button';
-import { usePreferences } from "@/context/PreferencesContext";
+import Button from '../components/Button';
+import { usePreferences } from "../context/PreferencesContext";
 
 
 export default function LanguageSelectionScreen() {
@@ -13,7 +13,7 @@ export default function LanguageSelectionScreen() {
     ) {
         await setLanguage(language)
 
-        router.replace('./(tabs)/about')
+        router.replace('/(tabs)/about')
     }
 
     return(
@@ -25,12 +25,12 @@ export default function LanguageSelectionScreen() {
                 <Button 
                 label = "English" 
                 onPress = {() => selectLanguage('en')}
-                /> //message="You choose Nepali Language"
+                />
 
                 <Button 
                 label = "Nepali (नेपाली)"
                 onPress = {() => selectLanguage('nepali')}  
-                /> //message = "You choose Nepali Language"
+                />
 
             </View>
         </View>
