@@ -27,7 +27,8 @@
       "favicon": "./assets/icons/ios-icon-default.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-localization"
     ],
     "experiments": {}
   }

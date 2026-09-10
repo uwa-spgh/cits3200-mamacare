@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import * as SplashScreen from 'expo-splash-screen';
+import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { PreferencesProvider } from "../context/PreferencesContext";
 
@@ -13,26 +13,45 @@ export default function RootLayout() {
     <PreferencesProvider>
       <StatusBar style="dark" />
 
-      <Stack>
-        <Stack.Screen 
-          name="(tabs)" 
-          options = {{
-            headerTitle:"MamaCare",
-            headerShown: false, // hide header
-            headerLeft: () => <></>, // removes the "go back" button that automatically is created
-          }} 
+      <Stack
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#DFBEC3",
+          },
+          headerTintColor: "#AE214D",
+          headerShadowVisible: true,
+        }}
+      >
+        <Stack.Screen
+          name="(tabs)"
+          options={{
+            headerShown: false,
+          }}
         />
 
-        <Stack.Screen 
+        <Stack.Screen
+          name="notifications"
+          options={{
+            headerShown: true,
+            headerTitle: "MamaCare",
+
+            // On iOS this keeps only the back arrow
+            headerBackButtonDisplayMode: "minimal",
+          }}
+        />
+
+        <Stack.Screen
           name="languageSelection"
           options={{
             headerTitle: "Language Selection",
-            headerShown:false,
-          }} 
+            headerShown: false,
+          }}
         />
-        
-        <Stack.Screen name="+not-found" options = {{}} />
-        
+
+        <Stack.Screen
+          name="+not-found"
+          options={{}}
+        />
       </Stack>
     </PreferencesProvider>
   );

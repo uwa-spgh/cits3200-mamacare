@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useLayoutEffect } from "react";
 import {
   Alert,
   Pressable,
@@ -8,10 +8,30 @@ import {
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 
 export default function HomeScreen() {
   const [medicationTaken, setMedicationTaken] = useState(false);
+  const navigation = useNavigation();
+
+   useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: "MamaCare",
+
+      headerRight: () => (
+        <Pressable
+          style={styles.notificationButton}
+          onPress={() => router.push("/notifications")}
+        >
+          <Ionicons
+            name="notifications-outline"
+            size={25}
+            color="#B62555"
+          />
+        </Pressable>
+      ),
+    });
+  }, [navigation]);
 
   return (
     <ScrollView
@@ -127,6 +147,10 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  notificationButton: {
+    marginRight: 16,
+    padding: 6,
+  },
   screen: {
     flex: 1,
     backgroundColor: "#FFF9F8",
