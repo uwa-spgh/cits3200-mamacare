@@ -1,7 +1,7 @@
 // Design tokens and content for the Health & Education flow
 //
-// TBD swap PLACEHOLDER titles/descriptions/images for the real copy
-// once the client send through articles/information.
+// TBD swap PLACEHOLDER titles/descriptions/images
+// once the client sends through articles/information.
 
 export const colors = {
   background: "#FDF1F2",

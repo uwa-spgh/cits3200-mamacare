@@ -1,6 +1,6 @@
 // Danger Signs: general signs to watch for throughout pregnancy, plus
 // signs to watch for at each of the 8 ANC contacts. Reachable from the 
-// Education Library screen, and also from the Home screen (via the "Danger Signs" button).
+// Education Library screen
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";

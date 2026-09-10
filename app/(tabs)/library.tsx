@@ -1,5 +1,4 @@
 // Health and Education Screen — Education Library
-// Content below is placeholder
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Link } from "expo-router";
 import { useMemo, useState } from "react";

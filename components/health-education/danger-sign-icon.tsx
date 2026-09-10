@@ -11,10 +11,6 @@ interface DangerSignIconViewProps {
   color: string;
 }
 
-// Danger sign icons can come from Ionicons, MaterialCommunityIcons, Entypo,
-// or FontAwesome6 (some glyphs, like the headache or baby icons, only exist
-// in one set) — this picks the right icon component based on which set the
-// icon is tagged with.
 export function DangerSignIconView({ icon, size, color }: DangerSignIconViewProps) {
   if (icon.family === "material-community") {
     return <MaterialCommunityIcons name={icon.name} size={size} color={color} />;
