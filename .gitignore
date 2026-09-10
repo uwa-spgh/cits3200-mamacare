@@ -42,5 +42,4 @@ app-example
 /ios
 /android
 
-# Claude Code (kept local, not shared via the repo)
 .claude/
