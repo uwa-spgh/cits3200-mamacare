@@ -32,6 +32,14 @@ export default function RootLayout() {
               headerShown:false,
             }} 
           />
+
+          <Stack.Screen
+            name="danger-signs"
+            options={{
+              headerTitle: "Danger Signs",
+              headerShown: false, 
+            }}
+          />
           
           <Stack.Screen name="+not-found" options = {{}} />
           
