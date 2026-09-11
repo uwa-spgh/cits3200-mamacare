@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from "expo-status-bar";
-import { PreferencesProvider } from "@/context/PreferencesContext";
+import { PreferencesProvider } from "../context/PreferencesContext";
 
 SplashScreen.setOptions({
   duration: 1000,

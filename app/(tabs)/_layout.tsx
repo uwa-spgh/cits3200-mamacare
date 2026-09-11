@@ -49,6 +49,18 @@ export default function TabsLayout() {
       }}
       />
 
+      <Tabs.Screen name="planner"
+      options={{
+        headerTitle: "Planner",
+        tabBarIcon: (
+          {focused}) =>
+          <Ionicons
+          name={ focused ? "calendar" : "calendar-outline"}
+          size={30}
+          />,
+      }}
+      />
+
       <Tabs.Screen name="about"
       options = {{
         headerTitle:"About",

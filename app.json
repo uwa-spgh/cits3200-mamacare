@@ -10,17 +10,12 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "icon": {
-        "light": "./assets/icons/ios-icon-default.png",
-        "dark": "./assets/icons/ios-icon-dark.png",
-        "monochrome": "./assets/icons/ios-icon-monochrome.png",
-        "tinted": "./assets/icons/ios-icon-tinted.png"
-      },
-      "bundleIdentifier": "com.anonymous.MamaCareapp1"
+      "icon": "./assets/icons/ios-icon-default.png"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/android-icon-foreground.png",
+        "monochromeImage": "./assets/icons/android-icon-monochrome.png",
         "backgroundColor": "#FFFFFF"
       },
       "edgeToEdgeEnabled": true,
@@ -28,28 +23,12 @@
       "package": "com.anonymous.MamaCareapp1"
     },
     "web": {
-      "output": "static",
+      "output": "single",
       "favicon": "./assets/icons/ios-icon-default.png"
     },
     "plugins": [
-      "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/icons/ios-icon-default.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#000000",
-          "dark": {
-            "backgroundColor": "#FFFFFF",
-            "image": "./assets/icons/ios-icon-default.png"
-          }
-        }
-      ]
+      "expo-router"
     ],
-    "experiments": {
-      "typedRoutes": true,
-      "reactCompiler": true
-    }
+    "experiments": {}
   }
 }

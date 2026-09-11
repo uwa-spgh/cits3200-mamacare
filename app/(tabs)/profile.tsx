@@ -1,12 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
+import { View, Text, StyleSheet } from 'react-native';
 
-// Placeholder
-// A route file must have a default export or expo-router warns/crashes on
-// navigation to it, so this stub fills that in until the real screen lands.
 export default function ProfileScreen() {
   return (
     <View style={styles.container}>
-      <Text>Profile screen.</Text>
+      <Text style={styles.title}>Profile</Text>
+      <Text style={styles.body}>Your profile details will appear here.</Text>
     </View>
   );
 }
@@ -14,8 +12,18 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
+    justifyContent: 'center',
+    padding: 24,
+    backgroundColor: '#FFF8F8',
+  },
+  title: {
+    color: '#AE214D',
+    fontSize: 28,
+    fontWeight: '700',
+    marginBottom: 8,
+  },
+  body: {
+    color: '#4F343B',
+    fontSize: 16,
   },
 });
