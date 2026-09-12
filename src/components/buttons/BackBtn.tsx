@@ -4,6 +4,7 @@ import {Ionicons} from "@expo/vector-icons"
 import AppText from '../texts/AppText'
 import { AppColors } from '../../styles/colors'
 import {s, vs} from 'react-native-size-matters'
+import { useTranslation } from 'react-i18next'
 
 interface BackBtnProps {
     onPress: () => void,
@@ -12,10 +13,12 @@ interface BackBtnProps {
 }
 
 const BackBtn: FC<BackBtnProps> = ({onPress, iconSize, color}) => {
+
+  const {t} = useTranslation();
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
         <Ionicons name="chevron-back" size={iconSize} color={color} />
-      <AppText style={[styles.btnText, {color: color}]}>Back</AppText>
+      <AppText style={[styles.btnText, {color: color}]}>{t("buttonArrows.back")}</AppText>
     </TouchableOpacity>
   )
 }

@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons'
 import AppText from '../texts/AppText'
 import { AppColors } from '../../styles/colors'
 import {s, vs} from 'react-native-size-matters'
+import { useTranslation } from 'react-i18next'
 
 interface NextBtnProps {
     onPress: () => void,
@@ -12,9 +13,11 @@ interface NextBtnProps {
 }
 
 const NextBtn: FC<NextBtnProps> = ({onPress, iconSize, color}) => {
+
+  const {t} = useTranslation();
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      <AppText style={[styles.btnText, {color:color}]}>Next</AppText>
+      <AppText style={[styles.btnText, {color:color}]}>{t("buttonArrows.next")}</AppText>
       <Ionicons name="chevron-forward" size={iconSize} color={color} />
     </TouchableOpacity>
   )

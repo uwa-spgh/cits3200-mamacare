@@ -1,4 +1,4 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createBottomTabNavigator } from "expo-router/js-tabs";
 import HomeScreen from "../screens/home/HomeScreen";
 import ProfileScreen from "../screens/profile/ProfileScreen";
 import MedsScreen from "../screens/meds/MedsScreen";
@@ -7,10 +7,14 @@ import { AppColors } from "../styles/colors";
 import { s, vs } from "react-native-size-matters";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { IS_ANDROID } from "../constants/constants";
+import { useTranslation } from "react-i18next";
 
 const Tab = createBottomTabNavigator();
 
 export default function MainAppBottomTabs() {
+  
+  const {t} = useTranslation();
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -33,7 +37,7 @@ export default function MainAppBottomTabs() {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="home" size={size} color={color} />
           ),
-          title: "Home",
+          title: t("navTabs.homeTab"),
         }}
       />
       <Tab.Screen
@@ -43,7 +47,7 @@ export default function MainAppBottomTabs() {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="pills" size={size} color={color}/>
           ),
-          title: "Meds",
+          title: t("navTabs.medsTab"),
         }}
       />
       <Tab.Screen name="Library" component={LibraryScreen} 
@@ -51,13 +55,13 @@ export default function MainAppBottomTabs() {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="university" size={size} color={color}/>
           ),
-          title: "Library",
+          title:t("navTabs.libraryTab"),
         }}/>
       <Tab.Screen name="Profile" component={ProfileScreen} options={{
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="user" size={size} color={color}/>
           ),
-          title: "Profile",
+          title: t("navTabs.profileTab"),
         }}/>
     </Tab.Navigator>
   );

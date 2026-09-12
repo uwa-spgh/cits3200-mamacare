@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import AppSafeView from "../../components/views/AppSafeView";
 import NavFooter from "../../components/footers/NavFooter";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from "expo-router/react-navigation";
 import AppText from "../../components/texts/AppText";
 import { AppColors } from "../../styles/colors";
 import { AppFonts } from "../../styles/fonts";
@@ -15,6 +16,7 @@ import InputDueDate from "../../components/cards/InputDueDate";
 const InitialSetupScreen = () => {
   const [selectedMethod, setSelectedMethod] = useState("LMP");
   const navigation = useNavigation<any>();
+  const { t } = useTranslation();
   return (
     <>
       <AppSafeView style={styles.container}>
@@ -26,12 +28,12 @@ const InitialSetupScreen = () => {
             fontSize: s(14),
           }}
         >
-          How would you like to calculate your dates?
+          {t("initialSetupScreen.calculateDates")}
         </AppText>
         <View style={styles.methodsContainer}>
           <DueDateMethod
-            title="Last Period (LMP)"
-            textContent="Use the first day of your last menstrual period."
+            title={t("initialSetupScreen.lastPeriodTitle")}
+            textContent={t("initialSetupScreen.lastPeriodDescription")}
             icon={
               <MaterialCommunityIcons
                 name="calendar-month"
@@ -44,8 +46,8 @@ const InitialSetupScreen = () => {
             isSelected={selectedMethod === "LMP"}
           />
           <DueDateMethod
-            title="Due Date (EDD)"
-            textContent="Use the expected delivery date given by your doctor."
+            title={t("initialSetupScreen.dueDateTitle")}
+            textContent={t("initialSetupScreen.dueDateDescription")}
             icon={
               <MaterialCommunityIcons
                 name="baby-face"
@@ -60,8 +62,8 @@ const InitialSetupScreen = () => {
           <InputDueDate
             textEdd={
               selectedMethod === "LMP"
-                ? "Enter the first day of your last period."
-                : "Enter the estimated due date."
+                ? t("initialSetupScreen.lastPeriodPrompt")
+                : t("initialSetupScreen.dueDatePrompt")
             }
           />
         </View>

@@ -3,7 +3,7 @@ import { s, vs } from "react-native-size-matters";
 import React, { FC } from "react";
 import { AppColors } from "../../styles/colors";
 import BackBtn from "../buttons/BackBtn";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from "expo-router/react-navigation";
 import NextBtn from "../buttons/NextBtn";
 import AppButton from "../buttons/AppButton";
 

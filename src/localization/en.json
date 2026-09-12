@@ -1,0 +1,140 @@
+{
+    "languageSelectionScreen": {
+        "languageSelection": "Language Selection",
+        "langSelectText": "Please choose your preferred language to continue.",
+        "englishOption": "English",
+        "nepaliOption": "Nepali (नेपाली)"
+    },
+
+    "navTabs":{
+        "homeTab": "Home",
+        "medsTab": "Meds",
+        "libraryTab": "Library",
+        "profileTab": "Profile"
+
+    },
+
+    "initialSetupScreen": {
+        "setupTitle": "Pregnancy Setup",
+        "setupDescription": "We need a few details to accurately track your pregnancy progress and provide the right information at the right time.",
+        "calculateDates": "How would you like to calculate your dates?",
+        "lastPeriodTitle": "Last Period (LMP)",
+        "lastPeriodDescription": "Use the first day of your last menstrual period.",
+        "dueDateTitle": "Due Date (EDD)",
+        "dueDateDescription": "Use the expected delivery date given by your doctor.",
+        "lastPeriodPrompt": "Enter the first day of your last period.",
+        "dueDatePrompt": "Enter the estimated due date.",
+        "datePlaceholder": "mm/dd/yyyy",
+        "privacyNotice": "This information is kept private and is only used to calculate your current week of pregnancy to tailor your health tips."
+    },
+
+    "homeScreen": {
+        "greeting": "Hello, Asha",
+        "dailyOverview": "Here is your daily overview.",
+        "trimester": "SECOND TRIMESTER",
+        "weeks": "12 Weeks",
+        "days": ", 3 Days",
+        "babySize": "Size of a Plum",
+        "babyLength": "Your baby is about 5.4 cm long.",
+        "todaysPriority": "Today's Priority",
+        "medications": "Medications",
+        "ironAndFolicAcid": "Iron & Folic Acid",
+        "pillWithFood": "1 Pill with food",
+        "nextAncVisit": "Next ANC Visit",
+        "clinicCheckup": "Clinic Checkup",
+        "hospital": "City General Hospital",
+        "daysLabel": "DAYS",
+        "quickActions": "Quick Actions",
+        "educationLibrary": "Education\nLibrary",
+        "trackSymptoms": "Track\nSymptoms",
+        "educationLibraryAlertTitle": "Education Library",
+        "educationLibraryAlertMessage": "The education library screen will be added later.",
+        "trackSymptomsAlertTitle": "Track Symptoms",
+        "trackSymptomsAlertMessage": "The symptom tracking screen will be added later."
+    },
+
+    "libraryScreen": {
+        "title": "Education Library",
+        "subtitle": "Find information for your pregnancy journey.",
+        "dangerSigns": "Danger Signs",
+        "searchPlaceholder": "Search topics (e.g., Nutrition)",
+        "searchAccessibilityLabel": "Search topics",
+        "allTopics": "All Topics",
+        "nutrition": "Nutrition",
+        "birthPrep": "Birth Prep",
+        "general": "General",
+        "noTopics": "No topics match your search yet.",
+        "topics": {
+            "healthyNutrition": {
+                "title": "Healthy Nutrition",
+                "description": "Placeholder description — content to come."
+            },
+            "ancVisits": {
+                "title": "Importance of ANC Visits",
+                "description": "Placeholder description — content to come."
+            },
+            "birthPreparedness": {
+                "title": "Birth Preparedness",
+                "description": "Placeholder description — content to come."
+            },
+            "labourPreparation": {
+                "title": "Labour Preparation",
+                "description": "Placeholder description — content to come."
+            },
+            "breastfeedingPreparation": {
+                "title": "Breastfeeding Preparation",
+                "description": "Placeholder description — content to come."
+            },
+            "generalPregnancyAdvice": {
+                "title": "General Pregnancy Advice",
+                "description": "Placeholder description — content to come."
+            }
+        }
+    },
+
+    "dangerSignsScreen": {
+        "seekHelpTitle": "Seek Help Immediately",
+        "seekHelpDescription": "If you experience any of these signs, do not wait. Go to the nearest clinic or hospital right away.",
+        "generalTitle": "General Danger Signs",
+        "generalSubtitle": "Watch for these at any point in your pregnancy.",
+        "byContactTitle": "Danger Signs by ANC Contact",
+        "byContactSubtitle": "Signs to watch for at each antenatal care visit.",
+        "callEmergency": "Call Emergency",
+        "callEmergencyHelp": "Call for emergency help",
+        "goToHospital": "Go to hospital immediately",
+        "contact": "Contact",
+        "watchFor": "Watch for:",
+        "contacts": {
+            "1": "Before 12 weeks",
+            "2": "20 weeks",
+            "3": "26 weeks",
+            "4": "30 weeks",
+            "5": "34 weeks",
+            "6": "36 weeks",
+            "7": "38 weeks",
+            "8": "40 weeks"
+        },
+        "signs": {
+            "heavy-vaginal-bleeding": "Heavy Vaginal Bleeding",
+            "vaginal-bleeding": "Vaginal Bleeding",
+            "severe-stomach-pain": "Severe Stomach Pain",
+            "severe-headache": "Severe Headache",
+            "blurred-vision": "Blurred Vision",
+            "headache-or-blurred-vision": "Severe Headache or Blurred Vision",
+            "swelling": "Swelling of Face or Hands",
+            "fever-chills": "Fever or Chills",
+            "trouble-breathing": "Trouble Breathing",
+            "fainting-seizures": "Fainting or Seizures",
+            "dizziness-fainting": "Dizziness or Fainting",
+            "severe-vomiting": "Severe Vomiting",
+            "reduced-movement": "Reduced Baby Movement",
+            "fluid-leaking": "Fluid Leaking"
+        }
+    },
+
+    "buttonArrows": {
+        "next": "Next",
+        "back": "Back",
+        "backAccessibility": "Go back"
+    }
+}

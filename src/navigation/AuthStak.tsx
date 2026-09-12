@@ -1,4 +1,4 @@
-import {createStackNavigator} from "@react-navigation/stack";
+import {createStackNavigator} from "expo-router/js-stack";
 import SignInScreen from "../screens/auth/SignInScreen";
 import SignUpScreen from "../screens/auth/SignUPScreen";
 import LanguageSelectionScreen from "../screens/auth/LanguageSelectionScreen";

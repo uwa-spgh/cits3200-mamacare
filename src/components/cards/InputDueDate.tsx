@@ -6,6 +6,7 @@ import AppText from "../texts/AppText";
 import { AppFonts } from "../../styles/fonts";
 import AppTextInput from "../inputs/AppTextInput";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useTranslation } from "react-i18next";
 
 interface InputDueDateInputProps{
     textEdd: string;
@@ -13,6 +14,7 @@ interface InputDueDateInputProps{
 
 const InputDueDate: FC<InputDueDateInputProps> = ({textEdd}) => {
   const [dueDate, setDueDate] = useState("");
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
@@ -28,7 +30,7 @@ const InputDueDate: FC<InputDueDateInputProps> = ({textEdd}) => {
       <View style={styles.innerContainer}>
         <AppTextInput
           style={styles.inputText}
-          placeholder="mm/dd/yyyy"
+          placeholder={t("initialSetupScreen.datePlaceholder")}
           onChangeText={setDueDate}
         />
         <View style={styles.infoContainer}>
@@ -38,8 +40,7 @@ const InputDueDate: FC<InputDueDateInputProps> = ({textEdd}) => {
             size={s(20)}
           />
           <AppText style={styles.infoText}>
-            This information is kept private and is only used to calculate your
-            current week of pregnancy to tailor your health tips.
+            {t("initialSetupScreen.privacyNotice")}
           </AppText>
         </View>
       </View>

@@ -8,7 +8,7 @@ import AppText from "../../components/texts/AppText";
 import AppTextInput from "../../components/inputs/AppTextInput";
 import AppButton from "../../components/buttons/AppButton";
 import { AppColors } from "../../styles/colors";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from "expo-router/react-navigation";
 import MainAppBottomTabs from "../../navigation/MainAppBottomTabs";
 
 const SignInScreen = () => {

@@ -1,0 +1,140 @@
+{
+    "languageSelectionScreen": {
+        "languageSelection": "भाषा चयन",
+        "langSelectText": "कृपया जारी राख्न आफ्नो मनपर्ने भाषा छान्नुहोस्।",
+        "englishOption": "English (अंग्रेजी)",
+        "nepaliOption": "नेपाली (नेपाली)"
+    },
+
+    "initialSetupScreen": {
+    "setupTitle": "गर्भावस्था सेटअप",
+    "setupDescription": "तपाईंको गर्भावस्थाको प्रगति सही रूपमा ट्र्याक गर्न र सही समयमा सही जानकारी दिन हामीलाई केही विवरणहरू चाहिन्छ।",
+    "calculateDates": "तपाईं आफ्नो मितिहरू कसरी गणना गर्न चाहनुहुन्छ?",
+    "lastPeriodTitle": "अन्तिम महिनावारी (LMP)",
+    "lastPeriodDescription": "तपाईंको अन्तिम महिनावारीको पहिलो दिन प्रयोग गर्नुहोस्।",
+    "dueDateTitle": "प्रसूति मिति (EDD)",
+    "dueDateDescription": "तपाईंको डाक्टरले दिनुभएको अनुमानित प्रसूति मिति प्रयोग गर्नुहोस्।",
+    "lastPeriodPrompt": "तपाईंको अन्तिम महिनावारीको पहिलो दिन लेख्नुहोस्।",
+    "dueDatePrompt": "अनुमानित प्रसूति मिति लेख्नुहोस्।",
+    "datePlaceholder": "mm/dd/yyyy",
+    "privacyNotice": "यो जानकारी गोप्य राखिन्छ र तपाईंको स्वास्थ्य सुझावहरू अनुकूलन गर्नको लागि तपाईंको गर्भावस्थाको हालको हप्ता गणना गर्न मात्र प्रयोग गरिन्छ।"
+},
+
+"homeScreen": {
+    "greeting": "नमस्ते, आशा",
+    "dailyOverview": "यहाँ तपाईंको दैनिक अवलोकन छ।",
+    "trimester": "दोस्रो त्रैमासिक",
+    "weeks": "१२ हप्ता",
+    "days": ", ३ दिन",
+    "babySize": "एक बेरको आकार",
+    "babyLength": "तपाईंको बच्चा करिब ५.४ से.मि. लामो छ।",
+    "todaysPriority": "आजको प्राथमिकता",
+    "medications": "औषधिहरू",
+    "ironAndFolicAcid": "फलाम र फोलिक एसिड",
+    "pillWithFood": "खानासँगै १ चक्की",
+    "nextAncVisit": "अर्को ANC भ्रमण",
+    "clinicCheckup": "क्लिनिक जाँच",
+    "hospital": "सिटी जनरल अस्पताल",
+    "daysLabel": "दिन",
+    "quickActions": "द्रुत कार्यहरू",
+    "educationLibrary": "शिक्षा\nपुस्तकालय",
+    "trackSymptoms": "लक्षण\nट्र्याक",
+    "educationLibraryAlertTitle": "शिक्षा पुस्तकालय",
+    "educationLibraryAlertMessage": "शिक्षा पुस्तकालय स्क्रिन पछि थपिनेछ।",
+    "trackSymptomsAlertTitle": "लक्षण ट्र्याक गर्नुहोस्",
+    "trackSymptomsAlertMessage": "लक्षण ट्र्याकिङ स्क्रिन पछि थपिनेछ।"
+},
+
+"libraryScreen": {
+    "title": "शिक्षा पुस्तकालय",
+    "subtitle": "तपाईंको गर्भावस्था यात्राको लागि जानकारी खोज्नुहोस्।",
+    "dangerSigns": "खतराका संकेतहरू",
+    "searchPlaceholder": "विषयहरू खोज्नुहोस् (जस्तै: पोषण)",
+    "searchAccessibilityLabel": "विषयहरू खोज्नुहोस्",
+    "allTopics": "सबै विषयहरू",
+    "nutrition": "पोषण",
+    "birthPrep": "जन्मको तयारी",
+    "general": "सामान्य",
+    "noTopics": "अहिलेसम्म तपाईंको खोजसँग मिल्ने कुनै विषय भेटिएन।",
+    "topics": {
+        "healthyNutrition": {
+            "title": "स्वस्थ पोषण",
+            "description": "प्लेसहोल्डर विवरण — सामग्री पछि थपिनेछ।"
+        },
+        "ancVisits": {
+            "title": "ANC भ्रमणहरूको महत्त्व",
+            "description": "प्लेसहोल्डर विवरण — सामग्री पछि थपिनेछ।"
+        },
+        "birthPreparedness": {
+            "title": "जन्मको तयारी",
+            "description": "प्लेसहोल्डर विवरण — सामग्री पछि थपिनेछ।"
+        },
+        "labourPreparation": {
+            "title": "प्रसवको तयारी",
+            "description": "प्लेसहोल्डर विवरण — सामग्री पछि थपिनेछ।"
+        },
+        "breastfeedingPreparation": {
+            "title": "स्तनपानको तयारी",
+            "description": "प्लेसहोल्डर विवरण — सामग्री पछि थपिनेछ।"
+        },
+        "generalPregnancyAdvice": {
+            "title": "सामान्य गर्भावस्था सल्लाह",
+            "description": "प्लेसहोल्डर विवरण — सामग्री पछि थपिनेछ।"
+        }
+    }
+},
+
+"dangerSignsScreen": {
+    "seekHelpTitle": "तुरुन्तै सहायता खोज्नुहोस्",
+    "seekHelpDescription": "यी मध्ये कुनै पनि संकेत देखिएमा नपर्खनुहोस्। तुरुन्तै नजिकको क्लिनिक वा अस्पताल जानुहोस्।",
+    "generalTitle": "सामान्य खतराका संकेतहरू",
+    "generalSubtitle": "गर्भावस्थाको कुनै पनि समयमा यिनमा ध्यान दिनुहोस्।",
+    "byContactTitle": "ANC सम्पर्क अनुसार खतराका संकेतहरू",
+    "byContactSubtitle": "प्रत्येक पूर्वसूतिका जाँच भ्रमणमा ध्यान दिनुपर्ने संकेतहरू।",
+    "callEmergency": "आपतकालीन कल गर्नुहोस्",
+    "callEmergencyHelp": "आपतकालीन सहायताको लागि कल गर्नुहोस्",
+    "goToHospital": "तुरुन्तै अस्पताल जानुहोस्",
+    "contact": "सम्पर्क",
+    "watchFor": "ध्यान दिनुहोस्:",
+    "contacts": {
+        "1": "१२ हप्ता अघि",
+        "2": "२० हप्ता",
+        "3": "२६ हप्ता",
+        "4": "३० हप्ता",
+        "5": "३४ हप्ता",
+        "6": "३६ हप्ता",
+        "7": "३८ हप्ता",
+        "8": "४० हप्ता"
+    },
+    "signs": {
+        "heavy-vaginal-bleeding": "धेरै योनि रक्तस्राव",
+        "vaginal-bleeding": "योनि रक्तस्राव",
+        "severe-stomach-pain": "कडा पेट दुखाइ",
+        "severe-headache": "कडा टाउको दुखाइ",
+        "blurred-vision": "धमिलो दृष्टि",
+        "headache-or-blurred-vision": "कडा टाउको दुखाइ वा धमिलो दृष्टि",
+        "swelling": "अनुहार वा हातमा सुन्निने",
+        "fever-chills": "ज्वरो वा काँप",
+        "trouble-breathing": "सास फेर्न गाह्रो",
+        "fainting-seizures": "बेहोस हुनु वा दौरा पर्नु",
+        "dizziness-fainting": "रिंगटा लाग्नु वा बेहोस हुनु",
+        "severe-vomiting": "कडा वाकवाकी",
+        "reduced-movement": "बच्चाको चाल कम हुनु",
+        "fluid-leaking": "पानी चुहिनु"
+    }
+},
+
+"navTabs": {
+    "homeTab": "गृह",
+    "medsTab": "औषधि",
+    "libraryTab": "पुस्तकालय",
+    "profileTab": "प्रोफाइल"
+},
+
+    "buttonArrows": {
+        "next": "अगाडि",
+        "back": "पछाडि",
+        "backAccessibility": "पछाडि जानुहोस्"
+
+    }
+}

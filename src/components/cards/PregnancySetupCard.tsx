@@ -3,14 +3,15 @@ import React from "react";
 import { AppColors } from "../../styles/colors";
 import { AppFonts } from "../../styles/fonts";
 import { s, vs } from "react-native-size-matters";
+import { useTranslation } from "react-i18next";
 
 const PregnancySetupCard = () => {
+  const { t } = useTranslation();
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Pregnancy Setup</Text>
+      <Text style={styles.title}>{t("initialSetupScreen.setupTitle")}</Text>
       <Text style={styles.content}>
-        We need a few details to accurately track your pregnancy progress and
-        provide the right information at the right time.
+        {t("initialSetupScreen.setupDescription")}
       </Text>
     </View>
   );

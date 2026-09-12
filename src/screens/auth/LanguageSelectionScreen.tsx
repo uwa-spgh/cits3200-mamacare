@@ -6,33 +6,49 @@ import AppText from "../../components/texts/AppText";
 import { AppColors } from "../../styles/colors";
 import { AppFonts } from "../../styles/fonts";
 import AppButton from "../../components/buttons/AppButton";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from "expo-router/react-navigation";
 import NavFooter from "../../components/footers/NavFooter";
+import { useDispatch, useSelector } from "react-redux";
+import { setLanguage } from "../../store/reducers/dataReducers";
+import { useTranslation } from "react-i18next";
+import i18n from "../../localization/i18n";
 
 const LanguageSelectionScreen = () => {
   const navigation = useNavigation<any>();
+  const language = useSelector(
+    (state: { dataReducer: { language: string } }) => state.dataReducer.language
+  );
+  const dispatch = useDispatch();
+
+  const {t} = useTranslation();
 
   return (
     <>
       <AppSafeView style={styles.container}>
-        <AppText style={styles.mainHeading}>Language Selection</AppText>
+        <AppText style={styles.mainHeading}>{t("languageSelectionScreen.languageSelection")}</AppText>
         <View style={{ paddingHorizontal: s(20) }}>
           <AppText style={styles.secText}>
-            Please choose your preferred language to continue.
+            {t("languageSelectionScreen.langSelectText")}
           </AppText>
         </View>
 
         <View style={styles.btsContainer}>
           <AppButton
-            title="English"
+            title={t("languageSelectionScreen.englishOption")}
             style={styles.btnEnglish}
-            onPress={() => navigation.navigate("MainAppBottomTabs")}
+            onPress={() => {
+              dispatch(setLanguage('en'))
+              i18n.changeLanguage('en')
+            }}
           />
           <AppButton
-            title="Nepali (नेपाली)"
+            title={t("languageSelectionScreen.nepaliOption")}
             style={styles.btnNepali}
             textColor={AppColors.text_secondary}
-            onPress={() => navigation.navigate("MainAppBottomTabs")}
+            onPress={() => {
+              dispatch(setLanguage('ne'))
+              i18n.changeLanguage('ne')
+            }}
           />
         </View>
       </AppSafeView>
