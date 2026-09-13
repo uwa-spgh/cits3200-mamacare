@@ -10,7 +10,8 @@
         "homeTab": "Home",
         "medsTab": "Meds",
         "libraryTab": "Library",
-        "profileTab": "Profile"
+        "profileTab": "Profile",
+        "plannerTab": "Planner"
 
     },
 

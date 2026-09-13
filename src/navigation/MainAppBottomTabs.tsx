@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from "expo-router/js-tabs";
 import HomeScreen from "../screens/home/HomeScreen";
-import ProfileScreen from "../screens/profile/ProfileScreen";
+import PlannerScreen from "../screens/planner/PlannerScreen";
 import MedsScreen from "../screens/meds/MedsScreen";
 import LibraryScreen from "../screens/library/LibraryScreen";
 import { AppColors } from "../styles/colors";
@@ -40,6 +40,13 @@ export default function MainAppBottomTabs() {
           title: t("navTabs.homeTab"),
         }}
       />
+
+      <Tab.Screen name="Planner" component={PlannerScreen} options={{
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome5 name="calendar-alt" size={size} color={color}/>
+          ),
+          title: t("navTabs.plannerTab"),
+        }}/>
       <Tab.Screen
         name="Meds"
         component={MedsScreen}
@@ -56,12 +63,6 @@ export default function MainAppBottomTabs() {
             <FontAwesome5 name="university" size={size} color={color}/>
           ),
           title:t("navTabs.libraryTab"),
-        }}/>
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome5 name="user" size={size} color={color}/>
-          ),
-          title: t("navTabs.profileTab"),
         }}/>
     </Tab.Navigator>
   );

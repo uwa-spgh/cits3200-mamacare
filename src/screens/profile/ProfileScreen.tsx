@@ -1,11 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import AppSafeView from '../../components/views/AppSafeView'
 
 const ProfileScreen = () => {
   return (
-    <View>
+    <AppSafeView>
       <Text>ProfileScreen</Text>
-    </View>
+    </AppSafeView>
   )
 }
 
