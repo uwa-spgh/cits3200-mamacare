@@ -12,6 +12,7 @@ import {
   View,
 } from "react-native";
 import AppSafeView from "../../components/views/AppSafeView";
+import HomeHeader from "../../components/headers/HomeHeader";
 
 const dates = [
   { day: "Mon", date: "12" },
@@ -203,6 +204,7 @@ export default function MedicationScreen() {
 
   return (
     <AppSafeView >
+      <HomeHeader />
       <ScrollView
         style={styles.screen}
         contentContainerStyle={styles.container}

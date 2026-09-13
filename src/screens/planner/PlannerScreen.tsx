@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 import AppSafeView from "../../components/views/AppSafeView";
+import HomeHeader from "../../components/headers/HomeHeader";
 
 type Visit = {
   id: string;
@@ -392,6 +393,7 @@ export default function PlannerScreen() {
 
   return (
     <AppSafeView style={styles.screen}>
+      <HomeHeader />
       {view === "schedule" ? (
         <AppointmentTracker
           appointment={selectedAppointment}
