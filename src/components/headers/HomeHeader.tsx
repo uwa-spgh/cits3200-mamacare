@@ -7,12 +7,23 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { AppFonts } from "../../styles/fonts";
 import MamaCareTopIcon from "./MamaCareTopIcon";
+import { useNavigation } from "expo-router";
 
 const HomeHeader = () => {
+
+   const navigation = useNavigation<any>()
+
   return (
     <View style={styles.container}>
       <MamaCareTopIcon/>
       <View style={styles.containerIcons}>
+        <TouchableOpacity onPress={() => navigation.navigate("ProfileScreen")}>
+          <MaterialCommunityIcons
+            name="account"
+            size={s(20)}
+            color={AppColors.text_secondary}
+          />
+        </TouchableOpacity>
         <TouchableOpacity>
           <MaterialIcons
             name="notifications"
@@ -48,7 +59,7 @@ const styles = StyleSheet.create({
   },
 
   containerIcons: {
-    width: s(60),
+    width: s(80),
     flexDirection: "row",
     justifyContent: "space-between",
   },

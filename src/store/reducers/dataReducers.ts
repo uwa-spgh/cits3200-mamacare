@@ -3,7 +3,7 @@ import {createSlice} from '@reduxjs/toolkit'
 
 const initialState = {
     language: 'en',
-    userName: '',
+    userName: 'Asha Sharma',
     edd: '',
 }
 
