@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import AppSafeView from "../../components/views/AppSafeView";
 import ProfilePicture from "../../components/profile/ProfilePicture";
@@ -12,6 +12,7 @@ import { AppColors } from "../../styles/colors";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { ScrollView } from "react-native-gesture-handler";
 import EddCard from "../../components/profile/EddCard";
+import JourneyCards from "../../components/profile/JourneyCards";
 
 const ProfileScreen = () => {
   const userName = useSelector(
@@ -39,6 +40,56 @@ const ProfileScreen = () => {
         </View>
         <View style={styles.eddContainer}>
           <EddCard />
+        </View>
+        <View style={styles.journey}>
+          <View style={styles.contentJourney}>
+            <AppText
+              style={{
+                fontFamily: AppFonts.TextBold,
+                fontSize: s(12),
+                color: AppColors.text_headings,
+                marginBottom: s(15),
+              }}
+            >
+              My Journey
+            </AppText>
+            <JourneyCards
+              title={"Personal Information"}
+              icon={
+                <MaterialCommunityIcons
+                  name="account-outline"
+                  size={s(20)}
+                  color={AppColors.white}
+                />
+              }
+              onPress={() => Alert.alert("Coming soon", "This feature will be added later.")}
+              backgroundColor={AppColors.button_primary_accent}
+            />
+            <JourneyCards
+              title={"Medical History"}
+              icon={
+                <MaterialCommunityIcons
+                  name="medical-bag"
+                  size={s(20)}
+                  color={AppColors.icon_border_green}
+                />
+              }
+              onPress={() => Alert.alert("Coming soon", "This feature will be added later.")}
+              backgroundColor={AppColors.cyan}
+            />
+            <JourneyCards
+              title={"Emergency Contacts"}
+              icon={
+                <MaterialCommunityIcons
+                  name="asterisk"
+                  size={s(20)}
+                  color={AppColors.marron}
+                />
+              }
+              onPress={() => Alert.alert("Coming soon", "This feature will be added later.")}
+              backgroundColor={AppColors.icon_bg_emergency}
+            />
+          </View>
         </View>
       </ScrollView>
     </AppSafeView>
@@ -86,5 +137,16 @@ const styles = StyleSheet.create({
   eddContainer: {
     alignItems: "center",
     justifyContent: "center",
-  }
+  },
+
+  journey: {
+    width: "100%",
+    marginVertical: vs(15),
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  contentJourney: {
+    width: "80%",
+  },
 });

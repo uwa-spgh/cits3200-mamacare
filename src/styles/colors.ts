@@ -20,5 +20,8 @@ export const AppColors = {
     text_secondary: '#584144',
     text_headings: '#25181A',
     section_green: '#006B32',
-    alert_heading_red: '#BA1A1A'
+    alert_heading_red: '#BA1A1A',
+    icon_border_green: '#006F62',
+    icon_bg_emergency: '#FFDAD6',
+    marron: '#93000A'
 }
