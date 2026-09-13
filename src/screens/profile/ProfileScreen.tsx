@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, Settings, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import AppSafeView from "../../components/views/AppSafeView";
 import ProfilePicture from "../../components/profile/ProfilePicture";
@@ -13,6 +13,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { ScrollView } from "react-native-gesture-handler";
 import EddCard from "../../components/profile/EddCard";
 import JourneyCards from "../../components/profile/JourneyCards";
+import { Ionicons } from "@expo/vector-icons";
 
 const ProfileScreen = () => {
   const userName = useSelector(
@@ -62,7 +63,9 @@ const ProfileScreen = () => {
                   color={AppColors.white}
                 />
               }
-              onPress={() => Alert.alert("Coming soon", "This feature will be added later.")}
+              onPress={() =>
+                Alert.alert("Coming soon", "This feature will be added later.")
+              }
               backgroundColor={AppColors.button_primary_accent}
             />
             <JourneyCards
@@ -74,7 +77,9 @@ const ProfileScreen = () => {
                   color={AppColors.icon_border_green}
                 />
               }
-              onPress={() => Alert.alert("Coming soon", "This feature will be added later.")}
+              onPress={() =>
+                Alert.alert("Coming soon", "This feature will be added later.")
+              }
               backgroundColor={AppColors.cyan}
             />
             <JourneyCards
@@ -86,9 +91,98 @@ const ProfileScreen = () => {
                   color={AppColors.marron}
                 />
               }
-              onPress={() => Alert.alert("Coming soon", "This feature will be added later.")}
+              onPress={() =>
+                Alert.alert("Coming soon", "This feature will be added later.")
+              }
               backgroundColor={AppColors.icon_bg_emergency}
             />
+          </View>
+        </View>
+        <View style={styles.settings}>
+          <View style={styles.settingsContent}>
+            <AppText
+              style={{
+                fontFamily: AppFonts.TextBold,
+                fontSize: s(12),
+                color: AppColors.text_headings,
+                marginBottom: s(15),
+              }}
+            >
+              App Settings
+            </AppText>
+            <View style={styles.settingsOptions}>
+              <JourneyCards
+                title={"Language"}
+                icon={
+                  <Ionicons
+                    name="globe-outline"
+                    size={s(20)}
+                    color={AppColors.text_headings}
+                  />
+                }
+                onPress={() =>
+                  Alert.alert(
+                    "Coming soon",
+                    "This feature will be added later.",
+                  )
+                }
+                backgroundColor={AppColors.white}
+                style={{
+                  borderWidth: 0,
+                  marginBottom: 0,
+                  height: s(40),
+                  paddingVertical: 0
+                }}
+              />
+              <View style={styles.separator}></View>
+              <JourneyCards
+                title={"Notifications"}
+                icon={
+                  <MaterialCommunityIcons
+                    name="bell-ring-outline"
+                    size={s(20)}
+                    color={AppColors.text_headings}
+                  />
+                }
+                onPress={() =>
+                  Alert.alert(
+                    "Coming soon",
+                    "This feature will be added later.",
+                  )
+                }
+                backgroundColor={AppColors.white}
+                style={{
+                  borderWidth: 0,
+                  marginBottom: 0,
+                  height: s(40),
+                  paddingVertical: 0
+                }}
+              />
+              <View style={styles.separator}></View>
+              <JourneyCards
+                title={"Help and Support"}
+                icon={
+                  <Ionicons
+                    name="help-circle-outline"
+                    size={s(20)}
+                    color={AppColors.text_headings}
+                  />
+                }
+                onPress={() =>
+                  Alert.alert(
+                    "Coming soon",
+                    "This feature will be added later.",
+                  )
+                }
+                backgroundColor={AppColors.white}
+                style={{
+                  borderWidth: 0,
+                  marginBottom: 0,
+                  height: s(40),
+                  paddingVertical: 0
+                }}
+              />
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -106,6 +200,7 @@ const styles = StyleSheet.create({
 
   scrollArea: {
     flex: 1,
+    marginBottom: s(20),
   },
 
   profileInfo: {
@@ -149,4 +244,28 @@ const styles = StyleSheet.create({
   contentJourney: {
     width: "80%",
   },
+
+  settings: {
+    width: "100%",
+    marginBottom: s(15),
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  settingsContent: {
+    width: "80%",
+  },
+
+  settingsOptions: {
+    borderWidth: s(1),
+    borderColor: AppColors.stroke_primary,
+    borderRadius: s(10),
+    backgroundColor: AppColors.white
+  },
+
+  separator:{
+        height: s(1),
+        width: '100%',
+        backgroundColor: AppColors.stroke_primary,
+    },
 });
