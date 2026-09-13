@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Pressable,
   ScrollView,
@@ -282,17 +283,33 @@ const defaultState: PlannerState = {
 };
 
 export default function PlannerScreen() {
+  const { t } = useTranslation();
   const [view, setView] = useState<"schedule" | "checklist">("schedule");
   const [state, setState] = useState(defaultState);
   const [hasLoadedState, setHasLoadedState] = useState(false);
   const selectedVisit = useMemo(
-    () => visits.find((visit) => visit.id === state.selectedVisitId) ?? visits[0],
-    [state.selectedVisitId],
+    () => {
+      const visit = visits.find((item) => item.id === state.selectedVisitId) ?? visits[0];
+      const translationKey = `plannerScreen.contacts.${visit.id}`;
+
+      return {
+        ...visit,
+        title: t(`${translationKey}.title`),
+        timing: t(`${translationKey}.timing`),
+        trimester: t(`${translationKey}.trimester`),
+        date: t(`${translationKey}.date`),
+        summary: t(`${translationKey}.summary`),
+        advice: t(`${translationKey}.advice`, { returnObjects: true }) as unknown as string[],
+        checks: t(`${translationKey}.checks`, { returnObjects: true }) as unknown as string[],
+        dangerSigns: t(`${translationKey}.dangerSigns`, { returnObjects: true }) as unknown as string[],
+      };
+    },
+    [state.selectedVisitId, t],
   );
   const selectedChecks = state.checklist[selectedVisit.id] ?? [];
   const selectedAppointment = state.appointments[selectedVisit.id] ?? {
     date: selectedVisit.date,
-    facility: "Local health facility",
+    facility: t("plannerScreen.localFacility"),
   };
 
   useEffect(() => {
@@ -382,7 +399,20 @@ export default function PlannerScreen() {
           onBook={() => setView("checklist")}
           onSelectVisit={selectVisit}
           selectedVisitId={selectedVisit.id}
-          visits={visits}
+          visits={visits.map((visit) => {
+            const translationKey = `plannerScreen.contacts.${visit.id}`;
+            return {
+              ...visit,
+              title: t(`${translationKey}.title`),
+              timing: t(`${translationKey}.timing`),
+              trimester: t(`${translationKey}.trimester`),
+              date: t(`${translationKey}.date`),
+              summary: t(`${translationKey}.summary`),
+              advice: t(`${translationKey}.advice`, { returnObjects: true }) as unknown as string[],
+              checks: t(`${translationKey}.checks`, { returnObjects: true }) as unknown as string[],
+              dangerSigns: t(`${translationKey}.dangerSigns`, { returnObjects: true }) as unknown as string[],
+            };
+          })}
         />
       ) : (
         <VisitChecklist
@@ -417,14 +447,15 @@ function AppointmentTracker({
   selectedVisitId: string;
   visits: Visit[];
 }) {
+  const { t } = useTranslation();
   const selectedVisit = visits.find((visit) => visit.id === selectedVisitId) ?? visits[0];
 
   return (
     <ScrollView contentContainerStyle={styles.content}>
-      <Text style={styles.pageTitle}>Appointments</Text>
+      <Text style={styles.pageTitle}>{t("plannerScreen.appointments")}</Text>
       <View style={styles.nextCard}>
         <View>
-          <Text style={styles.nextLabel}>Next Appointment</Text>
+          <Text style={styles.nextLabel}>{t("plannerScreen.nextAppointment")}</Text>
           <Text style={styles.nextTitle}>{selectedVisit.title}</Text>
         </View>
         <View style={styles.calendarBadge}>
@@ -442,7 +473,7 @@ function AppointmentTracker({
         </View>
       </View>
 
-      <Text style={styles.sectionTitle}>Visit Schedule</Text>
+      <Text style={styles.sectionTitle}>{t("plannerScreen.visitSchedule")}</Text>
       <View style={styles.timeline}>
         {visits.map((visit, index) => (
           <VisitCard
@@ -458,7 +489,7 @@ function AppointmentTracker({
 
       <Pressable style={styles.primaryButton} onPress={onBook}>
         <Ionicons name="add-circle-outline" color="#FFFFFF" size={18} />
-        <Text style={styles.primaryButtonText}>Prepare for Appointment</Text>
+        <Text style={styles.primaryButtonText}>{t("plannerScreen.prepareAppointment")}</Text>
       </Pressable>
     </ScrollView>
   );
@@ -477,6 +508,7 @@ function VisitCard({
   selected: boolean;
   visit: Visit;
 }) {
+  const { t } = useTranslation();
   return (
     <Pressable onPress={onPress} style={styles.visitRow}>
       <View style={styles.timelineRail}>
@@ -506,7 +538,11 @@ function VisitCard({
               completed ? styles.statusDone : selected ? styles.statusUpcoming : styles.statusLater,
             ]}
           >
-            {completed ? "Completed" : selected ? "Upcoming" : visit.trimester}
+            {completed
+              ? t("plannerScreen.completed")
+              : selected
+                ? t("plannerScreen.upcoming")
+                : visit.trimester}
           </Text>
         </View>
         <Text style={styles.visitTiming}>{visit.timing}</Text>
@@ -541,13 +577,14 @@ function VisitChecklist({
   visit: Visit;
   visitComplete: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <ScrollView contentContainerStyle={styles.content}>
       <Pressable onPress={onBack} style={styles.backInline}>
         <Ionicons name="arrow-back" color="#5F414A" size={20} />
-        <Text style={styles.backInlineText}>Planner</Text>
+        <Text style={styles.backInlineText}>{t("plannerScreen.planner")}</Text>
       </Pressable>
-      <Text style={styles.checklistTitle}>Visit Checklist</Text>
+      <Text style={styles.checklistTitle}>{t("plannerScreen.visitChecklist")}</Text>
       <View style={styles.visitChip}>
         <Ionicons name="calendar" color="#156A5E" size={15} />
         <Text style={styles.visitChipText}>
@@ -557,13 +594,13 @@ function VisitChecklist({
       <Text style={styles.description}>{visit.summary}</Text>
 
       <View style={styles.editCard}>
-        <Text style={styles.inputLabel}>Appointment date and time</Text>
+        <Text style={styles.inputLabel}>{t("plannerScreen.appointmentDateTime")}</Text>
         <TextInput
           onChangeText={(value) => onUpdateAppointment("date", value)}
           style={styles.input}
           value={appointment.date}
         />
-        <Text style={styles.inputLabel}>Facility or provider</Text>
+        <Text style={styles.inputLabel}>{t("plannerScreen.facilityProvider")}</Text>
         <TextInput
           onChangeText={(value) => onUpdateAppointment("facility", value)}
           style={styles.input}
@@ -577,31 +614,31 @@ function VisitChecklist({
         items={visit.checks}
         onToggle={onToggleCheck}
         selectedItems={checkedItems}
-        title="Before and During Your Visit"
+        title={t("plannerScreen.beforeDuringVisit")}
       />
       <InfoSection
         color={BRAND}
         icon="heart-circle"
         items={visit.advice}
-        title="Health Advice"
+        title={t("plannerScreen.healthAdvice")}
       />
       <InfoSection
         color="#D94370"
         icon="warning"
         items={visit.dangerSigns}
-        title="Danger Signs"
+        title={t("plannerScreen.dangerSigns")}
       />
       <View style={styles.panel}>
         <View style={styles.panelHeading}>
           <View style={[styles.panelIcon, { backgroundColor: "#F4DDE4" }]}>
             <Ionicons name="create-outline" color={BRAND_DARK} size={21} />
           </View>
-          <Text style={styles.panelTitle}>Notes for Provider</Text>
+          <Text style={styles.panelTitle}>{t("plannerScreen.notesForProvider")}</Text>
         </View>
         <TextInput
           multiline
           onChangeText={onUpdateNotes}
-          placeholder="E.g., Ask about safe sleeping positions, mention headaches..."
+          placeholder={t("plannerScreen.notesPlaceholder")}
           placeholderTextColor="#9D858C"
           style={styles.notesInput}
           textAlignVertical="top"
@@ -615,7 +652,9 @@ function VisitChecklist({
           size={18}
         />
         <Text style={styles.primaryButtonText}>
-          {visitComplete ? "Visit Completed" : "Complete Visit"}
+          {visitComplete
+            ? t("plannerScreen.visitCompleted")
+            : t("plannerScreen.completeVisit")}
         </Text>
       </Pressable>
     </ScrollView>

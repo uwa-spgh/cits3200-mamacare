@@ -185,6 +185,77 @@
         "viewHistory": "View Adherence History"
     },
 
+    "plannerScreen": {
+        "appointments": "Appointments",
+        "nextAppointment": "Next Appointment",
+        "localFacility": "Local health facility",
+        "visitSchedule": "Visit Schedule",
+        "prepareAppointment": "Prepare for Appointment",
+        "completed": "Completed",
+        "upcoming": "Upcoming",
+        "planner": "Planner",
+        "visitChecklist": "Visit Checklist",
+        "appointmentDateTime": "Appointment date and time",
+        "facilityProvider": "Facility or provider",
+        "beforeDuringVisit": "Before and During Your Visit",
+        "healthAdvice": "Health Advice",
+        "dangerSigns": "Danger Signs",
+        "notesForProvider": "Notes for Provider",
+        "notesPlaceholder": "E.g., Ask about safe sleeping positions, mention headaches...",
+        "visitCompleted": "Visit Completed",
+        "completeVisit": "Complete Visit",
+        "contacts": {
+            "anc-1": {
+                "title": "1st ANC Visit", "timing": "Up to 12 weeks", "trimester": "First trimester", "date": "Before week 12", "summary": "Start antenatal care early and register your pregnancy.",
+                "advice": ["Enter LMP and confirm your expected date of delivery.", "Start daily iron-folic acid tablets as advised.", "Eat balanced local foods such as rice, dal, leafy greens, eggs, fish, and fruits.", "Plan your delivery facility, transport, and emergency contact person."],
+                "checks": ["Bring your ANC card or health record", "Blood pressure check", "Weight and height measurement", "Urine test for protein", "Haemoglobin or anaemia check", "Blood grouping and blood sugar check"],
+                "dangerSigns": ["Bleeding", "Severe abdominal pain", "Severe headache", "Blurred vision", "High fever"]
+            },
+            "anc-2": {
+                "title": "2nd ANC Visit", "timing": "20 weeks", "trimester": "Second trimester", "date": "Week 20", "summary": "Continue supplements and check your baby growth.",
+                "advice": ["Continue iron-folic acid and other supplements.", "Ask whether your Td vaccine dose is due.", "Tell your health worker about swelling, headache, or bleeding."],
+                "checks": ["Bring your health card", "Prepare questions for the midwife", "Blood pressure check", "Weight measurement", "Fundal height check", "Fetal heartbeat check", "Urine test for protein"],
+                "dangerSigns": ["Severe headache", "Blurred vision", "Swelling of face or hands", "Any bleeding"]
+            },
+            "anc-3": {
+                "title": "3rd ANC Visit", "timing": "26 weeks", "trimester": "Second trimester", "date": "Week 26", "summary": "Prepare for the third trimester and start birth preparedness.",
+                "advice": ["Continue iron-folic acid tablets.", "Check in on your mental wellbeing.", "Decide the place of delivery.", "Arrange transport and save emergency contact numbers.", "Prepare a delivery bag and essential newborn items."],
+                "checks": ["Bring your health card", "Review your birth plan", "Blood pressure check", "Weight measurement", "Fundal height check", "Fetal heartbeat check", "Discuss delivery facility and transport"],
+                "dangerSigns": ["Severe abdominal pain", "Reduced fetal movement", "Any bleeding"]
+            },
+            "anc-4": {
+                "title": "4th ANC Visit", "timing": "30 weeks", "trimester": "Third trimester", "date": "Week 30", "summary": "Confirm delivery preparation and skilled birth attendance.",
+                "advice": ["Confirm your chosen delivery facility.", "Talk about skilled birth attendance.", "Start preparing for breastfeeding.", "Share key information with family or a support person."],
+                "checks": ["Blood pressure check", "Weight measurement", "Fundal height check", "Fetal heartbeat check", "Review breastfeeding preparation", "Confirm delivery facility"],
+                "dangerSigns": ["Bleeding", "Watery discharge or fluid leakage", "Reduced fetal movement"]
+            },
+            "anc-5": {
+                "title": "5th ANC Visit", "timing": "34 weeks", "trimester": "Third trimester", "date": "Week 34", "summary": "Learn labour signs and prepare newborn care items.",
+                "advice": ["Learn signs that labour is starting.", "Prepare your delivery bag.", "Plan to keep the baby warm with skin-to-skin contact.", "Plan early and exclusive breastfeeding."],
+                "checks": ["Blood pressure check", "Weight measurement", "Fundal height check", "Fetal heartbeat check", "Review labour warning signs", "Check delivery bag items"],
+                "dangerSigns": ["Contractions before 37 weeks", "Reduced fetal movement", "Bleeding", "Severe headache or swelling"]
+            },
+            "anc-6": {
+                "title": "6th ANC Visit", "timing": "36 weeks", "trimester": "Third trimester", "date": "Week 36", "summary": "Do the final birth preparation and emergency plan review.",
+                "advice": ["Review your emergency plan.", "Confirm your transport plan.", "Save facility and family contact numbers.", "Ask about family planning information."],
+                "checks": ["Blood pressure check", "Weight measurement", "Fundal height check", "Fetal heartbeat check", "Confirm transport plan", "Save emergency contacts"],
+                "dangerSigns": ["Bleeding", "Watery discharge or fluid leakage", "Reduced fetal movement", "Abnormal position confirmed at visit"]
+            },
+            "anc-7": {
+                "title": "7th ANC Visit", "timing": "38 weeks", "trimester": "Third trimester", "date": "Week 38", "summary": "Prepare to go to the facility when labour signs begin.",
+                "advice": ["Know when labour starts.", "Go to your chosen facility as soon as labour signs begin.", "Ask when emergency care is needed.", "Keep your ready-for-delivery items together."],
+                "checks": ["Blood pressure check", "Weight measurement", "Fundal height check", "Fetal heartbeat check", "Confirm ready-for-delivery plan", "Review emergency care signs"],
+                "dangerSigns": ["Signs labour is starting", "Reduced or no fetal movement", "Bleeding", "Severe abdominal pain"]
+            },
+            "anc-8": {
+                "title": "8th ANC Visit", "timing": "40 weeks", "trimester": "Third trimester", "date": "Week 40", "summary": "Visit the facility for assessment if labour has not started.",
+                "advice": ["Ask what to do if labour has not started.", "Prepare for routine assessment after 40 weeks.", "Learn how the app will move from ANC to postnatal care after birth registration."],
+                "checks": ["Blood pressure check", "Weight measurement", "Fundal height check", "Fetal heartbeat check", "Discuss post-term assessment", "Ask about postnatal care schedule"],
+                "dangerSigns": ["No labour by 41 weeks", "Reduced or no fetal movement", "Bleeding", "Signs labour is starting"]
+            }
+        }
+    },
+
     "buttonArrows": {
         "next": "Next",
         "back": "Back",
