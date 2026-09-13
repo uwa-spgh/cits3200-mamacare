@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useMedications } from "../../context/MedicationContext";
 import {
     ScrollView,
@@ -17,6 +18,7 @@ type Period = "Morning" | "Afternoon" | "Evening";
 
 export default function AddMedicationScreen() {
     const { addMedication } = useMedications();
+    const { t } = useTranslation();
     
     const [name, setName] = useState("");
     const [dosage, setDosage] = useState("");
@@ -55,42 +57,42 @@ export default function AddMedicationScreen() {
                     <Ionicons name="arrow-back" size={24} color="#AE214D" />
                 </TouchableOpacity>
 
-                <Text style={styles.title}>Add Medication</Text>
+                <Text style={styles.title}>{t("addMedicationScreen.title")}</Text>
             </View>
 
-            <Text style={styles.label}>Medication or supplement name</Text>
+            <Text style={styles.label}>{t("medicationScreen.medicationName")}</Text>
             <TextInput
                 style={styles.input}
-                placeholder="e.g. Iron & Folic Acid"
+                placeholder={t("addMedicationScreen.namePlaceholder")}
                 value={name}
                 onChangeText={setName}
             />
 
-            <Text style={styles.label}>Dosage</Text>
+            <Text style={styles.label}>{t("medicationScreen.dosage")}</Text>
             <TextInput
                 style={styles.input}
-                placeholder="e.g. 1 pill"
+                placeholder={t("addMedicationScreen.dosagePlaceholder")}
                 value={dosage}
                 onChangeText={setDosage}
             />
 
-            <Text style={styles.label}>Instructions</Text>
+            <Text style={styles.label}>{t("medicationScreen.instructions")}</Text>
             <TextInput
                 style={styles.input}
-                placeholder="e.g. Take with food"
+                placeholder={t("addMedicationScreen.instructionsPlaceholder")}
                 value={instructions}
                 onChangeText={setInstructions}
             />
 
-            <Text style={styles.label}>Time</Text>
+            <Text style={styles.label}>{t("medicationScreen.time")}</Text>
             <TextInput
                 style={styles.input}
-                placeholder="e.g. 8:00 AM"
+                placeholder={t("addMedicationScreen.timePlaceholder")}
                 value={time}
                 onChangeText={setTime}
             />
 
-            <Text style={styles.label}>Time of day</Text>
+            <Text style={styles.label}>{t("medicationScreen.timeOfDay")}</Text>
 
             <View style={styles.periodRow}>
                 {(["Morning", "Afternoon", "Evening"] as Period[]).map((item) => {
@@ -111,7 +113,7 @@ export default function AddMedicationScreen() {
                                     selected && styles.periodButtonTextSelected,
                                 ]}
                             >
-                                {item}
+                                {t(`medicationScreen.${item.toLowerCase()}`)}
                             </Text>
                         </TouchableOpacity>
                     );
@@ -126,7 +128,7 @@ export default function AddMedicationScreen() {
                 disabled={!name.trim()}
                 onPress={handleSave}
             >
-                <Text style={styles.saveButtonText}>Save Medication</Text>
+                <Text style={styles.saveButtonText}>{t("addMedicationScreen.save")}</Text>
             </TouchableOpacity>
         </ScrollView>
         </AppSafeView>

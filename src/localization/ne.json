@@ -124,6 +124,58 @@
     }
 },
 
+"medicationScreen": {
+    "medicationName": "औषधि वा पूरकको नाम",
+    "dosage": "मात्रा",
+    "instructions": "निर्देशनहरू",
+    "time": "समय",
+    "timeOfDay": "दिनको समय",
+    "morning": "बिहान",
+    "afternoon": "दिउँसो",
+    "evening": "साँझ",
+    "taken": "लिइयो",
+    "missed": "छुट्यो",
+    "takenAt": "{{time}} मा लिइयो",
+    "dueAt": "{{time}} मा लिनुपर्ने"
+},
+
+"addMedicationScreen": {
+    "title": "औषधि थप्नुहोस्",
+    "namePlaceholder": "जस्तै: फलाम र फोलिक एसिड",
+    "dosagePlaceholder": "जस्तै: १ चक्की",
+    "instructionsPlaceholder": "जस्तै: खानासँगै लिनुहोस्",
+    "timePlaceholder": "जस्तै: बिहान ८:००",
+    "save": "औषधि सुरक्षित गर्नुहोस्"
+},
+
+"medicationDetailsScreen": {
+    "title": "औषधिको विवरण",
+    "save": "परिवर्तनहरू सुरक्षित गर्नुहोस्",
+    "delete": "औषधि मेटाउनुहोस्",
+    "notFound": "औषधि भेटिएन।",
+    "backToMedications": "औषधिहरूमा फर्कनुहोस्"
+},
+
+"medicationHistoryScreen": {
+    "title": "औषधि सेवनको इतिहास",
+    "emptyTitle": "अहिलेसम्म औषधि सेवनको कुनै इतिहास छैन",
+    "emptyDescription": "औषधिहरू लिइयो वा छुट्यो भनी चिन्ह लगाइएपछि यहाँ औषधि सेवनको गतिविधि देखिनेछ।"
+},
+
+"medsScreen": {
+    "title": "औषधिहरू",
+    "mon": "सोम",
+    "tue": "मंगल",
+    "wed": "बुध",
+    "thu": "बिहि",
+    "fri": "शुक्र",
+    "todaysProgress": "आजको प्रगति",
+    "takenCount": "{{total}} मध्ये {{taken}} लिइयो",
+    "todaysSchedule": "आजको तालिका",
+    "addNew": "नयाँ औषधि थप्नुहोस्",
+    "viewHistory": "सेवन इतिहास हेर्नुहोस्"
+},
+
 "navTabs": {
     "homeTab": "गृह",
     "medsTab": "औषधि",

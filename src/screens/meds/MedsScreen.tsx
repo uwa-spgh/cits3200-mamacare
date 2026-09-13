@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigation } from "expo-router";
 import Svg, { Circle, Path } from "react-native-svg";
 import { Medication, useMedications } from "../../context/MedicationContext";
@@ -64,6 +65,7 @@ const describeArc = (
 
 export default function MedicationScreen() {
   const navigation = useNavigation<any>();
+  const { t } = useTranslation();
   const [selectedDate, setSelectedDate] = useState("14");
   const { medications, toggleMedicationTaken } = useMedications();
   const takenCount = medications.filter(
@@ -99,7 +101,9 @@ export default function MedicationScreen() {
           <View style={styles.periodHeading}>
             <Ionicons name={getPeriodIcon(period)} size={16} color="#6A5058" />
 
-            <Text style={styles.periodTitle}>{period}</Text>
+            <Text style={styles.periodTitle}>
+              {t(`medicationScreen.${period.toLowerCase()}`)}
+            </Text>
           </View>
 
           {items.map((medication) => (
@@ -141,7 +145,7 @@ export default function MedicationScreen() {
                     />
 
                     <Text style={styles.takenStatus}>
-                      Taken at {medication.time}
+                      {t("medicationScreen.takenAt", { time: medication.time })}
                     </Text>
                   </View>
                 ) : medication.missed ? (
@@ -149,12 +153,12 @@ export default function MedicationScreen() {
                     <Ionicons name="time" size={13} color="#F28C28" />
 
                     <Text style={styles.overdueStatus}>
-                      Due at {medication.time}
+                      {t("medicationScreen.dueAt", { time: medication.time })}
                     </Text>
                   </View>
                 ) : (
                   <Text style={styles.upcomingStatus}>
-                    Due at {medication.time}
+                    {t("medicationScreen.dueAt", { time: medication.time })}
                   </Text>
                 )}
               </View>
@@ -204,7 +208,7 @@ export default function MedicationScreen() {
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>Medications</Text>
+        <Text style={styles.title}>{t("medsScreen.title")}</Text>
 
         <View style={styles.dateRow}>
           {dates.map((item) => {
@@ -219,7 +223,7 @@ export default function MedicationScreen() {
                 <Text
                   style={[styles.dateDay, selected && styles.selectedDateText]}
                 >
-                  {item.day}
+                  {t(`medsScreen.${item.day.toLowerCase()}`)}
                 </Text>
 
                 <Text
@@ -237,10 +241,10 @@ export default function MedicationScreen() {
 
         <View style={styles.progressCard}>
           <View>
-            <Text style={styles.progressTitle}>Today's Progress</Text>
+            <Text style={styles.progressTitle}>{t("medsScreen.todaysProgress")}</Text>
 
             <Text style={styles.progressSubtitle}>
-              {takenCount} of {totalCount} taken
+              {t("medsScreen.takenCount", { taken: takenCount, total: totalCount })}
             </Text>
           </View>
 
@@ -274,7 +278,7 @@ export default function MedicationScreen() {
           </View>
         </View>
 
-        <Text style={styles.scheduleTitle}>Today's Schedule</Text>
+        <Text style={styles.scheduleTitle}>{t("medsScreen.todaysSchedule")}</Text>
 
         {renderMedicationSection("Morning", morningMedications)}
         {renderMedicationSection("Afternoon", afternoonMedications)}
@@ -287,7 +291,7 @@ export default function MedicationScreen() {
           }}
         >
           <Ionicons name="add" size={20} color="#FFFFFF" />
-          <Text style={styles.primaryButtonText}>Add New Medication</Text>
+          <Text style={styles.primaryButtonText}>{t("medsScreen.addNew")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -298,7 +302,7 @@ export default function MedicationScreen() {
         >
           <Ionicons name="time-outline" size={18} color="#BE1E50" />
 
-          <Text style={styles.secondaryButtonText}>View Adherence History</Text>
+          <Text style={styles.secondaryButtonText}>{t("medsScreen.viewHistory")}</Text>
         </TouchableOpacity>
       </ScrollView>
     </AppSafeView>

@@ -132,6 +132,58 @@
         }
     },
 
+    "medicationScreen": {
+        "medicationName": "Medication or supplement name",
+        "dosage": "Dosage",
+        "instructions": "Instructions",
+        "time": "Time",
+        "timeOfDay": "Time of day",
+        "morning": "Morning",
+        "afternoon": "Afternoon",
+        "evening": "Evening",
+        "taken": "Taken",
+        "missed": "Missed",
+        "takenAt": "Taken at {{time}}",
+        "dueAt": "Due at {{time}}"
+    },
+
+    "addMedicationScreen": {
+        "title": "Add Medication",
+        "namePlaceholder": "e.g. Iron & Folic Acid",
+        "dosagePlaceholder": "e.g. 1 pill",
+        "instructionsPlaceholder": "e.g. Take with food",
+        "timePlaceholder": "e.g. 8:00 AM",
+        "save": "Save Medication"
+    },
+
+    "medicationDetailsScreen": {
+        "title": "Medication Details",
+        "save": "Save Changes",
+        "delete": "Delete Medication",
+        "notFound": "Medication not found.",
+        "backToMedications": "Back to Medications"
+    },
+
+    "medicationHistoryScreen": {
+        "title": "Adherence History",
+        "emptyTitle": "No medication history yet",
+        "emptyDescription": "Medication activity will appear here when medications are marked as taken or missed."
+    },
+
+    "medsScreen": {
+        "title": "Medications",
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "todaysProgress": "Today's Progress",
+        "takenCount": "{{taken}} of {{total}} taken",
+        "todaysSchedule": "Today's Schedule",
+        "addNew": "Add New Medication",
+        "viewHistory": "View Adherence History"
+    },
+
     "buttonArrows": {
         "next": "Next",
         "back": "Back",

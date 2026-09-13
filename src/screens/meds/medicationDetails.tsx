@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "expo-router";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ScrollView,
   StyleSheet,
@@ -20,6 +21,7 @@ type DetailsRoute = {
 };
 
 export default function MedicationDetailsScreen() {
+  const { t } = useTranslation();
   const navigation = useNavigation<any>();
   const route = useRoute<DetailsRoute>();
   const id = route.params?.id;
@@ -74,13 +76,13 @@ export default function MedicationDetailsScreen() {
   if (!medication) {
     return (
       <View style={styles.notFoundContainer}>
-        <Text style={styles.notFoundText}>Medication not found.</Text>
+        <Text style={styles.notFoundText}>{t("medicationDetailsScreen.notFound")}</Text>
 
         <TouchableOpacity
           style={styles.backToMedicationButton}
           onPress={() => navigation.goBack()}
         >
-          <Text style={styles.backToMedicationText}>Back to Medications</Text>
+          <Text style={styles.backToMedicationText}>{t("medicationDetailsScreen.backToMedications")}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -107,14 +109,14 @@ export default function MedicationDetailsScreen() {
             <Ionicons name="arrow-back" size={24} color="#AE214D" />
           </TouchableOpacity>
 
-          <Text style={styles.title}>Medication Details</Text>
+          <Text style={styles.title}>{t("medicationDetailsScreen.title")}</Text>
         </View>
 
-        <Text style={styles.label}>Medication or supplement name</Text>
+        <Text style={styles.label}>{t("medicationScreen.medicationName")}</Text>
 
         <TextInput style={styles.input} value={name} onChangeText={setName} />
 
-        <Text style={styles.label}>Dosage</Text>
+        <Text style={styles.label}>{t("medicationScreen.dosage")}</Text>
 
         <TextInput
           style={styles.input}
@@ -122,7 +124,7 @@ export default function MedicationDetailsScreen() {
           onChangeText={setDosage}
         />
 
-        <Text style={styles.label}>Instructions</Text>
+        <Text style={styles.label}>{t("medicationScreen.instructions")}</Text>
 
         <TextInput
           style={styles.input}
@@ -130,11 +132,11 @@ export default function MedicationDetailsScreen() {
           onChangeText={setInstructions}
         />
 
-        <Text style={styles.label}>Time</Text>
+        <Text style={styles.label}>{t("medicationScreen.time")}</Text>
 
         <TextInput style={styles.input} value={time} onChangeText={setTime} />
 
-        <Text style={styles.label}>Time of day</Text>
+        <Text style={styles.label}>{t("medicationScreen.timeOfDay")}</Text>
 
         <View style={styles.periodRow}>
           {(["Morning", "Afternoon", "Evening"] as Period[]).map((item) => {
@@ -155,7 +157,7 @@ export default function MedicationDetailsScreen() {
                     selected && styles.periodButtonTextSelected,
                   ]}
                 >
-                  {item}
+                  {t(`medicationScreen.${item.toLowerCase()}`)}
                 </Text>
               </TouchableOpacity>
             );
@@ -163,13 +165,13 @@ export default function MedicationDetailsScreen() {
         </View>
 
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-          <Text style={styles.saveButtonText}>Save Changes</Text>
+          <Text style={styles.saveButtonText}>{t("medicationDetailsScreen.save")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
           <Ionicons name="trash-outline" size={18} color="#B42318" />
 
-          <Text style={styles.deleteButtonText}>Delete Medication</Text>
+          <Text style={styles.deleteButtonText}>{t("medicationDetailsScreen.delete")}</Text>
         </TouchableOpacity>
       </ScrollView>
     </AppSafeView>
