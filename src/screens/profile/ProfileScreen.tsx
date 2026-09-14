@@ -1,4 +1,11 @@
-import { Alert, Settings, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Settings,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import AppSafeView from "../../components/views/AppSafeView";
 import ProfilePicture from "../../components/profile/ProfilePicture";
@@ -16,6 +23,7 @@ import JourneyCards from "../../components/profile/JourneyCards";
 import { Ionicons } from "@expo/vector-icons";
 import { SheetManager } from "react-native-actions-sheet";
 import LanguageBottomSheet from "../../components/sheets/LanguageBottomSheet";
+import AppButton from "../../components/buttons/AppButton";
 
 const ProfileScreen = () => {
   const userName = useSelector(
@@ -133,15 +141,13 @@ const ProfileScreen = () => {
                     color={AppColors.text_headings}
                   />
                 }
-                onPress={() =>
-                  SheetManager.show('LANG_SHEET')
-                }
+                onPress={() => SheetManager.show("LANG_SHEET")}
                 backgroundColor={AppColors.white}
                 style={{
                   borderWidth: 0,
                   marginBottom: 0,
                   height: s(40),
-                  paddingVertical: 0
+                  paddingVertical: 0,
                 }}
               />
               <View style={styles.separator}></View>
@@ -165,7 +171,7 @@ const ProfileScreen = () => {
                   borderWidth: 0,
                   marginBottom: 0,
                   height: s(40),
-                  paddingVertical: 0
+                  paddingVertical: 0,
                 }}
               />
               <View style={styles.separator}></View>
@@ -189,15 +195,35 @@ const ProfileScreen = () => {
                   borderWidth: 0,
                   marginBottom: 0,
                   height: s(40),
-                  paddingVertical: 0
+                  paddingVertical: 0,
                 }}
               />
             </View>
           </View>
         </View>
-
+        <TouchableOpacity activeOpacity={0.6} style={styles.button}>
+          <View
+            style={{
+              flexDirection: "row",
+              paddingVertical: vs(5),
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <MaterialCommunityIcons
+              name="logout"
+              size={s(20)}
+              color={AppColors.text_headings}
+            />
+            <AppText style={{
+              fontFamily: AppFonts.TextRegular,
+              color: AppColors.text_headings,
+              fontSize: s(13),
+              marginLeft: s(5)
+            }}>Logout</AppText>
+          </View>
+        </TouchableOpacity>
       </ScrollView>
-      {/* <LanguageBottomSheet/> */}
     </AppSafeView>
   );
 };
@@ -272,12 +298,24 @@ const styles = StyleSheet.create({
     borderWidth: s(1),
     borderColor: AppColors.stroke_primary,
     borderRadius: s(10),
-    backgroundColor: AppColors.white
+    backgroundColor: AppColors.white,
   },
 
-  separator:{
-        height: s(1),
-        width: '100%',
-        backgroundColor: AppColors.stroke_primary,
-    },
+  separator: {
+    height: s(1),
+    width: "100%",
+    backgroundColor: AppColors.stroke_primary,
+  },
+
+  button: {
+    width: "80%",
+    height: vs(38),
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: s(20),
+    alignSelf: "center",
+    marginVertical: vs(10),
+    borderColor: "#8C7074",
+    borderWidth: s(1),
+  },
 });
