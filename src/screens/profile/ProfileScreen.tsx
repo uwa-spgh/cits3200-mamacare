@@ -14,6 +14,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import EddCard from "../../components/profile/EddCard";
 import JourneyCards from "../../components/profile/JourneyCards";
 import { Ionicons } from "@expo/vector-icons";
+import { SheetManager } from "react-native-actions-sheet";
+import LanguageBottomSheet from "../../components/sheets/LanguageBottomSheet";
 
 const ProfileScreen = () => {
   const userName = useSelector(
@@ -36,7 +38,9 @@ const ProfileScreen = () => {
               size={s(20)}
               color={AppColors.button_primary_accent}
             />
-            <AppText style={styles.gestationText}>Week 24</AppText>
+            <AppText style={styles.gestationText}>
+              {t("profileScreen.gestationWeek", { week: 24 })}
+            </AppText>
           </View>
         </View>
         <View style={styles.eddContainer}>
@@ -52,10 +56,10 @@ const ProfileScreen = () => {
                 marginBottom: s(15),
               }}
             >
-              My Journey
+              {t("profileScreen.myJourney")}
             </AppText>
             <JourneyCards
-              title={"Personal Information"}
+              title={t("profileScreen.personalInformation")}
               icon={
                 <MaterialCommunityIcons
                   name="account-outline"
@@ -64,12 +68,15 @@ const ProfileScreen = () => {
                 />
               }
               onPress={() =>
-                Alert.alert("Coming soon", "This feature will be added later.")
+                Alert.alert(
+                  t("profileScreen.comingSoon"),
+                  t("profileScreen.featureComingLater"),
+                )
               }
               backgroundColor={AppColors.button_primary_accent}
             />
             <JourneyCards
-              title={"Medical History"}
+              title={t("profileScreen.medicalHistory")}
               icon={
                 <MaterialCommunityIcons
                   name="medical-bag"
@@ -78,12 +85,15 @@ const ProfileScreen = () => {
                 />
               }
               onPress={() =>
-                Alert.alert("Coming soon", "This feature will be added later.")
+                Alert.alert(
+                  t("profileScreen.comingSoon"),
+                  t("profileScreen.featureComingLater"),
+                )
               }
               backgroundColor={AppColors.cyan}
             />
             <JourneyCards
-              title={"Emergency Contacts"}
+              title={t("profileScreen.emergencyContacts")}
               icon={
                 <MaterialCommunityIcons
                   name="asterisk"
@@ -92,7 +102,10 @@ const ProfileScreen = () => {
                 />
               }
               onPress={() =>
-                Alert.alert("Coming soon", "This feature will be added later.")
+                Alert.alert(
+                  t("profileScreen.comingSoon"),
+                  t("profileScreen.featureComingLater"),
+                )
               }
               backgroundColor={AppColors.icon_bg_emergency}
             />
@@ -108,11 +121,11 @@ const ProfileScreen = () => {
                 marginBottom: s(15),
               }}
             >
-              App Settings
+              {t("profileScreen.appSettings")}
             </AppText>
             <View style={styles.settingsOptions}>
               <JourneyCards
-                title={"Language"}
+                title={t("profileScreen.language")}
                 icon={
                   <Ionicons
                     name="globe-outline"
@@ -121,10 +134,7 @@ const ProfileScreen = () => {
                   />
                 }
                 onPress={() =>
-                  Alert.alert(
-                    "Coming soon",
-                    "This feature will be added later.",
-                  )
+                  SheetManager.show('LANG_SHEET')
                 }
                 backgroundColor={AppColors.white}
                 style={{
@@ -136,7 +146,7 @@ const ProfileScreen = () => {
               />
               <View style={styles.separator}></View>
               <JourneyCards
-                title={"Notifications"}
+                title={t("profileScreen.notifications")}
                 icon={
                   <MaterialCommunityIcons
                     name="bell-ring-outline"
@@ -146,8 +156,8 @@ const ProfileScreen = () => {
                 }
                 onPress={() =>
                   Alert.alert(
-                    "Coming soon",
-                    "This feature will be added later.",
+                    t("profileScreen.comingSoon"),
+                    t("profileScreen.featureComingLater"),
                   )
                 }
                 backgroundColor={AppColors.white}
@@ -160,7 +170,7 @@ const ProfileScreen = () => {
               />
               <View style={styles.separator}></View>
               <JourneyCards
-                title={"Help and Support"}
+                title={t("profileScreen.helpAndSupport")}
                 icon={
                   <Ionicons
                     name="help-circle-outline"
@@ -170,8 +180,8 @@ const ProfileScreen = () => {
                 }
                 onPress={() =>
                   Alert.alert(
-                    "Coming soon",
-                    "This feature will be added later.",
+                    t("profileScreen.comingSoon"),
+                    t("profileScreen.featureComingLater"),
                   )
                 }
                 backgroundColor={AppColors.white}
@@ -185,7 +195,9 @@ const ProfileScreen = () => {
             </View>
           </View>
         </View>
+
       </ScrollView>
+      {/* <LanguageBottomSheet/> */}
     </AppSafeView>
   );
 };

@@ -9,6 +9,12 @@ import { store } from "./src/store/store";
 import i18n from "./src/localization/i18n";
 import { I18nextProvider } from "react-i18next";
 import { MedicationProvider } from "./src/context/MedicationContext";
+import { registerSheet } from "react-native-actions-sheet";
+import LanguageBottomSheet from "./src/components/sheets/LanguageBottomSheet";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SheetProvider } from "react-native-actions-sheet";
+
+registerSheet("LANG_SHEET", LanguageBottomSheet);
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -36,16 +42,20 @@ export default function App() {
 
   return (
     <>
-      <Provider store={store}>
-        <I18nextProvider i18n={i18n}>
-          <NavigationContainer>
-            <MedicationProvider>
-              <FlashMessage position="top" />
-              <MainAppNavStack />
-            </MedicationProvider>
-          </NavigationContainer>
-        </I18nextProvider>
-      </Provider>
+      <SafeAreaProvider>
+        <SheetProvider>
+          <Provider store={store}>
+            <I18nextProvider i18n={i18n}>
+              <NavigationContainer>
+                <MedicationProvider>
+                  <FlashMessage position="top" />
+                  <MainAppNavStack />
+                </MedicationProvider>
+              </NavigationContainer>
+            </I18nextProvider>
+          </Provider>
+        </SheetProvider>
+      </SafeAreaProvider>
     </>
   );
 }

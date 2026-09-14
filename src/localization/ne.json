@@ -6,6 +6,32 @@
         "nepaliOption": "नेपाली (नेपाली)"
     },
 
+    "profileScreen": {
+    "gestationWeek": "हप्ता {{week}}",
+    "myJourney": "मेरो यात्रा",
+    "personalInformation": "व्यक्तिगत जानकारी",
+    "medicalHistory": "चिकित्सा इतिहास",
+    "emergencyContacts": "आपतकालीन सम्पर्कहरू",
+    "appSettings": "एप सेटिङ",
+    "language": "भाषा",
+    "notifications": "सूचनाहरू",
+    "helpAndSupport": "सहायता र समर्थन",
+    "comingSoon": "चाँडै आउँदैछ",
+    "featureComingLater": "यो सुविधा पछि थपिनेछ।"
+},
+
+"eddCard": {
+    "estimatedDueDate": "अनुमानित प्रसूति मिति",
+    "date": "अक्टोबर १२, २०२६",
+    "progress": "प्रगति",
+    "daysToGo": "४१ दिन बाँकी। तपाईं राम्रो गरिरहनुभएको छ!"
+},
+
+"languageBottomSheet": {
+    "selectLanguage": "भाषा छान्नुहोस्",
+    "confirm": "पुष्टि गर्नुहोस्"
+},
+
     "initialSetupScreen": {
     "setupTitle": "गर्भावस्था सेटअप",
     "setupDescription": "तपाईंको गर्भावस्थाको प्रगति सही रूपमा ट्र्याक गर्न र सही समयमा सही जानकारी दिन हामीलाई केही विवरणहरू चाहिन्छ।",

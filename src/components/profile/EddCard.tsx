@@ -6,15 +6,18 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import AppText from '../texts/AppText';
 import { AppFonts } from '../../styles/fonts';
 import ProgressBar from './ProgressBar';
+import { useTranslation } from 'react-i18next';
 
 const EddCard = () => {
+    const { t } = useTranslation();
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <FontAwesome5 name="calendar-alt" size={22} color={AppColors.button_primary_accent}/>
         <View style={styles.rightHeader}>
-            <AppText style={styles.edd}>Estimated Due Date</AppText>
-            <AppText style={styles.date}>Oct 12, 2026</AppText>
+            <AppText style={styles.edd}>{t("eddCard.estimatedDueDate")}</AppText>
+            <AppText style={styles.date}>{t("eddCard.date")}</AppText>
         </View>
       </View>
       <View style={styles.separator}></View>
@@ -23,7 +26,7 @@ const EddCard = () => {
             fontFamily: AppFonts.Heading1Bold,
             fontSize: s(12),
             color: AppColors.text_headings
-        }}>Progress</AppText>
+        }}>{t("eddCard.progress")}</AppText>
         <AppText style={{
             fontFamily: AppFonts.Heading1Bold,
             fontSize: s(12),
@@ -37,7 +40,7 @@ const EddCard = () => {
             fontSize: s(12),
             color: AppColors.text_secondary,
             marginTop: s(10)
-      }}>41 days to go. You're doing great!</AppText>
+    }}>{t("eddCard.daysToGo")}</AppText>
     </View>
   )
 }

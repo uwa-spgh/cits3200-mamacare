@@ -15,6 +15,32 @@
 
     },
 
+    "profileScreen": {
+        "gestationWeek": "Week {{week}}",
+        "myJourney": "My Journey",
+        "personalInformation": "Personal Information",
+        "medicalHistory": "Medical History",
+        "emergencyContacts": "Emergency Contacts",
+        "appSettings": "App Settings",
+        "language": "Language",
+        "notifications": "Notifications",
+        "helpAndSupport": "Help and Support",
+        "comingSoon": "Coming soon",
+        "featureComingLater": "This feature will be added later."
+    },
+
+    "eddCard": {
+        "estimatedDueDate": "Estimated Due Date",
+        "date": "Oct 12, 2026",
+        "progress": "Progress",
+        "daysToGo": "41 days to go. You're doing great!"
+    },
+
+    "languageBottomSheet": {
+        "selectLanguage": "Select Language",
+        "confirm": "Confirm"
+    },
+
     "initialSetupScreen": {
         "setupTitle": "Pregnancy Setup",
         "setupDescription": "We need a few details to accurately track your pregnancy progress and provide the right information at the right time.",
