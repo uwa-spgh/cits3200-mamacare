@@ -102,7 +102,7 @@ export default function HomeScreen() {
         <Pressable
           style={styles.actionButton}
           onPress={() =>
-            router.push("/screens/screens/Health-and-Edu-screen")
+            router.push("/(tabs)/library")
           }
         >
           <Ionicons name="book" size={32} color="#B62555" />
