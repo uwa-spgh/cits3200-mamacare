@@ -1,6 +1,7 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
+import { AppIconView } from "@/components/health-education/app-icon";
 import { colors, EducationTopic } from "@/constants/health-education";
 
 interface TopicGridProps {
@@ -27,7 +28,7 @@ export function TopicGrid({ topics, onSelectTopic }: TopicGridProps) {
           accessibilityRole="button"
         >
           <View style={styles.icon}>
-            <Ionicons name="book-outline" size={18} color={colors.primary} />
+            <AppIconView icon={topic.icon} size={18} color={colors.primary} />
           </View>
           <View style={styles.rowBody}>
             <Text style={styles.rowTitle}>{topic.title}</Text>

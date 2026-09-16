@@ -1,6 +1,6 @@
 // Health and Education Screen — Education Library
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -50,9 +50,7 @@ export default function HealthAndEducationScreen() {
         <View style={styles.section}>
           <TopicGrid
             topics={filteredTopics}
-            onSelectTopic={() => {
-              // TODO: navigate to the Article screen
-            }}
+            onSelectTopic={(topic) => router.push(`/article/${topic.id}`)}
           />
         </View>
       </ScrollView>

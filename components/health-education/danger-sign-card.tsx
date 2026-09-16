@@ -1,7 +1,7 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { StyleSheet, Text, View } from "react-native";
 
-import { DangerSignIconView } from "@/components/health-education/danger-sign-icon";
+import { AppIconView } from "@/components/health-education/app-icon";
 import { colors } from "@/constants/health-education";
 import { DangerSign } from "@/constants/danger-signs";
 
@@ -17,7 +17,7 @@ export function DangerSignCard({ sign }: DangerSignCardProps) {
   return (
     <View style={styles.card}>
       <View style={styles.iconCircle}>
-        <DangerSignIconView icon={sign.icon} size={18} color={colors.danger} />
+        <AppIconView icon={sign.icon} size={18} color={colors.danger} />
       </View>
       <View style={styles.body}>
         <Text style={styles.title}>{sign.title}</Text>
