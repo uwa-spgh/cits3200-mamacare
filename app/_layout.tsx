@@ -37,10 +37,18 @@ export default function RootLayout() {
             name="danger-signs"
             options={{
               headerTitle: "Danger Signs",
-              headerShown: false, 
+              headerShown: false,
             }}
           />
-          
+
+          <Stack.Screen
+            name="article/[id]"
+            options={{
+              headerTitle: "Article",
+              headerShown: false, // screen renders its own header to match the design
+            }}
+          />
+
           <Stack.Screen name="+not-found" options = {{}} />
           
         </Stack>

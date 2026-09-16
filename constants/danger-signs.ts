@@ -1,16 +1,5 @@
 // Danger Signs content
-import type { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-
-type IoniconName = keyof typeof Ionicons.glyphMap;
-type MaterialCommunityIconName = keyof typeof MaterialCommunityIcons.glyphMap;
-type EntypoName = keyof typeof Entypo.glyphMap;
-type FontAwesome6Style = "solid" | "regular" | "brand";
-
-export type DangerSignIcon =
-  | { family: "ionicons"; name: IoniconName }
-  | { family: "material-community"; name: MaterialCommunityIconName }
-  | { family: "entypo"; name: EntypoName }
-  | { family: "font-awesome-6"; name: string; style: FontAwesome6Style };
+import { AppIcon, entypo, fa6, ion, mci } from "@/constants/icon";
 
 export type DangerSignUrgency = "hospital" | "emergency";
 
@@ -18,20 +7,8 @@ export interface DangerSign {
   id: string;
   title: string;
   urgency: DangerSignUrgency;
-  icon: DangerSignIcon;
+  icon: AppIcon;
 }
-
-const ion = (name: IoniconName): DangerSignIcon => ({ family: "ionicons", name });
-const mci = (name: MaterialCommunityIconName): DangerSignIcon => ({
-  family: "material-community",
-  name,
-});
-const fa6 = (name: string, style: FontAwesome6Style = "solid"): DangerSignIcon => ({
-  family: "font-awesome-6",
-  name,
-  style,
-});
-const entypo = (name: EntypoName): DangerSignIcon => ({ family: "entypo", name });
 
 export const DANGER_SIGNS: Record<string, DangerSign> = {
   "heavy-vaginal-bleeding": {
