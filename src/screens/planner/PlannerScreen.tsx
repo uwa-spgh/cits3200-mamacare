@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
+import { createStackNavigator } from "expo-router/js-stack";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -12,6 +13,7 @@ import {
 } from "react-native";
 import AppSafeView from "../../components/views/AppSafeView";
 import HomeHeader from "../../components/headers/HomeHeader";
+import DateInput from "../../components/inputs/DateInput";
 
 type Visit = {
   id: string;
@@ -42,6 +44,23 @@ const PINK = "#FBE4EA";
 const BORDER = "#E9B8C4";
 const TEXT = "#33252A";
 const STORAGE_KEY = "mamacare:planner";
+const Stack = createStackNavigator();
+
+const formatAppointmentDate = (value: string) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return date.toLocaleString(undefined, {
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    month: "short",
+    weekday: "long",
+    year: "numeric",
+  });
+};
 
 const visits: Visit[] = [
   {
@@ -285,7 +304,6 @@ const defaultState: PlannerState = {
 
 export default function PlannerScreen() {
   const { t } = useTranslation();
-  const [view, setView] = useState<"schedule" | "checklist">("schedule");
   const [state, setState] = useState(defaultState);
   const [hasLoadedState, setHasLoadedState] = useState(false);
   const selectedVisit = useMemo(
@@ -392,88 +410,111 @@ export default function PlannerScreen() {
   };
 
   return (
-    <AppSafeView style={styles.screen}>
-      <HomeHeader />
-      {view === "schedule" ? (
-        <AppointmentTracker
-          appointment={selectedAppointment}
-          completedVisits={state.completedVisits}
-          onBook={() => setView("checklist")}
-          onSelectVisit={selectVisit}
-          selectedVisitId={selectedVisit.id}
-          visits={visits.map((visit) => {
-            const translationKey = `plannerScreen.contacts.${visit.id}`;
-            return {
-              ...visit,
-              title: t(`${translationKey}.title`),
-              timing: t(`${translationKey}.timing`),
-              trimester: t(`${translationKey}.trimester`),
-              date: t(`${translationKey}.date`),
-              summary: t(`${translationKey}.summary`),
-              advice: t(`${translationKey}.advice`, { returnObjects: true }) as unknown as string[],
-              checks: t(`${translationKey}.checks`, { returnObjects: true }) as unknown as string[],
-              dangerSigns: t(`${translationKey}.dangerSigns`, { returnObjects: true }) as unknown as string[],
-            };
-          })}
-        />
-      ) : (
-        <VisitChecklist
-          checkedItems={selectedChecks}
-          notes={state.notes[selectedVisit.id] ?? ""}
-          onBack={() => setView("schedule")}
-          onCompleteVisit={toggleVisitComplete}
-          onToggleCheck={toggleCheck}
-          onUpdateAppointment={updateAppointment}
-          onUpdateNotes={updateNotes}
-          visit={selectedVisit}
-          appointment={selectedAppointment}
-          visitComplete={state.completedVisits.includes(selectedVisit.id)}
-        />
-      )}
-    </AppSafeView>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="PlannerSchedule">
+        {({ navigation }) => (
+          <AppSafeView style={styles.screen}>
+            <HomeHeader />
+            <AppointmentTracker
+              appointments={state.appointments}
+              completedVisits={state.completedVisits}
+              onSelectVisit={(visitId) => {
+                selectVisit(visitId);
+                navigation.navigate("VisitChecklist");
+              }}
+              selectedVisitId={selectedVisit.id}
+              visits={visits.map((visit) => {
+                const translationKey = `plannerScreen.contacts.${visit.id}`;
+                return {
+                  ...visit,
+                  title: t(`${translationKey}.title`),
+                  timing: t(`${translationKey}.timing`),
+                  trimester: t(`${translationKey}.trimester`),
+                  date: t(`${translationKey}.date`),
+                  summary: t(`${translationKey}.summary`),
+                  advice: t(`${translationKey}.advice`, { returnObjects: true }) as unknown as string[],
+                  checks: t(`${translationKey}.checks`, { returnObjects: true }) as unknown as string[],
+                  dangerSigns: t(`${translationKey}.dangerSigns`, { returnObjects: true }) as unknown as string[],
+                };
+              })}
+            />
+          </AppSafeView>
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="VisitChecklist">
+        {({ navigation }) => (
+          <AppSafeView style={styles.screen}>
+            <HomeHeader />
+            <VisitChecklist
+              checkedItems={selectedChecks}
+              notes={state.notes[selectedVisit.id] ?? ""}
+              onBack={() => navigation.goBack()}
+              onCompleteVisit={() => {
+                toggleVisitComplete();
+                navigation.goBack();
+              }}
+              onToggleCheck={toggleCheck}
+              onUpdateAppointment={updateAppointment}
+              onUpdateNotes={updateNotes}
+              visit={selectedVisit}
+              appointment={selectedAppointment}
+              visitComplete={state.completedVisits.includes(selectedVisit.id)}
+            />
+          </AppSafeView>
+        )}
+      </Stack.Screen>
+    </Stack.Navigator>
   );
 }
 
 function AppointmentTracker({
-  appointment,
+  appointments,
   completedVisits,
-  onBook,
   onSelectVisit,
   selectedVisitId,
   visits,
 }: {
-  appointment: { date: string; facility: string };
+  appointments: PlannerState["appointments"];
   completedVisits: string[];
-  onBook: () => void;
   onSelectVisit: (visitId: string) => void;
   selectedVisitId: string;
   visits: Visit[];
 }) {
   const { t } = useTranslation();
-  const selectedVisit = visits.find((visit) => visit.id === selectedVisitId) ?? visits[0];
+  const nextVisit = visits.find((visit) => !completedVisits.includes(visit.id));
+  const nextAppointment = nextVisit
+    ? appointments[nextVisit.id] ?? {
+        date: nextVisit.date,
+        facility: t("plannerScreen.localFacility"),
+      }
+    : undefined;
 
   return (
     <ScrollView contentContainerStyle={styles.content}>
       <Text style={styles.pageTitle}>{t("plannerScreen.appointments")}</Text>
-      <View style={styles.nextCard}>
-        <View>
-          <Text style={styles.nextLabel}>{t("plannerScreen.nextAppointment")}</Text>
-          <Text style={styles.nextTitle}>{selectedVisit.title}</Text>
-        </View>
-        <View style={styles.calendarBadge}>
-          <Ionicons name="calendar" color="#FFFFFF" size={24} />
-        </View>
-        <View style={styles.nextDetails}>
-          <View style={styles.detailRow}>
-            <Ionicons name="time-outline" color="#FFFFFF" size={18} />
-            <Text style={styles.nextDetailText}>{appointment.date}</Text>
+      {nextVisit && nextAppointment ? (
+        <View style={styles.nextCard}>
+          <View>
+            <Text style={styles.nextLabel}>{t("plannerScreen.nextAppointment")}</Text>
+            <Text style={styles.nextTitle}>{nextVisit.title}</Text>
           </View>
-          <View style={styles.detailRow}>
-            <Ionicons name="location-outline" color="#FFFFFF" size={18} />
-            <Text style={styles.nextDetailText}>{appointment.facility}</Text>
+          <View style={styles.calendarBadge}>
+            <Ionicons name="calendar" color="#FFFFFF" size={24} />
+          </View>
+          <View style={styles.nextDetails}>
+            <View style={styles.detailRow}>
+              <Ionicons name="time-outline" color="#FFFFFF" size={18} />
+              <Text style={styles.nextDetailText}>
+                {formatAppointmentDate(nextAppointment.date)}
+              </Text>
+            </View>
+            <View style={styles.detailRow}>
+              <Ionicons name="location-outline" color="#FFFFFF" size={18} />
+              <Text style={styles.nextDetailText}>{nextAppointment.facility}</Text>
+            </View>
           </View>
         </View>
-      </View>
+      ) : null}
 
       <Text style={styles.sectionTitle}>{t("plannerScreen.visitSchedule")}</Text>
       <View style={styles.timeline}>
@@ -488,11 +529,6 @@ function AppointmentTracker({
           />
         ))}
       </View>
-
-      <Pressable style={styles.primaryButton} onPress={onBook}>
-        <Ionicons name="add-circle-outline" color="#FFFFFF" size={18} />
-        <Text style={styles.primaryButtonText}>{t("plannerScreen.prepareAppointment")}</Text>
-      </Pressable>
     </ScrollView>
   );
 }
@@ -519,6 +555,7 @@ function VisitCard({
             styles.timelineDot,
             completed && styles.timelineDotDone,
             selected && styles.timelineDotSelected,
+            completed && selected && styles.timelineDotSelectedDone,
           ]}
         >
           {completed ? <Ionicons name="checkmark" color="#FFFFFF" size={13} /> : null}
@@ -597,9 +634,10 @@ function VisitChecklist({
 
       <View style={styles.editCard}>
         <Text style={styles.inputLabel}>{t("plannerScreen.appointmentDateTime")}</Text>
-        <TextInput
-          onChangeText={(value) => onUpdateAppointment("date", value)}
-          style={styles.input}
+        <DateInput
+          mode="datetime"
+          onChange={(value) => onUpdateAppointment("date", value)}
+          placeholder={t("plannerScreen.appointmentDateTime")}
           value={appointment.date}
         />
         <Text style={styles.inputLabel}>{t("plannerScreen.facilityProvider")}</Text>
@@ -829,6 +867,10 @@ const styles = StyleSheet.create({
   },
   timelineDotSelected: {
     backgroundColor: "#FFFFFF",
+    borderColor: BRAND,
+  },
+  timelineDotSelectedDone: {
+    backgroundColor: "#2D8B43",
     borderColor: BRAND,
   },
   timelineLine: {

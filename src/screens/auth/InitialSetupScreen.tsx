@@ -71,7 +71,7 @@ const InitialSetupScreen = () => {
       <NavFooter
         onPressBack={() => navigation.navigate("LanguageSelectionScreen")}
         // onPressNext={() => navigation.navigate("WelcomeScreen")}
-        onPressNext={() => navigation.navigate("MainAppBottomTabs")}
+        onPressNext={() => navigation.getParent()?.replace("MainAppBottomTabs")}
       />
     </>
   );
