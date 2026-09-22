@@ -23,6 +23,68 @@ export default function ArticleScreen() {
   const topic = EDUCATION_TOPICS.find((item) => item.id === id);
   const article = id ? ARTICLES[id] : undefined;
 
+  const translatedArticle = article && {
+    ...article,
+    title: t(`articles.${article.id}.title`, { defaultValue: article.title }),
+    summary: article.summary
+      ? t(`articles.${article.id}.summary`, { defaultValue: article.summary })
+      : undefined,
+    sections: article.sections.map((section, index) => ({
+      ...section,
+      heading: t(`articles.${article.id}.sections.${index}.heading`, {
+        defaultValue: section.heading,
+      }),
+      intro: section.intro
+        ? t(`articles.${article.id}.sections.${index}.intro`, {
+            defaultValue: section.intro,
+          })
+        : undefined,
+      body: section.body
+        ? t(`articles.${article.id}.sections.${index}.body`, {
+            defaultValue: section.body,
+          })
+        : undefined,
+      note: section.note
+        ? t(`articles.${article.id}.sections.${index}.note`, {
+            defaultValue: section.note,
+          })
+        : undefined,
+      bullets: section.bullets
+        ? (t(`articles.${article.id}.sections.${index}.bullets`, {
+            defaultValue: section.bullets,
+            returnObjects: true,
+          }) as string[])
+        : undefined,
+      link: section.link
+        ? {
+            ...section.link,
+            label: t(`articles.${article.id}.sections.${index}.link`, {
+              defaultValue: section.link.label,
+            }),
+          }
+        : undefined,
+    })),
+    goodToKnow: article.goodToKnow
+      ? {
+          ...article.goodToKnow,
+          heading: t(`articles.${article.id}.goodToKnow.heading`, {
+            defaultValue: article.goodToKnow.heading,
+          }),
+          body: article.goodToKnow.body
+            ? t(`articles.${article.id}.goodToKnow.body`, {
+                defaultValue: article.goodToKnow.body,
+              })
+            : undefined,
+          bullets: article.goodToKnow.bullets
+            ? (t(`articles.${article.id}.goodToKnow.bullets`, {
+                defaultValue: article.goodToKnow.bullets,
+                returnObjects: true,
+              }) as string[])
+            : undefined,
+        }
+      : undefined,
+  };
+
   if (!topic || !article) {
     return (
       <SafeAreaView style={styles.safeArea} edges={["top"]}>
@@ -48,15 +110,15 @@ export default function ArticleScreen() {
         </View>
 
         <View style={styles.titleBlock}>
-          <Text style={styles.title}>{article.title}</Text>
-          {article.summary && <Text style={styles.summary}>{article.summary}</Text>}
+          <Text style={styles.title}>{translatedArticle?.title}</Text>
+            {translatedArticle?.summary && <Text style={styles.summary}>{translatedArticle.summary}</Text>}
         </View>
 
-        {article.sections.map((section) => (
+        {translatedArticle?.sections.map((section) => (
           <ArticleSection key={section.heading} section={section} />
         ))}
 
-        {article.goodToKnow && <GoodToKnowCard section={article.goodToKnow} />}
+        {translatedArticle?.goodToKnow && <GoodToKnowCard section={translatedArticle.goodToKnow} />}
       </ScrollView>
     </SafeAreaView>
   );

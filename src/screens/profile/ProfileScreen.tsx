@@ -22,8 +22,7 @@ import EddCard from "../../components/profile/EddCard";
 import JourneyCards from "../../components/profile/JourneyCards";
 import { Ionicons } from "@expo/vector-icons";
 import { SheetManager } from "react-native-actions-sheet";
-import LanguageBottomSheet from "../../components/sheets/LanguageBottomSheet";
-import AppButton from "../../components/buttons/AppButton";
+import { useNavigation } from "expo-router/react-navigation";
 
 const ProfileScreen = () => {
   const userName = useSelector(
@@ -31,6 +30,7 @@ const ProfileScreen = () => {
       state.dataReducer.userName,
   );
   const dispatch = useDispatch();
+  const navigation = useNavigation<any>();
 
   const { t } = useTranslation();
 
@@ -201,7 +201,28 @@ const ProfileScreen = () => {
             </View>
           </View>
         </View>
-        <TouchableOpacity activeOpacity={0.6} style={styles.button}>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          style={styles.button}
+          onPress={() =>
+            Alert.alert(
+              t("profileScreen.logoutTitle"),
+              t("profileScreen.logoutMessage"),
+              [
+                { text: t("profileScreen.cancel"), style: "cancel" },
+                {
+                  text: t("profileScreen.logout"),
+                  style: "destructive",
+                  onPress: () =>
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: "AuthStack" }],
+                    }),
+                },
+              ],
+            )
+          }
+        >
           <View
             style={{
               flexDirection: "row",
@@ -219,8 +240,8 @@ const ProfileScreen = () => {
               fontFamily: AppFonts.TextRegular,
               color: AppColors.text_headings,
               fontSize: s(13),
-              marginLeft: s(5)
-            }}>Logout</AppText>
+              marginLeft: s(5)}}
+            >{t("profileScreen.logout")}</AppText>
           </View>
         </TouchableOpacity>
       </ScrollView>

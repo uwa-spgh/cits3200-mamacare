@@ -1,5 +1,4 @@
 import { useNavigation } from "expo-router/react-navigation";
-import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "../../constants/health-education";
@@ -10,7 +9,6 @@ interface ArticleSectionProps {
 }
 
 export function ArticleSection({ section }: ArticleSectionProps) {
-  const { t } = useTranslation();
   const navigation = useNavigation<any>();
 
   return (
@@ -36,7 +34,7 @@ export function ArticleSection({ section }: ArticleSectionProps) {
           accessibilityRole="link"
         >
           <Text style={styles.link}>
-            {t("articleScreen.viewGuide", { defaultValue: section.link.label })} →
+            {section.link.label} →
           </Text>
         </Pressable>
       )}
