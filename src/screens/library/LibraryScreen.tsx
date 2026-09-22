@@ -79,9 +79,7 @@ export default function HealthAndEducationScreen() {
         <View style={styles.section}>
           <TopicGrid
             topics={filteredTopics}
-            onSelectTopic={() => {
-              // TODO: navigate to the Article screen
-            }}
+            onSelectTopic={(topic) => navigation.navigate("Article", { id: topic.id })}
           />
         </View>
       </ScrollView>

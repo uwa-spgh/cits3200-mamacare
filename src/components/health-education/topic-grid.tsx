@@ -1,9 +1,8 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
-
+import { AppIconView } from "../../components/health-education/app-icon";
 import { colors, EducationTopic } from "../../constants/health-education";
-import { camelCase } from "react-native-svg";
 
 interface TopicGridProps {
   topics: EducationTopic[];
@@ -31,12 +30,12 @@ export function TopicGrid({ topics, onSelectTopic }: TopicGridProps) {
           accessibilityRole="button"
         >
           <View style={styles.icon}>
-            <Ionicons name="book-outline" size={18} color={colors.primary} />
+            <AppIconView icon={topic.icon} size={18} color={colors.primary} />
           </View>
           <View style={styles.rowBody}>
-            <Text style={styles.rowTitle}>{t(`libraryScreen.topics.${camelCase(topic.id)}.title`)}</Text>
+            <Text style={styles.rowTitle}>{t(`libraryScreen.topics.${topic.id}.title`)}</Text>
             <Text style={styles.rowDescription} numberOfLines={2}>
-              {t(`libraryScreen.topics.${camelCase(topic.id)}.description`)}
+              {t(`libraryScreen.topics.${topic.id}.description`)}
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />

@@ -13,6 +13,7 @@ import { AppColors } from "../styles/colors";
 import { AppFonts } from "../styles/fonts";
 import { s } from "react-native-size-matters";
 import { Ionicons } from "@expo/vector-icons";
+import ArticleScreen from "../screens/article/[id]"
 
 const Stack = createStackNavigator();
 
@@ -56,12 +57,17 @@ export default function MainAppNavStack() {
           headerTitleStyle: {
             fontFamily: AppFonts.Heading1Bold,
             color: AppColors.button_primary_accent,
-            fontSize: s(20)
+            fontSize: s(20),
           },
           headerBackTitleStyle: { fontFamily: AppFonts.Heading1Bold },
           headerTintColor: AppColors.text_secondary,
           headerBackImage: () => <Ionicons name="chevron-back" size={s(20)} />,
         }}
+      />
+      <Stack.Screen
+        name="Article"
+        component={ArticleScreen}
+        options={{ headerShown: true, title: "" }}
       />
     </Stack.Navigator>
   );

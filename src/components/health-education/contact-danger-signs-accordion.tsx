@@ -2,7 +2,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { DangerSignIconView } from "../../components/health-education/danger-sign-icon";
+import { AppIconView } from "../../components/health-education/app-icon";
 import { colors } from "../../constants/health-education";
 import { AncContactDangerSigns, DangerSign } from "../../constants/danger-signs";
 
@@ -46,7 +46,7 @@ export function ContactDangerSignsAccordion({
           <Text style={styles.watchForLabel}>{t("dangerSignsScreen.watchFor")}</Text>
           {signs.map((sign) => (
             <View key={sign.id} style={styles.signRow}>
-              <DangerSignIconView icon={sign.icon} size={16} color={colors.danger} />
+              <AppIconView icon={sign.icon} size={16} color={colors.danger} />
               <Text style={styles.signRowLabel}>{sign.title}</Text>
             </View>
           ))}

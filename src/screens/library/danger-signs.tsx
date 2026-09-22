@@ -9,7 +9,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ContactDangerSignsAccordion } from "../../components/health-education/contact-danger-signs-accordion";
 import { DangerSignCard } from "../../components/health-education/danger-sign-card";
-import { EmergencyCallButton } from "../../components/health-education/emergency-call-button";
 import { SeekHelpBanner } from "../../components/health-education/seek-help-banner";
 import {
   ANC_CONTACT_DANGER_SIGNS,
@@ -74,12 +73,6 @@ export default function DangerSignsScreen() {
           </View>
         </View>
       </ScrollView>
-      <EmergencyCallButton
-        label={t("dangerSignsScreen.callEmergency")}
-        onPress={() => {
-          // TODO: add local emergency number or prompt user to call emergency services
-        }}
-      />
     </SafeAreaView>
   );
 }
