@@ -1,12 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React, { FC, useState } from "react";
 import { s, vs } from "react-native-size-matters";
 import { AppColors } from "../../styles/colors";
 import AppText from "../texts/AppText";
 import { AppFonts } from "../../styles/fonts";
-import AppTextInput from "../inputs/AppTextInput";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTranslation } from "react-i18next";
+import DateInput from "../inputs/DateInput";
 
 interface InputDueDateInputProps{
     textEdd: string;
@@ -28,10 +28,10 @@ const InputDueDate: FC<InputDueDateInputProps> = ({textEdd}) => {
         {textEdd}
       </AppText>
       <View style={styles.innerContainer}>
-        <AppTextInput
-          style={styles.inputText}
+        <DateInput
+          onChange={setDueDate}
           placeholder={t("initialSetupScreen.datePlaceholder")}
-          onChangeText={setDueDate}
+          value={dueDate}
         />
         <View style={styles.infoContainer}>
           <MaterialCommunityIcons
@@ -64,13 +64,6 @@ const styles = StyleSheet.create({
 
   innerContainer: {
     paddingVertical: s(10),
-  },
-
-  inputText: {
-    borderRadius: s(10),
-    marginTop: s(10),
-    fontFamily: AppFonts.TextRegular,
-    height: vs(35)
   },
 
   infoContainer: {
