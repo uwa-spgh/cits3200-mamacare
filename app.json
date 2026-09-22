@@ -1,34 +1,42 @@
 {
   "expo": {
-    "name": "MamaCare-app1",
-    "slug": "MamaCare-app1",
+    "name": "mamaCare",
+    "slug": "mamaCare",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icons/ios-icon-default.png",
-    "scheme": "mamacareapp1",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "icon": "./assets/splash-icon.png",
+    "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true,
-      "icon": "./assets/icons/ios-icon-default.png"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icons/android-icon-foreground.png",
-        "monochromeImage": "./assets/icons/android-icon-monochrome.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.MamaCareapp1"
+      "predictiveBackGestureEnabled": false
     },
     "web": {
-      "output": "single",
-      "favicon": "./assets/icons/ios-icon-default.png"
+      "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-router"
-    ],
-    "experiments": {}
+      "@react-native-vector-icons/material-icons",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FFF8F7",
+          "image": "./assets/splash-icon.svg",
+          "imageWidth": 200,
+          "resizeMode": "contain"
+        }
+      ],
+      "expo-font",
+      "expo-router",
+      "expo-status-bar",
+      "expo-image",
+      "@react-native-community/datetimepicker"
+    ]
   }
 }

@@ -1,0 +1,388 @@
+{
+    "languageSelectionScreen": {
+        "languageSelection": "Language Selection",
+        "langSelectText": "Please choose your preferred language to continue.",
+        "englishOption": "English",
+        "nepaliOption": "Nepali (नेपाली)"
+    },
+
+    "navTabs":{
+        "homeTab": "Home",
+        "medsTab": "Meds",
+        "libraryTab": "Library",
+        "profileTab": "Profile",
+        "plannerTab": "Planner"
+
+    },
+
+    "profileScreen": {
+        "gestationWeek": "Week {{week}}",
+        "myJourney": "My Journey",
+        "personalInformation": "Personal Information",
+        "medicalHistory": "Medical History",
+        "emergencyContacts": "Emergency Contacts",
+        "appSettings": "App Settings",
+        "language": "Language",
+        "notifications": "Notifications",
+        "helpAndSupport": "Help and Support",
+        "comingSoon": "Coming soon",
+        "featureComingLater": "This feature will be added later.",
+        "logout": "Logout",
+        "logoutTitle": "Log out",
+        "logoutMessage": "Are you sure you want to log out?",
+        "cancel": "Cancel"
+    },
+
+    "eddCard": {
+        "estimatedDueDate": "Estimated Due Date",
+        "date": "Oct 12, 2026",
+        "progress": "Progress",
+        "daysToGo": "41 days to go. You're doing great!"
+    },
+
+    "languageBottomSheet": {
+        "selectLanguage": "Select Language",
+        "confirm": "Confirm"
+    },
+
+    "initialSetupScreen": {
+        "setupTitle": "Pregnancy Setup",
+        "setupDescription": "We need a few details to accurately track your pregnancy progress and provide the right information at the right time.",
+        "calculateDates": "How would you like to calculate your dates?",
+        "lastPeriodTitle": "Last Period (LMP)",
+        "lastPeriodDescription": "Use the first day of your last menstrual period.",
+        "dueDateTitle": "Due Date (EDD)",
+        "dueDateDescription": "Use the expected delivery date given by your doctor.",
+        "lastPeriodPrompt": "Enter the first day of your last period.",
+        "dueDatePrompt": "Enter the estimated due date.",
+        "datePlaceholder": "mm/dd/yyyy",
+        "privacyNotice": "This information is kept private and is only used to calculate your current week of pregnancy to tailor your health tips."
+    },
+
+    "homeScreen": {
+        "greeting": "Hello, Asha",
+        "dailyOverview": "Here is your daily overview.",
+        "trimester": "SECOND TRIMESTER",
+        "weeks": "12 Weeks",
+        "days": ", 3 Days",
+        "babySize": "Size of a Plum",
+        "babyLength": "Your baby is about 5.4 cm long.",
+        "todaysPriority": "Today's Priority",
+        "medications": "Medications",
+        "ironAndFolicAcid": "Iron & Folic Acid",
+        "pillWithFood": "1 Pill with food",
+        "nextAncVisit": "Next ANC Visit",
+        "clinicCheckup": "Clinic Checkup",
+        "hospital": "City General Hospital",
+        "daysLabel": "DAYS",
+        "quickActions": "Quick Actions",
+        "educationLibrary": "Education\nLibrary",
+        "trackSymptoms": "Track\nSymptoms",
+        "educationLibraryAlertTitle": "Education Library",
+        "educationLibraryAlertMessage": "The education library screen will be added later.",
+        "trackSymptomsAlertTitle": "Track Symptoms",
+        "trackSymptomsAlertMessage": "The symptom tracking screen will be added later."
+    },
+
+    "libraryScreen": {
+        "title": "Education Library",
+        "subtitle": "Find information for your pregnancy journey.",
+        "dangerSigns": "Danger Signs",
+        "searchPlaceholder": "Search topics (e.g., Nutrition)",
+        "searchAccessibilityLabel": "Search topics",
+        "allTopics": "All Topics",
+        "nutrition": "Nutrition",
+        "birthPrep": "Birth Prep",
+        "general": "General",
+        "noTopics": "No topics match your search yet.",
+        "topics": {
+            "healthy-nutrition": {
+                "title": "Healthy Nutrition",
+                "description": "Eating well during pregnancy helps support your health and your baby's growth."
+            },
+            "anc-visits": {
+                "title": "Importance of ANC Visits",
+                "description": "Antenatal care helps you and your health worker monitor your health and your baby's growth."
+            },
+            "maternal-immunisation": {
+                "title": "Maternal Immunisation",
+                "description": "Vaccines during pregnancy help protect you and your baby from serious infections."
+            },
+            "birth-preparedness": {
+                "title": "Birth Preparedness",
+                "description": "Preparing for birth before labour starts can help you and your family be ready."
+            },
+            "labour-preparation": {
+                "title": "Labour Preparation",
+                "description": "Knowing the signs of labour can help you recognise when it's time to go to the facility."
+            },
+            "breastfeeding-preparation": {
+                "title": "Breastfeeding Preparation",
+                "description": "Breastfeeding preparation can help you feel ready to feed your baby after birth."
+            },
+            "general-pregnancy-advice": {
+                "title": "General Pregnancy Advice",
+                "description": "Everyday tips to help you stay healthy and safe throughout your pregnancy."
+            }
+        }
+    },
+
+    "articles": {
+        "healthy-nutrition": {
+            "title": "Healthy Nutrition",
+            "summary": "Eating well during pregnancy helps support your health and your baby's growth.",
+            "sections": [
+                {"heading": "Eat a balanced diet", "intro": "Try to eat a variety of affordable, locally available foods, such as:", "bullets": ["Rice and other staple foods", "Lentils (dal)", "Green leafy vegetables", "Other vegetables", "Eggs", "Fish", "Fruits"]},
+                {"heading": "Iron and folic acid", "bullets": ["Take your daily iron-folic acid (IFA) tablets as advised by your health worker.", "IFA helps prevent anaemia and supports your baby's growth."]},
+                {"heading": "Calcium", "bullets": ["Take calcium tablets as recommended by your health worker.", "Calcium helps keep your bones and your baby's bones healthy."]},
+                {"heading": "If you feel nauseous", "bullets": ["Try eating small, frequent meals.", "Drink enough water and other fluids."]},
+                {"heading": "Rest and wellbeing", "bullets": ["Get enough rest and sleep when you can.", "Eat regularly and drink enough fluids, especially in hot weather."]}
+            ],
+            "goodToKnow": {"heading": "Good to know", "bullets": ["Wash your hands regularly.", "Drink safe water.", "Keep food clean and well cooked.", "Avoid alcohol, tobacco and other harmful substances.", "Do not take medicines without advice from a health worker."]}
+        },
+        "anc-visits": {
+            "title": "Importance of ANC Visits",
+            "summary": "Antenatal care (ANC) helps you and your health worker monitor your health and your baby's growth during pregnancy.",
+            "sections": [
+                {"heading": "Start ANC early", "bullets": ["Start antenatal care as early as possible in pregnancy.", "Your first ANC visit should be early in pregnancy."]},
+                {"heading": "Attend all your scheduled visits", "bullets": ["Go to every ANC visit recommended for you.", "Regular check-ups help monitor your health and your baby's wellbeing.", "Keep your ANC card and follow the advice given by your health worker."]},
+                {"heading": "What may happen during ANC", "intro": "Your health worker may check:", "bullets": ["Blood pressure", "Weight and height", "Urine", "Haemoglobin and anaemia", "Blood group", "Blood sugar", "Your baby's growth and wellbeing"], "note": "Your health worker may also provide advice about nutrition, supplements, maternal immunisation, birth preparation and danger signs."}
+            ],
+            "goodToKnow": {"heading": "Good to know", "body": "Do not wait until you feel unwell to attend ANC. Regular care helps identify problems early and allows you to receive the care and advice you need."}
+        },
+        "maternal-immunisation": {
+            "title": "Maternal Immunisation",
+            "summary": "Vaccines during pregnancy help protect you and your baby from serious infections.",
+            "sections": [{"heading": "Take recommended vaccines", "bullets": ["Ask your health worker which vaccines you need during pregnancy.", "Take your vaccines according to the recommended schedule.", "Keep your vaccination card safe and bring it to your ANC visits."]}],
+            "goodToKnow": {"heading": "Good to know", "body": "Vaccination during pregnancy helps protect both you and your baby. Talk to your health worker if you have questions about your vaccines."}
+        },
+        "birth-preparedness": {
+            "title": "Birth Preparedness",
+            "summary": "Preparing for birth before labour starts can help you and your family be ready.",
+            "sections": [
+                {"heading": "Plan your place of delivery", "bullets": ["Decide where you will give birth.", "Choose a health facility where skilled health workers can provide care.", "Discuss your birth plan with your family or support person."]},
+                {"heading": "Plan transport", "bullets": ["Decide how you will reach the health facility.", "Arrange transport in advance.", "Keep an emergency transport option ready."]},
+                {"heading": "Save important contacts", "intro": "Keep phone numbers for:", "bullets": ["Your health worker", "Your chosen health facility", "Your transport provider", "A trusted family member or emergency contact"]},
+                {"heading": "Prepare a delivery bag", "intro": "Prepare important items before labour begins, including:", "bullets": ["Your ANC/vaccination cards", "Clothes and personal items for yourself", "Clothes and essential items for your baby"]},
+                {"heading": "Prepare your family", "bullets": ["Tell your family or support person about your birth plan.", "Make sure someone can accompany or support you when needed.", "Arrange help with household tasks after the baby is born."]}
+            ],
+            "goodToKnow": {"heading": "Good to know", "body": "It is safest to plan to give birth at a health facility with a skilled health worker."}
+        },
+        "labour-preparation": {
+            "title": "Labour Preparation",
+            "summary": "Knowing the signs of labour can help you recognise when it is time to go to the health facility.",
+            "sections": [
+                {"heading": "Signs that labour may be starting", "intro": "You may notice:", "bullets": ["Regular stomach tightening or pain that comes and goes and becomes stronger over time.", "Lower back pain or cramps.", "A small amount of blood-mixed mucus coming from the vagina.", "Water leaking from the vagina.", "More pressure in the lower abdomen or a feeling that the baby is moving down."]},
+                {"heading": "When should you go to the health facility?", "intro": "Go to your chosen health facility when labour pains become regular or stronger. Go to the health facility immediately if:", "bullets": ["Your water breaks or fluid starts leaking.", "You have vaginal bleeding.", "You have severe stomach pain.", "Your baby's movements decrease or stop.", "You have severe headache or blurred vision.", "You have fits or convulsions.", "You have fever.", "You feel very weak, dizzy or have difficulty breathing.", "Your hands, feet or face suddenly become swollen.", "Labour continues for more than 12 hours without delivery.", "A health worker advises you to come to the facility."]}
+            ],
+            "goodToKnow": {"heading": "Good to know", "body": "Keep your delivery bag, transport plan and emergency contact numbers ready before labour starts."}
+        },
+        "breastfeeding-preparation": {
+            "title": "Breastfeeding Preparation",
+            "summary": "Breastfeeding preparation can help you feel ready to feed your baby after birth.",
+            "sections": [
+                {"heading": "Start breastfeeding early", "bullets": ["Start breastfeeding within 1 hour of birth.", "Keep your baby skin-to-skin with you after birth.", "Keep your baby warm."]},
+                {"heading": "Give only breastmilk", "bullets": ["Give your baby only breastmilk for the first 6 months.", "Do not give water, honey or other food during this time."]},
+                {"heading": "Feed your baby often", "bullets": ["Breastfeed whenever your baby wants, during the day and night.", "Offer both breasts during feeding."]},
+                {"heading": "Good breastfeeding position", "bullets": ["Hold your baby close to you, tummy to tummy.", "Make sure your baby's mouth opens wide and attaches well to the breast."]},
+                {"heading": "Get help when needed", "bullets": ["If breastfeeding is difficult, ask a health worker for help.", "If your breasts become painful, swollen or sore, speak to a health worker."]}
+            ]
+        },
+        "general-pregnancy-advice": {
+            "title": "General Pregnancy Advice",
+            "sections": [
+                {"heading": "Stay active", "bullets": ["Move a little every day, such as walking or gentle stretching.", "Rest when you are tired.", "Stop activity if you experience pain, dizziness, breathing problems or bleeding."]},
+                {"heading": "Drink enough fluids", "bullets": ["Drink enough water and other fluids every day.", "Drink more fluids when the weather is hot."]},
+                {"heading": "Take your medicines and supplements as advised", "bullets": ["Take iron-folic acid and calcium as recommended by your health worker.", "Do not take medicines without advice from a health worker."]},
+                {"heading": "Avoid harmful substances", "bullets": ["Avoid alcohol, tobacco and other harmful substances during pregnancy."]},
+                {"heading": "Keep clean", "bullets": ["Wash your hands regularly.", "Use safe drinking water.", "Keep food clean and well cooked."]},
+                {"heading": "Look after your mental wellbeing", "bullets": ["Feeling worried or tired can happen during pregnancy.", "Talk to someone you trust if you feel stressed, sad or overwhelmed."]},
+                {"heading": "Learn about caring for your baby", "intro": "Before delivery, learn about:", "bullets": ["Breastfeeding", "Newborn care", "Newborn danger signs", "Postnatal care", "How your family can support you after birth"]},
+                {"heading": "Know the danger signs", "intro": "Do not wait if you have a danger sign. Go to a health facility immediately. Seek medical care immediately if you have:", "bullets": ["Vaginal bleeding", "Severe abdominal pain", "Severe headache", "Blurred vision", "High fever", "Swelling of the face, hands or feet", "Difficulty breathing", "Reduced or no baby movement", "Convulsions or fits"], "link": "View the full Danger Signs guide"}
+            ]
+        }
+    },
+
+    "articleScreen": {
+        "notFound": "This article couldn't be found.",
+        "readTime": "{{minutes}} min read",
+        "viewGuide": "View the full Danger Signs guide",
+        "tags": {
+            "Nutrition": "Nutrition",
+            "ANC Care": "ANC Care",
+            "Immunisation": "Immunisation",
+            "Birth Prep": "Birth Prep",
+            "Breastfeeding": "Breastfeeding",
+            "General": "General"
+        }
+    },
+
+    "dangerSignsScreen": {
+        "seekHelpTitle": "Seek Help Immediately",
+        "seekHelpDescription": "If you experience any of these signs, do not wait. Go to the nearest clinic or hospital right away.",
+        "generalTitle": "General Danger Signs",
+        "generalSubtitle": "Watch for these at any point in your pregnancy.",
+        "byContactTitle": "Danger Signs by ANC Contact",
+        "byContactSubtitle": "Signs to watch for at each antenatal care visit.",
+        "callEmergency": "Call Emergency",
+        "callEmergencyHelp": "Call for emergency help",
+        "goToHospital": "Go to hospital immediately",
+        "contact": "Contact",
+        "watchFor": "Watch for:",
+        "contacts": {
+            "1": "Before 12 weeks",
+            "2": "20 weeks",
+            "3": "26 weeks",
+            "4": "30 weeks",
+            "5": "34 weeks",
+            "6": "36 weeks",
+            "7": "38 weeks",
+            "8": "40 weeks"
+        },
+        "signs": {
+            "heavy-vaginal-bleeding": "Heavy Vaginal Bleeding",
+            "vaginal-bleeding": "Vaginal Bleeding",
+            "severe-stomach-pain": "Severe Stomach Pain",
+            "severe-headache": "Severe Headache",
+            "blurred-vision": "Blurred Vision",
+            "headache-or-blurred-vision": "Severe Headache or Blurred Vision",
+            "swelling": "Swelling of Face or Hands",
+            "fever-chills": "Fever or Chills",
+            "trouble-breathing": "Trouble Breathing",
+            "fainting-seizures": "Fainting or Seizures",
+            "dizziness-fainting": "Dizziness or Fainting",
+            "severe-vomiting": "Severe Vomiting",
+            "reduced-movement": "Reduced Baby Movement",
+            "fluid-leaking": "Fluid Leaking"
+        }
+    },
+
+    "medicationScreen": {
+        "medicationName": "Medication or supplement name",
+        "dosage": "Dosage",
+        "instructions": "Instructions",
+        "time": "Time",
+        "timeOfDay": "Time of day",
+        "morning": "Morning",
+        "afternoon": "Afternoon",
+        "evening": "Evening",
+        "taken": "Taken",
+        "missed": "Missed",
+        "takenAt": "Taken at {{time}}",
+        "dueAt": "Due at {{time}}"
+    },
+
+    "addMedicationScreen": {
+        "title": "Add Medication",
+        "namePlaceholder": "e.g. Iron & Folic Acid",
+        "dosagePlaceholder": "e.g. 1 pill",
+        "instructionsPlaceholder": "e.g. Take with food",
+        "timePlaceholder": "e.g. 8:00 AM",
+        "save": "Save Medication"
+    },
+
+    "medicationDetailsScreen": {
+        "title": "Medication Details",
+        "save": "Save Changes",
+        "delete": "Delete Medication",
+        "notFound": "Medication not found.",
+        "backToMedications": "Back to Medications"
+    },
+
+    "medicationHistoryScreen": {
+        "title": "Adherence History",
+        "emptyTitle": "No medication history yet",
+        "emptyDescription": "Medication activity will appear here when medications are marked as taken or missed."
+    },
+
+    "medsScreen": {
+        "title": "Medications",
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "todaysProgress": "Today's Progress",
+        "takenCount": "{{taken}} of {{total}} taken",
+        "todaysSchedule": "Today's Schedule",
+        "addNew": "Add New Medication",
+        "viewHistory": "View Adherence History"
+    },
+
+    "plannerScreen": {
+        "appointments": "Appointments",
+        "nextAppointment": "Next Appointment",
+        "localFacility": "Local health facility",
+        "visitSchedule": "Visit Schedule",
+        "prepareAppointment": "Prepare for Appointment",
+        "completed": "Completed",
+        "upcoming": "Upcoming",
+        "planner": "Planner",
+        "visitChecklist": "Visit Checklist",
+        "appointmentDateTime": "Appointment date and time",
+        "facilityProvider": "Facility or provider",
+        "beforeDuringVisit": "Before and During Your Visit",
+        "healthAdvice": "Health Advice",
+        "dangerSigns": "Danger Signs",
+        "notesForProvider": "Notes for Provider",
+        "notesPlaceholder": "E.g., Ask about safe sleeping positions, mention headaches...",
+        "visitCompleted": "Visit Completed",
+        "completeVisit": "Complete Visit",
+        "contacts": {
+            "anc-1": {
+                "title": "1st ANC Visit", "timing": "Up to 12 weeks", "trimester": "First trimester", "date": "Before week 12", "summary": "Start antenatal care early and register your pregnancy.",
+                "advice": ["Enter LMP and confirm your expected date of delivery.", "Start daily iron-folic acid tablets as advised.", "Eat balanced local foods such as rice, dal, leafy greens, eggs, fish, and fruits.", "Plan your delivery facility, transport, and emergency contact person."],
+                "checks": ["Bring your ANC card or health record", "Blood pressure check", "Weight and height measurement", "Urine test for protein", "Haemoglobin or anaemia check", "Blood grouping and blood sugar check"],
+                "dangerSigns": ["Bleeding", "Severe abdominal pain", "Severe headache", "Blurred vision", "High fever"]
+            },
+            "anc-2": {
+                "title": "2nd ANC Visit", "timing": "20 weeks", "trimester": "Second trimester", "date": "Week 20", "summary": "Continue supplements and check your baby growth.",
+                "advice": ["Continue iron-folic acid and other supplements.", "Ask whether your Td vaccine dose is due.", "Tell your health worker about swelling, headache, or bleeding."],
+                "checks": ["Bring your health card", "Prepare questions for the midwife", "Blood pressure check", "Weight measurement", "Fundal height check", "Fetal heartbeat check", "Urine test for protein"],
+                "dangerSigns": ["Severe headache", "Blurred vision", "Swelling of face or hands", "Any bleeding"]
+            },
+            "anc-3": {
+                "title": "3rd ANC Visit", "timing": "26 weeks", "trimester": "Second trimester", "date": "Week 26", "summary": "Prepare for the third trimester and start birth preparedness.",
+                "advice": ["Continue iron-folic acid tablets.", "Check in on your mental wellbeing.", "Decide the place of delivery.", "Arrange transport and save emergency contact numbers.", "Prepare a delivery bag and essential newborn items."],
+                "checks": ["Bring your health card", "Review your birth plan", "Blood pressure check", "Weight measurement", "Fundal height check", "Fetal heartbeat check", "Discuss delivery facility and transport"],
+                "dangerSigns": ["Severe abdominal pain", "Reduced fetal movement", "Any bleeding"]
+            },
+            "anc-4": {
+                "title": "4th ANC Visit", "timing": "30 weeks", "trimester": "Third trimester", "date": "Week 30", "summary": "Confirm delivery preparation and skilled birth attendance.",
+                "advice": ["Confirm your chosen delivery facility.", "Talk about skilled birth attendance.", "Start preparing for breastfeeding.", "Share key information with family or a support person."],
+                "checks": ["Blood pressure check", "Weight measurement", "Fundal height check", "Fetal heartbeat check", "Review breastfeeding preparation", "Confirm delivery facility"],
+                "dangerSigns": ["Bleeding", "Watery discharge or fluid leakage", "Reduced fetal movement"]
+            },
+            "anc-5": {
+                "title": "5th ANC Visit", "timing": "34 weeks", "trimester": "Third trimester", "date": "Week 34", "summary": "Learn labour signs and prepare newborn care items.",
+                "advice": ["Learn signs that labour is starting.", "Prepare your delivery bag.", "Plan to keep the baby warm with skin-to-skin contact.", "Plan early and exclusive breastfeeding."],
+                "checks": ["Blood pressure check", "Weight measurement", "Fundal height check", "Fetal heartbeat check", "Review labour warning signs", "Check delivery bag items"],
+                "dangerSigns": ["Contractions before 37 weeks", "Reduced fetal movement", "Bleeding", "Severe headache or swelling"]
+            },
+            "anc-6": {
+                "title": "6th ANC Visit", "timing": "36 weeks", "trimester": "Third trimester", "date": "Week 36", "summary": "Do the final birth preparation and emergency plan review.",
+                "advice": ["Review your emergency plan.", "Confirm your transport plan.", "Save facility and family contact numbers.", "Ask about family planning information."],
+                "checks": ["Blood pressure check", "Weight measurement", "Fundal height check", "Fetal heartbeat check", "Confirm transport plan", "Save emergency contacts"],
+                "dangerSigns": ["Bleeding", "Watery discharge or fluid leakage", "Reduced fetal movement", "Abnormal position confirmed at visit"]
+            },
+            "anc-7": {
+                "title": "7th ANC Visit", "timing": "38 weeks", "trimester": "Third trimester", "date": "Week 38", "summary": "Prepare to go to the facility when labour signs begin.",
+                "advice": ["Know when labour starts.", "Go to your chosen facility as soon as labour signs begin.", "Ask when emergency care is needed.", "Keep your ready-for-delivery items together."],
+                "checks": ["Blood pressure check", "Weight measurement", "Fundal height check", "Fetal heartbeat check", "Confirm ready-for-delivery plan", "Review emergency care signs"],
+                "dangerSigns": ["Signs labour is starting", "Reduced or no fetal movement", "Bleeding", "Severe abdominal pain"]
+            },
+            "anc-8": {
+                "title": "8th ANC Visit", "timing": "40 weeks", "trimester": "Third trimester", "date": "Week 40", "summary": "Visit the facility for assessment if labour has not started.",
+                "advice": ["Ask what to do if labour has not started.", "Prepare for routine assessment after 40 weeks.", "Learn how the app will move from ANC to postnatal care after birth registration."],
+                "checks": ["Blood pressure check", "Weight measurement", "Fundal height check", "Fetal heartbeat check", "Discuss post-term assessment", "Ask about postnatal care schedule"],
+                "dangerSigns": ["No labour by 41 weeks", "Reduced or no fetal movement", "Bleeding", "Signs labour is starting"]
+            }
+        }
+    },
+
+    "buttonArrows": {
+        "next": "Next",
+        "back": "Back",
+        "backAccessibility": "Go back"
+    }
+}
