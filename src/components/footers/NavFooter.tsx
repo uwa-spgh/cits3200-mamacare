@@ -7,7 +7,7 @@ import NextBtn from "../buttons/NextBtn";
 
 interface NavFooterProps {
   nextDisabled?: boolean;
-  onPressBack: () => void;
+  onPressBack?: () => void;
   onPressNext: () => void;
 }
 
@@ -18,17 +18,21 @@ const NavFooter: FC<NavFooterProps> = ({
 }) => {
   return (
     <View style={styles.container}>
-      <BackBtn
-        onPress={onPressBack}
-        iconSize={s(16)}
-        color={AppColors.text_secondary}
-      />
-      <NextBtn
-        color={AppColors.white}
-        disabled={nextDisabled}
-        iconSize={s(16)}
-        onPress={onPressNext}
-      />
+      {onPressBack ? (
+        <BackBtn
+          onPress={onPressBack}
+          iconSize={s(16)}
+          color={AppColors.text_secondary}
+        />
+      ) : null}
+      <View style={styles.nextContainer}>
+        <NextBtn
+          color={AppColors.white}
+          disabled={nextDisabled}
+          iconSize={s(16)}
+          onPress={onPressNext}
+        />
+      </View>
     </View>
   );
 };
@@ -47,5 +51,8 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.background_primary,
     borderTopColor: AppColors.stroke_primary,
     borderTopWidth: s(1.5),
+  },
+  nextContainer: {
+    marginLeft: "auto",
   },
 });
