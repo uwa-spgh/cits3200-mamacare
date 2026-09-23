@@ -10,6 +10,9 @@
       "supportsTablet": true
     },
     "android": {
+      "permissions": [
+        "android.permission.SCHEDULE_EXACT_ALARM"
+      ],
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -37,6 +40,13 @@
       "expo-router",
       "expo-status-bar",
       "expo-image",
+      [
+        "expo-notifications",
+        {
+          "color": "#BC1F58",
+          "defaultChannel": "mamacare-important"
+        }
+      ],
       "@react-native-community/datetimepicker"
     ],
     "extra": {

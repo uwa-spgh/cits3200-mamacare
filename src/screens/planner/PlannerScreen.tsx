@@ -14,6 +14,10 @@ import {
 import AppSafeView from "../../components/views/AppSafeView";
 import HomeHeader from "../../components/headers/HomeHeader";
 import DateInput from "../../components/inputs/DateInput";
+import {
+  PLANNER_STORAGE_KEY,
+  syncAncNotifications,
+} from "../../notifications/notificationService";
 
 type Visit = {
   id: string;
@@ -43,7 +47,6 @@ const CREAM = "#FFF8F8";
 const PINK = "#FBE4EA";
 const BORDER = "#E9B8C4";
 const TEXT = "#33252A";
-const STORAGE_KEY = "mamacare:planner";
 const Stack = createStackNavigator();
 
 const formatAppointmentDate = (value: string) => {
@@ -334,7 +337,7 @@ export default function PlannerScreen() {
   useEffect(() => {
     let isMounted = true;
 
-    AsyncStorage.getItem(STORAGE_KEY)
+    AsyncStorage.getItem(PLANNER_STORAGE_KEY)
       .then((value) => {
         if (value && isMounted) {
           setState({ ...defaultState, ...(JSON.parse(value) as PlannerState) });
@@ -357,7 +360,9 @@ export default function PlannerScreen() {
       return;
     }
 
-    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => undefined);
+    AsyncStorage.setItem(PLANNER_STORAGE_KEY, JSON.stringify(state))
+      .then(() => syncAncNotifications(state))
+      .catch(() => undefined);
   }, [hasLoadedState, state]);
 
   const updateState = (nextState: PlannerState) => {

@@ -33,6 +33,41 @@
         "cancel": "Cancel"
     },
 
+    "notificationsScreen": {
+        "title": "Notifications",
+        "subtitle": "Manage the reminders stored and delivered locally on this device.",
+        "permissionTitle": "Device permission",
+        "permission": {
+            "granted": "Notifications are enabled.",
+            "denied": "Notifications are blocked in device settings.",
+            "undetermined": "Permission has not been requested yet."
+        },
+        "enable": "Enable",
+        "reminderTypes": "Reminder types",
+        "anc": "ANC appointments",
+        "ancDescription": "7 days, 24 hours, and 1 hour before",
+        "medication": "Medication",
+        "medicationDescription": "At the scheduled time, prepared 30 days ahead",
+        "education": "Pregnancy education",
+        "educationDescription": "Every Saturday at 10:00 AM",
+        "pending": "Pending reminders",
+        "pendingDescription": "The count includes each medication occurrence in the 30-day offline buffer.",
+        "developerTesting": "Developer testing",
+        "developerDescription": "Each button sends its test notification in 5 seconds. Lock or background the phone after tapping.",
+        "test": {
+            "medication": "Test medication",
+            "anc": "Test ANC",
+            "education": "Test education"
+        },
+        "permissionNeeded": "Permission needed",
+        "permissionInstructions": "Enable MamaCare notifications in your device settings, then try again.",
+        "testScheduled": "Test scheduled",
+        "testScheduledBody": "The notification will appear in about 5 seconds.",
+        "pendingList": "Scheduled on this device",
+        "noPending": "No MamaCare reminders are currently scheduled.",
+        "refresh": "Refresh list"
+    },
+
     "eddCard": {
         "estimatedDueDate": "Estimated Due Date",
         "date": "Oct 12, 2026",

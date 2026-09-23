@@ -14,6 +14,7 @@ import { AppFonts } from "../styles/fonts";
 import { s } from "react-native-size-matters";
 import { Ionicons } from "@expo/vector-icons";
 import ArticleScreen from "../screens/article/[id]"
+import NotificationsScreen from "../screens/notifications/NotificationsScreen";
 
 const Stack = createStackNavigator();
 
@@ -63,6 +64,11 @@ export default function MainAppNavStack() {
           headerTintColor: AppColors.text_secondary,
           headerBackImage: () => <Ionicons name="chevron-back" size={s(20)} />,
         }}
+      />
+      <Stack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Article"

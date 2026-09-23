@@ -5,6 +5,13 @@ import {
     useEffect,
     useState,
 } from "react";
+import { AppState } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+    MEDICATION_STORAGE_KEY,
+    syncMedicationNotifications,
+} from "../notifications/notificationService";
+import { localDateKey } from "../notifications/planning";
 
 export type Period = "Morning" | "Afternoon" | "Evening";
 
@@ -17,6 +24,7 @@ export type Medication = {
     period: Period;
     taken: boolean;
     missed: boolean;
+    statusDate?: string;
 };
 
 export type AdherenceRecord = {
@@ -130,9 +138,28 @@ export function MedicationProvider({
 }: MedicationProviderProps) {
     const [medications, setMedications] =
         useState<Medication[]>(initialMedications);
-    
-        const [adherenceHistory, setAdherenceHistory] =
+    const [hasLoadedState, setHasLoadedState] = useState(false);
+
+    const [adherenceHistory, setAdherenceHistory] =
         useState<AdherenceRecord[]>([]);
+
+    const normalizeDailyStatus = (items: Medication[]) => {
+        const today = localDateKey(new Date());
+
+        return items.map((medication) =>
+            medication.statusDate && medication.statusDate !== today
+                ? {
+                    ...medication,
+                    taken: false,
+                    missed: false,
+                    statusDate: today,
+                }
+                : {
+                    ...medication,
+                    statusDate: medication.statusDate ?? today,
+                }
+        );
+    };
 
     const addMedication = (medication: NewMedication) => {
         const newMedication: Medication = {
@@ -146,6 +173,7 @@ export function MedicationProvider({
 
             taken: false,
             missed: false,
+            statusDate: localDateKey(new Date()),
         };
 
         setMedications((currentMedications) => [
@@ -180,6 +208,7 @@ export function MedicationProvider({
 
         const newTakenStatus = !medication.taken;
         const today = new Date().toLocaleDateString();
+        const statusDate = localDateKey(new Date());
 
         const shouldBeMissed =
             !newTakenStatus &&
@@ -192,6 +221,7 @@ export function MedicationProvider({
                         ...item,
                         taken: newTakenStatus,
                         missed: shouldBeMissed,
+                        statusDate,
                     }
                     : item
             )
@@ -253,6 +283,7 @@ export function MedicationProvider({
         }
 
         const today = new Date().toLocaleDateString();
+        const statusDate = localDateKey(new Date());
 
         setMedications((currentMedications) =>
             currentMedications.map((item) =>
@@ -261,6 +292,7 @@ export function MedicationProvider({
                         ...item,
                         taken: false,
                         missed: true,
+                        statusDate,
                     }
                     : item
             )
@@ -290,6 +322,60 @@ export function MedicationProvider({
             ];
         });
     };
+
+    useEffect(() => {
+        let isMounted = true;
+
+        AsyncStorage.getItem(MEDICATION_STORAGE_KEY)
+            .then((value) => {
+                if (!isMounted) {
+                    return;
+                }
+
+                const stored = value
+                    ? (JSON.parse(value) as Medication[])
+                    : initialMedications;
+                setMedications(normalizeDailyStatus(stored));
+            })
+            .catch(() => undefined)
+            .finally(() => {
+                if (isMounted) {
+                    setHasLoadedState(true);
+                }
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!hasLoadedState) {
+            return;
+        }
+
+        AsyncStorage.setItem(MEDICATION_STORAGE_KEY, JSON.stringify(medications))
+            .then(() => syncMedicationNotifications(medications))
+            .catch(() => undefined);
+    }, [hasLoadedState, medications]);
+
+    useEffect(() => {
+        const resetForNewDay = () => {
+            setMedications((current) => normalizeDailyStatus(current));
+        };
+
+        const appStateListener = AppState.addEventListener("change", (state) => {
+            if (state === "active") {
+                resetForNewDay();
+            }
+        });
+        const interval = setInterval(resetForNewDay, 60000);
+
+        return () => {
+            appStateListener.remove();
+            clearInterval(interval);
+        };
+    }, []);
 
     const removeMedication = (id: string) => {
         setMedications((currentMedications) =>
