@@ -284,11 +284,7 @@ export const syncAllNotifications = async () => {
 
 export const initializeNotifications = async () => {
   await configureNotificationPlatform();
-  const existing = await getNotificationPermission();
-  const permission =
-    existing === "undetermined"
-      ? await requestNotificationPermission()
-      : existing;
+  const permission = await getNotificationPermission();
 
   if (permission === "granted") {
     await syncAllNotifications();

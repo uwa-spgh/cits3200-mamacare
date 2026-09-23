@@ -94,6 +94,30 @@
         "privacyNotice": "This information is kept private and is only used to calculate your current week of pregnancy to tailor your health tips."
     },
 
+    "notificationPermissionScreen": {
+        "title": "Stay on track with MamaCare",
+        "subtitle": "Allow notifications so MamaCare can give you helpful reminders at the right time.",
+        "benefits": {
+            "appointments": {
+                "title": "Never miss an ANC visit",
+                "description": "Get reminders one week, one day, and one hour before your appointment."
+            },
+            "medication": {
+                "title": "Take medication on time",
+                "description": "Receive a reminder exactly when each medication is due."
+            },
+            "education": {
+                "title": "Keep learning each week",
+                "description": "Get one friendly weekly reminder to explore pregnancy information."
+            }
+        },
+        "offline": "Reminders are stored on your phone and still work without internet.",
+        "allow": "Allow Notifications",
+        "notNow": "Not now",
+        "settingsLater": "You can change this later in Profile → Notifications.",
+        "backAccessibility": "Go back to pregnancy setup"
+    },
+
     "welcomeScreen": {
         "title": "Welcome to MamaCare!",
         "subtitle": "Your journey begins here. We've set up your personalized timeline.",

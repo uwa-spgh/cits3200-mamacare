@@ -41,7 +41,7 @@ const InitialSetupScreen = () => {
     setSelectedDate("");
   };
 
-  const continueToWelcome = () => {
+  const continueToNotifications = () => {
     if (!selectedDate) {
       return;
     }
@@ -53,7 +53,7 @@ const InitialSetupScreen = () => {
         : enteredDate;
 
     dispatch(setEdd(dueDate.toISOString()));
-    navigation.navigate("WelcomeScreen");
+    navigation.navigate("NotificationPermissionScreen");
   };
 
   return (
@@ -122,7 +122,7 @@ const InitialSetupScreen = () => {
       <NavFooter
         nextDisabled={!selectedDate}
         onPressBack={() => navigation.navigate("LanguageSelectionScreen")}
-        onPressNext={continueToWelcome}
+        onPressNext={continueToNotifications}
       />
     </>
   );

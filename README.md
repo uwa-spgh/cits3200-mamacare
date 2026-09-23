@@ -39,7 +39,7 @@ The phone may impose its own limit on the number of pending local notifications.
 
 ### Permissions and platform configuration
 
-MamaCare creates Android notification channels before asking for permission, requests notification permission on first native launch, and exposes the current permission status under **Profile → Notifications**. If permission was denied, the Enable button opens the device settings.
+MamaCare first shows an onboarding explanation after pregnancy date setup. The native permission prompt appears only after the user taps **Allow Notifications**. Choosing **Not now** does not block onboarding, and permission can be enabled later under **Profile → Notifications**. If permission was denied, the Enable button opens the device settings. Android notification channels are created before the permission request.
 
 Android declares `SCHEDULE_EXACT_ALARM` so scheduled medication and ANC times can be exact on Android 12 and newer. The `expo-notifications` config plugin is included in `app.json`; native configuration changes require rebuilding the native development app to take full effect.
 
@@ -65,7 +65,7 @@ These tests use a fixed clock and verify:
 
 Use a physical phone for the most reliable result.
 
-1. Start the app in development mode and allow notifications when prompted.
+1. Start the app in development mode, complete the date setup, and tap **Allow Notifications** on the explanation screen.
 2. Open **Profile → Notifications**.
 3. Confirm **Device permission** says notifications are enabled.
 4. Under **Developer testing**, tap **Test medication**.
