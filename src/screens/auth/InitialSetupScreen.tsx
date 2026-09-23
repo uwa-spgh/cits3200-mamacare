@@ -18,6 +18,7 @@ import { setEdd } from "../../store/reducers/dataReducers";
 type DateMethod = "LMP" | "EDD";
 
 const PREGNANCY_LENGTH_DAYS = 280;
+const DATE_ENTRY_RANGE_DAYS = 365;
 
 const addDays = (date: Date, days: number) => {
   const result = new Date(date);
@@ -101,11 +102,11 @@ const InitialSetupScreen = () => {
             maximumDate={
               selectedMethod === "LMP"
                 ? today
-                : addDays(today, PREGNANCY_LENGTH_DAYS)
+                : addDays(today, DATE_ENTRY_RANGE_DAYS)
             }
             minimumDate={
               selectedMethod === "LMP"
-                ? addDays(today, -PREGNANCY_LENGTH_DAYS)
+                ? addDays(today, -DATE_ENTRY_RANGE_DAYS)
                 : today
             }
             onChange={setSelectedDate}
