@@ -83,7 +83,7 @@ const WelcomeScreen = () => {
             <MaterialCommunityIcons
               color={AppColors.button_primary_accent}
               name="party-popper"
-              size={s(40)}
+              size={s(34)}
             />
           </View>
 
@@ -171,10 +171,10 @@ const styles = StyleSheet.create({
   cardIcon: {
     alignItems: "center",
     borderRadius: s(25),
-    height: s(44),
+    height: s(38),
     justifyContent: "center",
-    marginBottom: vs(9),
-    width: s(44),
+    marginBottom: vs(6),
+    width: s(38),
   },
   cardLabel: {
     color: AppColors.text_headings,
@@ -193,12 +193,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: AppColors.background_light_accent,
     borderColor: AppColors.primary_section,
-    borderRadius: s(52),
-    borderWidth: s(2.5),
-    height: s(96),
+    borderRadius: s(42),
+    borderWidth: s(2),
+    height: s(78),
     justifyContent: "center",
-    marginBottom: vs(17),
-    width: s(96),
+    marginBottom: vs(11),
+    width: s(78),
   },
   container: {
     flex: 1,
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     color: AppColors.text_secondary,
     fontFamily: AppFonts.TextRegular,
     fontSize: s(12),
-    lineHeight: s(18),
+    lineHeight: s(16),
     maxWidth: s(320),
     textAlign: "center",
   },
@@ -231,9 +231,9 @@ const styles = StyleSheet.create({
     elevation: 4,
     flexDirection: "row",
     justifyContent: "center",
-    marginBottom: vs(10),
-    marginTop: vs(8),
-    minHeight: vs(46),
+    marginBottom: vs(7),
+    marginTop: vs(5),
+    minHeight: vs(44),
     shadowColor: AppColors.black,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     borderBottomColor: AppColors.stroke_primary,
     borderBottomWidth: StyleSheet.hairlineWidth,
     flexDirection: "row",
-    minHeight: vs(50),
+    minHeight: vs(46),
     paddingHorizontal: s(16),
   },
   pregnancyIcon: {
@@ -267,16 +267,17 @@ const styles = StyleSheet.create({
   scrollContent: {
     alignItems: "center",
     flexGrow: 1,
-    paddingBottom: vs(18),
+    justifyContent: "center",
+    paddingBottom: vs(12),
     paddingHorizontal: s(28),
-    paddingTop: vs(18),
+    paddingTop: vs(12),
   },
   subtitle: {
     color: AppColors.text_secondary,
     fontFamily: AppFonts.TextRegular,
     fontSize: s(13),
-    lineHeight: s(20),
-    marginBottom: vs(17),
+    lineHeight: s(18),
+    marginBottom: vs(12),
     maxWidth: s(350),
     textAlign: "center",
   },
@@ -285,17 +286,17 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.bg_button_secondary,
     borderRadius: s(14),
     justifyContent: "center",
-    marginBottom: vs(11),
-    minHeight: vs(132),
+    marginBottom: vs(8),
+    minHeight: vs(112),
     paddingHorizontal: s(20),
-    paddingVertical: vs(14),
+    paddingVertical: vs(10),
     width: "100%",
   },
   title: {
     color: AppColors.button_primary_accent,
     fontFamily: AppFonts.Heading1ExtraBold,
-    fontSize: s(22),
-    marginBottom: vs(7),
+    fontSize: s(21),
+    marginBottom: vs(4),
     textAlign: "center",
   },
 });
