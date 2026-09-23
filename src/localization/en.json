@@ -94,6 +94,21 @@
         "privacyNotice": "This information is kept private and is only used to calculate your current week of pregnancy to tailor your health tips."
     },
 
+    "welcomeScreen": {
+        "title": "Welcome to MamaCare!",
+        "subtitle": "Your journey begins here. We've set up your personalized timeline.",
+        "youAre": "You are",
+        "weeks": "{{week}} Weeks",
+        "pregnant": "Pregnant",
+        "estimatedDueDate": "Estimated Due Date",
+        "markCalendar": "Mark your calendar!",
+        "getStarted": "Get Started",
+        "adjustLater": "You can always adjust these dates in your settings later.",
+        "dateUnavailable": "Date unavailable",
+        "backAccessibility": "Go back to pregnancy setup",
+        "getStartedAccessibility": "Finish setup and get started"
+    },
+
     "homeScreen": {
         "greeting": "Hello, Asha",
         "dailyOverview": "Here is your daily overview.",
