@@ -7,4 +7,5 @@ export type DateInputProps = {
   onChange: (value: string) => void;
   placeholder?: string;
   value?: string;
+  locale?: string;
 };

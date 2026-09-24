@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { s, vs } from "react-native-size-matters";
 import { AppColors } from "../../styles/colors";
 import AppText from "../texts/AppText";
@@ -7,13 +7,19 @@ import { AppFonts } from "../../styles/fonts";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTranslation } from "react-i18next";
 import DateInput from "../inputs/DateInput";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import { setEdd } from "../../store/reducers/dataReducers";
+import { formatEdd } from "../../helpers/formatDate";
+import i18n from "../../localization/i18n";
 
-interface InputDueDateInputProps{
-    textEdd: string;
+interface InputDueDateInputProps {
+  textEdd: string;
 }
 
-const InputDueDate: FC<InputDueDateInputProps> = ({textEdd}) => {
-  const [dueDate, setDueDate] = useState("");
+const InputDueDate: FC<InputDueDateInputProps> = ({ textEdd }) => {
+  const dispatch = useDispatch();
+  const edd = useSelector((state: RootState) => state.dataReducer.edd);
   const { t } = useTranslation();
 
   return (
@@ -29,9 +35,10 @@ const InputDueDate: FC<InputDueDateInputProps> = ({textEdd}) => {
       </AppText>
       <View style={styles.innerContainer}>
         <DateInput
-          onChange={setDueDate}
+          onChange={(iso) => dispatch(setEdd(iso))}
           placeholder={t("initialSetupScreen.datePlaceholder")}
-          value={dueDate}
+          value={edd}
+          locale={i18n.language}
         />
         <View style={styles.infoContainer}>
           <MaterialCommunityIcons
@@ -68,11 +75,12 @@ const styles = StyleSheet.create({
 
   infoContainer: {
     flexDirection: "row",
-  backgroundColor: "#FFF0F1",
-  padding: s(10),
-  borderRadius: s(5),
-  alignItems: "flex-start",
-  height: vs(70)
+    backgroundColor: "#FFF0F1",
+    padding: s(10),
+    borderRadius: s(5),
+    alignItems: "flex-start",
+    height: vs(70),
+    marginTop: s(10)
   },
 
   infoText: {
@@ -81,7 +89,6 @@ const styles = StyleSheet.create({
     color: AppColors.text_secondary,
     fontSize: s(10),
     paddingRight: s(10),
-    marginHorizontal: s(10)
-    
+    marginHorizontal: s(10),
   },
 });
