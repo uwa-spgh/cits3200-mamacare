@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import AppSafeView from "../../components/views/AppSafeView";
 import ProfilePicture from "../../components/profile/ProfilePicture";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,6 +23,7 @@ import JourneyCards from "../../components/profile/JourneyCards";
 import { Ionicons } from "@expo/vector-icons";
 import { SheetManager } from "react-native-actions-sheet";
 import { useNavigation } from "expo-router/react-navigation";
+import NameInputModal from "../../components/ modals/modalProfile";
 
 const ProfileScreen = () => {
   const userName = useSelector(
@@ -32,6 +33,8 @@ const ProfileScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation<any>();
 
+  const [isNameModalVisible, setNameModalVisible] = useState(false);
+
   const { t } = useTranslation();
 
   return (
@@ -39,7 +42,19 @@ const ProfileScreen = () => {
       <ScrollView style={styles.scrollArea}>
         <View style={styles.profileInfo}>
           <ProfilePicture />
-          <AppText style={styles.userName}>{userName}</AppText>
+          <AppText style={styles.userName}>
+            {userName}{" "}
+            <TouchableOpacity onPress={() => setNameModalVisible(true)}>
+              <AppText style={{
+                fontFamily: AppFonts.Heading2Regular,
+                color: AppColors.text_green,
+                fontSize: s(13),
+                alignContent: 'center',
+                justifyContent: 'center',
+                textDecorationLine: 'underline'
+              }}>   Edit</AppText>
+            </TouchableOpacity>
+          </AppText>
           <View style={styles.gestation}>
             <MaterialCommunityIcons
               name="baby-face"
@@ -236,14 +251,29 @@ const ProfileScreen = () => {
               size={s(20)}
               color={AppColors.text_headings}
             />
-            <AppText style={{
-              fontFamily: AppFonts.TextRegular,
-              color: AppColors.text_headings,
-              fontSize: s(13),
-              marginLeft: s(5)}}
-            >{t("profileScreen.logout")}</AppText>
+            <AppText
+              style={{
+                fontFamily: AppFonts.TextRegular,
+                color: AppColors.text_headings,
+                fontSize: s(13),
+                marginLeft: s(5),
+              }}
+            >
+              {t("profileScreen.logout")}
+            </AppText>
           </View>
         </TouchableOpacity>
+        <NameInputModal
+          visible={isNameModalVisible}
+          initialValue=""
+          onSubmit={(newName) => {
+            dispatch(setUserName(newName));
+            setNameModalVisible(false);
+          }}
+          onClose={() => {
+            setNameModalVisible(false);
+          }}
+        />
       </ScrollView>
     </AppSafeView>
   );
@@ -269,9 +299,13 @@ const styles = StyleSheet.create({
   },
 
   userName: {
+    flexDirection: 'row',
     marginTop: s(15),
     fontFamily: AppFonts.TextBold,
     color: AppColors.text_headings,
+    alignContent: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center'
   },
 
   gestation: {
