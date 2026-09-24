@@ -11,11 +11,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import AppSafeView from "../../components/views/AppSafeView";
 import HomeHeader from "../../components/headers/HomeHeader";
+import { useSelector } from "react-redux";
 // import { router } from "expo-router";
 
 export default function HomeScreen() {
   const [medicationTaken, setMedicationTaken] = useState(false);
   const { t } = useTranslation();
+  const userName = useSelector(
+    (state: { dataReducer: { userName: string } }) => state.dataReducer.userName
+  );
 
   return (
     <AppSafeView>
@@ -25,7 +29,7 @@ export default function HomeScreen() {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.greeting}>{t("homeScreen.greeting")}</Text>
+        <Text style={styles.greeting}>{t("homeScreen.greeting")} {userName.split(" ")[0]}</Text>
         <Text style={styles.subtitle}>{t("homeScreen.dailyOverview")}</Text>
 
         <View style={styles.progressCard}>
