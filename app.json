@@ -4,7 +4,7 @@
     "slug": "mamaCare",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/splash-icon.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true
@@ -16,7 +16,8 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.mamacareteamcits3200.mamaCare"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -27,7 +28,7 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#FFF8F7",
-          "image": "./assets/splash-icon.svg",
+          "image": "./assets/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain"
         }
@@ -37,6 +38,12 @@
       "expo-status-bar",
       "expo-image",
       "@react-native-community/datetimepicker"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b6dd1a28-9deb-4010-9346-e663bb322e16"
+      }
+    }
   }
 }
