@@ -47,25 +47,11 @@
         "anc": "ANC appointments",
         "ancDescription": "7 days, 24 hours, and 1 hour before",
         "medication": "Medication",
-        "medicationDescription": "At the scheduled time, prepared 30 days ahead",
+        "medicationDescription": "At the scheduled time, kept in a rolling offline buffer",
         "education": "Pregnancy education",
         "educationDescription": "Every Saturday at 10:00 AM",
         "pending": "Pending reminders",
-        "pendingDescription": "The count includes each medication occurrence in the 30-day offline buffer.",
-        "developerTesting": "Developer testing",
-        "developerDescription": "Each button sends its test notification in 5 seconds. Lock or background the phone after tapping.",
-        "test": {
-            "medication": "Test medication",
-            "anc": "Test ANC",
-            "education": "Test education"
-        },
-        "permissionNeeded": "Permission needed",
-        "permissionInstructions": "Enable MamaCare notifications in your device settings, then try again.",
-        "testScheduled": "Test scheduled",
-        "testScheduledBody": "The notification will appear in about 5 seconds.",
-        "pendingList": "Scheduled on this device",
-        "noPending": "No MamaCare reminders are currently scheduled.",
-        "refresh": "Refresh list"
+        "pendingDescription": "The count includes the nearest medication occurrences in the rolling offline buffer."
     },
 
     "eddCard": {
@@ -114,6 +100,11 @@
         "offline": "Reminders are stored on your phone and still work without internet.",
         "allow": "Allow Notifications",
         "notNow": "Not now",
+        "openSettings": "Open Settings",
+        "permissionDeniedTitle": "Notifications are turned off",
+        "permissionDeniedBody": "Your phone can only show the permission request once. Open Settings to allow MamaCare notifications, or choose Not now to continue.",
+        "requestErrorTitle": "Could not request permission",
+        "requestErrorBody": "MamaCare could not open the notification permission request. Please try again or enable notifications later in Profile.",
         "settingsLater": "You can change this later in Profile → Notifications.",
         "backAccessibility": "Go back to pregnancy setup"
     },
@@ -352,6 +343,7 @@
         "dosagePlaceholder": "e.g. 1 pill",
         "instructionsPlaceholder": "e.g. Take with food",
         "timePlaceholder": "e.g. 8:00 AM",
+        "timeError": "Enter a valid time, such as 8:00 AM.",
         "save": "Save Medication"
     },
 

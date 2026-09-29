@@ -14,8 +14,7 @@ import {
   EDUCATION_MINUTE,
   EDUCATION_WEEKDAY,
   localDateKey,
-  medicationReminderDates,
-  TEST_NOTIFICATION_DELAY_SECONDS,
+  medicationReminderOccurrences,
 } from "./planning";
 import type { MedicationForReminder } from "./planning";
 import type { ReminderKind } from "./types";
@@ -23,6 +22,7 @@ import type { ReminderKind } from "./types";
 export const NOTIFICATION_PREFERENCES_KEY = "mamacare:notification-preferences";
 export const MEDICATION_STORAGE_KEY = "mamacare:medications";
 export const PLANNER_STORAGE_KEY = "mamacare:planner";
+export const MAX_PENDING_MAMACARE_REMINDERS = 60;
 
 export type NotificationPreferences = {
   anc: boolean;
@@ -70,8 +70,6 @@ const copy = {
       })}.`,
     educationTitle: "A friendly MamaCare reminder",
     educationBody: "Take a few minutes to read a pregnancy education topic this week.",
-    testTitle: (kind: ReminderKind) => `MamaCare ${kind} test`,
-    testBody: "Your local notifications are working — even without internet.",
   },
   ne: {
     medicationTitle: "औषधि सम्झना",
@@ -88,8 +86,6 @@ const copy = {
       })} मा छ।`,
     educationTitle: "MamaCare को मैत्रीपूर्ण सम्झना",
     educationBody: "यस हप्ता गर्भावस्था शिक्षाको एउटा विषय पढ्न केही मिनेट निकाल्नुहोस्।",
-    testTitle: (_kind: ReminderKind) => "MamaCare परीक्षण सूचना",
-    testBody: "तपाईंको स्थानीय सूचनाले इन्टरनेटबिना पनि काम गरिरहेको छ।",
   },
 };
 
@@ -142,23 +138,30 @@ const performMedicationSync = async (
 
   const language = selectedLanguage();
   const now = new Date();
+  const alreadyPending = await getPendingReminders();
+  const availableMedicationSlots = Math.max(
+    0,
+    MAX_PENDING_MAMACARE_REMINDERS - alreadyPending.length,
+  );
 
-  for (const medication of medications) {
-    for (const date of medicationReminderDates(medication, now)) {
-      await scheduleReminder({
-        title: copy[language].medicationTitle,
-        body: copy[language].medicationBody(medication),
-        channel: "important",
-        date,
-        data: {
-          mamaCareReminder: true,
-          kind: "medication",
-          sourceId: medication.id,
-          occurrenceDate: localDateKey(date),
-          scheduledFor: date.toISOString(),
-        },
-      });
-    }
+  for (const { medication, date } of medicationReminderOccurrences(
+    medications,
+    now,
+    availableMedicationSlots,
+  )) {
+    await scheduleReminder({
+      title: copy[language].medicationTitle,
+      body: copy[language].medicationBody(medication),
+      channel: "important",
+      date,
+      data: {
+        mamaCareReminder: true,
+        kind: "medication",
+        sourceId: medication.id,
+        occurrenceDate: localDateKey(date),
+        scheduledFor: date.toISOString(),
+      },
+    });
   }
 };
 
@@ -277,9 +280,9 @@ export const syncAllNotifications = async () => {
   ]);
 
   await configureNotificationPlatform();
-  await syncMedicationNotifications(medications);
   await syncAncNotifications(planner);
   await syncEducationNotification();
+  await syncMedicationNotifications(medications);
 };
 
 export const initializeNotifications = async () => {
@@ -299,32 +302,6 @@ export const enableNotifications = async () => {
     await syncAllNotifications();
   }
   return permission;
-};
-
-export const scheduleTestNotification = async (kind: ReminderKind) => {
-  const permission = await enableNotifications();
-  if (permission !== "granted") {
-    return { permission, id: undefined };
-  }
-
-  const language = selectedLanguage();
-  const scheduledFor = new Date(
-    Date.now() + TEST_NOTIFICATION_DELAY_SECONDS * 1000,
-  );
-  const id = await scheduleReminder({
-    title: copy[language].testTitle(kind),
-    body: copy[language].testBody,
-    channel: kind === "education" ? "education" : "important",
-    seconds: TEST_NOTIFICATION_DELAY_SECONDS,
-    data: {
-      mamaCareReminder: true,
-      kind: "test",
-      sourceId: kind,
-      scheduledFor: scheduledFor.toISOString(),
-    },
-  });
-
-  return { permission, id };
 };
 
 export {

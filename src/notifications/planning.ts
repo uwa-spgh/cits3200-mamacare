@@ -8,7 +8,6 @@ export const MEDICATION_HORIZON_DAYS = 30;
 export const EDUCATION_WEEKDAY = 7;
 export const EDUCATION_HOUR = 10;
 export const EDUCATION_MINUTE = 0;
-export const TEST_NOTIFICATION_DELAY_SECONDS = 5;
 
 export type MedicationForReminder = {
   id: string;
@@ -26,6 +25,11 @@ export type AppointmentForReminder = {
   date: string;
 };
 
+export type MedicationReminderOccurrence = {
+  medication: MedicationForReminder;
+  date: Date;
+};
+
 export const localDateKey = (date: Date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -35,15 +39,25 @@ export const localDateKey = (date: Date) => {
 };
 
 export const parseMedicationTime = (value: string) => {
-  const match = value.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  const normalizedValue = value
+    .trim()
+    .replace(/[०-९]/g, (digit) => String("०१२३४५६७८९".indexOf(digit)));
+  const nepaliMatch = normalizedValue.match(
+    /^(बिहान|दिउँसो|साँझ)\s*(\d{1,2}):(\d{2})$/,
+  );
+  const match = normalizedValue.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
 
-  if (!match) {
+  if (!match && !nepaliMatch) {
     return null;
   }
 
-  let hour = Number(match[1]);
-  const minute = Number(match[2]);
-  const period = match[3].toUpperCase();
+  let hour = Number(match?.[1] ?? nepaliMatch?.[2]);
+  const minute = Number(match?.[2] ?? nepaliMatch?.[3]);
+  const period = match
+    ? match[3].toUpperCase()
+    : nepaliMatch?.[1] === "बिहान"
+      ? "AM"
+      : "PM";
 
   if (hour < 1 || hour > 12 || minute < 0 || minute > 59) {
     return null;
@@ -94,6 +108,25 @@ export const medicationReminderDates = (
   return dates;
 };
 
+export const medicationReminderOccurrences = (
+  medications: MedicationForReminder[],
+  now: Date,
+  limit: number,
+) =>
+  medications
+    .flatMap((medication) =>
+      medicationReminderDates(medication, now).map((date) => ({
+        medication,
+        date,
+      })),
+    )
+    .sort(
+      (left, right) =>
+        left.date.getTime() - right.date.getTime() ||
+        left.medication.id.localeCompare(right.medication.id),
+    )
+    .slice(0, Math.max(0, limit));
+
 export const ancReminderDates = (appointmentDate: string, now: Date) => {
   const appointment = new Date(appointmentDate);
 
@@ -105,4 +138,3 @@ export const ancReminderDates = (appointmentDate: string, now: Date) => {
     (offset) => new Date(appointment.getTime() - offset),
   ).filter((date) => date.getTime() > now.getTime());
 };
-

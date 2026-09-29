@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
+  Alert,
+  Linking,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -34,12 +37,36 @@ export default function NotificationPermissionScreen() {
   const requestPermission = async () => {
     setIsRequesting(true);
     try {
-      await enableNotifications();
+      const permission = await enableNotifications();
+      setIsRequesting(false);
+
+      if (permission === "granted" || Platform.OS === "web") {
+        continueToWelcome();
+        return;
+      }
+
+      Alert.alert(
+        t("notificationPermissionScreen.permissionDeniedTitle"),
+        t("notificationPermissionScreen.permissionDeniedBody"),
+        [
+          {
+            onPress: continueToWelcome,
+            style: "cancel",
+            text: t("notificationPermissionScreen.notNow"),
+          },
+          {
+            onPress: () => Linking.openSettings().catch(() => undefined),
+            text: t("notificationPermissionScreen.openSettings"),
+          },
+        ],
+      );
     } catch {
-      // Onboarding can continue; permission remains available in Profile.
+      setIsRequesting(false);
+      Alert.alert(
+        t("notificationPermissionScreen.requestErrorTitle"),
+        t("notificationPermissionScreen.requestErrorBody"),
+      );
     }
-    setIsRequesting(false);
-    continueToWelcome();
   };
 
   return (

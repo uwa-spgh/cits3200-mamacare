@@ -3,7 +3,6 @@ import { useNavigation } from "expo-router/react-navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Alert,
   AppState,
   Linking,
   Pressable,
@@ -20,14 +19,13 @@ import {
   getPendingReminders,
   loadNotificationPreferences,
   saveNotificationPreferences,
-  scheduleTestNotification,
   syncAllNotifications,
 } from "../../notifications/notificationService";
 import type {
   NotificationPermission,
   NotificationPreferences,
 } from "../../notifications/notificationService";
-import type { PendingReminder, ReminderKind } from "../../notifications/types";
+import type { PendingReminder } from "../../notifications/types";
 
 const BRAND = "#BC1F58";
 const GREEN = "#098F48";
@@ -90,29 +88,6 @@ export default function NotificationsScreen() {
     await saveNotificationPreferences(next);
     await syncAllNotifications();
     await refresh();
-  };
-
-  const handleTest = async (kind: ReminderKind) => {
-    setBusy(true);
-    try {
-      const result = await scheduleTestNotification(kind);
-
-      if (result.permission !== "granted") {
-        Alert.alert(
-          t("notificationsScreen.permissionNeeded"),
-          t("notificationsScreen.permissionInstructions"),
-        );
-        return;
-      }
-
-      Alert.alert(
-        t("notificationsScreen.testScheduled"),
-        t("notificationsScreen.testScheduledBody"),
-      );
-      await refresh();
-    } finally {
-      setBusy(false);
-    }
   };
 
   const permissionLabel = t(`notificationsScreen.permission.${permission}`);
@@ -186,60 +161,6 @@ export default function NotificationsScreen() {
           </View>
         </View>
         <Text style={styles.helperText}>{t("notificationsScreen.pendingDescription")}</Text>
-
-        {__DEV__ ? (
-          <View style={styles.developerCard}>
-            <View style={styles.developerHeading}>
-              <Ionicons name="construct-outline" color={BRAND} size={20} />
-              <Text style={styles.cardTitle}>{t("notificationsScreen.developerTesting")}</Text>
-            </View>
-            <Text style={styles.cardDescription}>
-              {t("notificationsScreen.developerDescription")}
-            </Text>
-            <View style={styles.testButtons}>
-              {(["medication", "anc", "education"] as ReminderKind[]).map((kind) => (
-                <Pressable
-                  disabled={busy}
-                  key={kind}
-                  onPress={() => handleTest(kind)}
-                  style={styles.testButton}
-                >
-                  <Text style={styles.testButtonText}>
-                    {t(`notificationsScreen.test.${kind}`)}
-                  </Text>
-                </Pressable>
-              ))}
-            </View>
-          </View>
-        ) : null}
-
-        {__DEV__ ? (
-          <View style={styles.pendingCard}>
-            <Text style={styles.pendingTitle}>{t("notificationsScreen.pendingList")}</Text>
-            {pending.length === 0 ? (
-              <Text style={styles.emptyText}>{t("notificationsScreen.noPending")}</Text>
-            ) : (
-              pending.map((reminder) => (
-                <View key={reminder.id} style={styles.pendingRow}>
-                  <View style={styles.pendingDot} />
-                  <View style={styles.pendingCopy}>
-                    <Text numberOfLines={1} style={styles.pendingItemTitle}>
-                      {reminder.title}
-                    </Text>
-                    <Text numberOfLines={1} style={styles.pendingItemBody}>
-                      {reminder.body}
-                    </Text>
-                    <Text style={styles.pendingTime}>{formatPendingTime(reminder)}</Text>
-                  </View>
-                </View>
-              ))
-            )}
-            <Pressable onPress={() => refresh()} style={styles.refreshButton}>
-              <Ionicons name="refresh" color={BRAND} size={16} />
-              <Text style={styles.refreshText}>{t("notificationsScreen.refresh")}</Text>
-            </Pressable>
-          </View>
-        ) : null}
       </ScrollView>
     </AppSafeView>
   );
@@ -279,17 +200,6 @@ function PreferenceRow({
 
 const Divider = () => <View style={styles.divider} />;
 
-const formatPendingTime = (reminder: PendingReminder) => {
-  if (reminder.data.scheduleLabel) return reminder.data.scheduleLabel;
-
-  if (reminder.data.scheduledFor) {
-    const date = new Date(reminder.data.scheduledFor);
-    if (!Number.isNaN(date.getTime())) return date.toLocaleString();
-  }
-
-  return reminder.data.kind ?? "reminder";
-};
-
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: BACKGROUND },
   content: { padding: 20, paddingBottom: 48 },
@@ -316,20 +226,4 @@ const styles = StyleSheet.create({
   countBadge: { backgroundColor: "#FBE4EA", borderRadius: 12, marginTop: 24, paddingHorizontal: 8, paddingVertical: 3 },
   countText: { color: BRAND, fontSize: 12, fontWeight: "800" },
   helperText: { color: "#806D73", fontSize: 12, lineHeight: 18, marginTop: 5 },
-  developerCard: { backgroundColor: "#FFF0F4", borderColor: "#EAB9C9", borderRadius: 14, borderWidth: 1, marginTop: 18, padding: 15 },
-  developerHeading: { alignItems: "center", flexDirection: "row", gap: 8 },
-  testButtons: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 12 },
-  testButton: { backgroundColor: BRAND, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10 },
-  testButtonText: { color: "#FFFFFF", fontSize: 12, fontWeight: "700" },
-  pendingCard: { backgroundColor: "#FFFFFF", borderRadius: 14, marginTop: 14, padding: 15 },
-  pendingTitle: { color: TEXT, fontSize: 14, fontWeight: "800", marginBottom: 8 },
-  emptyText: { color: "#89747A", fontSize: 12, paddingVertical: 8 },
-  pendingRow: { alignItems: "center", borderBottomColor: "#F2E7EA", borderBottomWidth: 1, flexDirection: "row", paddingVertical: 9 },
-  pendingDot: { backgroundColor: GREEN, borderRadius: 4, height: 8, marginRight: 10, width: 8 },
-  pendingCopy: { flex: 1 },
-  pendingItemTitle: { color: TEXT, fontSize: 12, fontWeight: "700" },
-  pendingItemBody: { color: "#67545A", fontSize: 11, marginTop: 2 },
-  pendingTime: { color: "#867177", fontSize: 11, marginTop: 2 },
-  refreshButton: { alignItems: "center", alignSelf: "flex-start", flexDirection: "row", gap: 5, marginTop: 12 },
-  refreshText: { color: BRAND, fontSize: 12, fontWeight: "700" },
 });

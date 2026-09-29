@@ -1,4 +1,4 @@
-export type ReminderKind = "anc" | "medication" | "education" | "test";
+export type ReminderKind = "anc" | "medication" | "education";
 
 export type ReminderData = {
   mamaCareReminder: true;
@@ -20,7 +20,6 @@ export type ScheduleRequest = {
     hour: number;
     minute: number;
   };
-  seconds?: number;
 };
 
 export type PendingReminder = {
@@ -30,5 +29,9 @@ export type PendingReminder = {
   data: Partial<ReminderData>;
 };
 
-export type NotificationPermission = "granted" | "denied" | "undetermined";
+export type ReminderResponse = {
+  id: string;
+  data: Partial<ReminderData>;
+};
 
+export type NotificationPermission = "granted" | "denied" | "undetermined";

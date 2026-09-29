@@ -3,6 +3,7 @@ import { useNavigation } from "expo-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMedications } from "../../context/MedicationContext";
+import { parseMedicationTime } from "../../notifications/planning";
 import {
     ScrollView,
     StyleSheet,
@@ -11,7 +12,6 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import App from "../../../App";
 import AppSafeView from "../../components/views/AppSafeView";
 
 type Period = "Morning" | "Afternoon" | "Evening";
@@ -27,6 +27,9 @@ export default function AddMedicationScreen() {
     const [period, setPeriod] = useState<Period>("Morning");
 
     const navigation = useNavigation<any>();
+    const isTimeValid = parseMedicationTime(time) !== null;
+    const canSave = Boolean(name.trim()) && isTimeValid;
+    const showTimeError = Boolean(time.trim()) && !isTimeValid;
 
     const handleSave = () => {
         addMedication({
@@ -86,11 +89,17 @@ export default function AddMedicationScreen() {
 
             <Text style={styles.label}>{t("medicationScreen.time")}</Text>
             <TextInput
-                style={styles.input}
+                autoCapitalize="characters"
+                style={[styles.input, showTimeError && styles.inputError]}
                 placeholder={t("addMedicationScreen.timePlaceholder")}
                 value={time}
                 onChangeText={setTime}
             />
+            {showTimeError ? (
+                <Text style={styles.errorText}>
+                    {t("addMedicationScreen.timeError")}
+                </Text>
+            ) : null}
 
             <Text style={styles.label}>{t("medicationScreen.timeOfDay")}</Text>
 
@@ -121,11 +130,13 @@ export default function AddMedicationScreen() {
             </View>
 
             <TouchableOpacity
+                accessibilityRole="button"
+                accessibilityState={{ disabled: !canSave }}
                 style={[
                     styles.saveButton,
-                    !name.trim() && styles.saveButtonDisabled,
+                    !canSave && styles.saveButtonDisabled,
                 ]}
-                disabled={!name.trim()}
+                disabled={!canSave}
                 onPress={handleSave}
             >
                 <Text style={styles.saveButtonText}>{t("addMedicationScreen.save")}</Text>
@@ -176,6 +187,16 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         fontSize: 14,
         color: "#3E3034",
+    },
+
+    inputError: {
+        borderColor: "#B42318",
+    },
+
+    errorText: {
+        color: "#B42318",
+        fontSize: 12,
+        marginTop: 6,
     },
 
     periodRow: {

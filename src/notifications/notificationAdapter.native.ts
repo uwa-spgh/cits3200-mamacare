@@ -3,6 +3,7 @@ import { Platform } from "react-native";
 import type {
   NotificationPermission,
   PendingReminder,
+  ReminderResponse,
   ScheduleRequest,
 } from "./types";
 
@@ -38,6 +39,19 @@ export const configureNotificationPlatform = async () => {
 const normalizePermission = (
   permission: Notifications.NotificationPermissionsStatus,
 ): NotificationPermission => {
+  if (Platform.OS === "ios" && permission.ios) {
+    switch (permission.ios.status) {
+      case Notifications.IosAuthorizationStatus.AUTHORIZED:
+      case Notifications.IosAuthorizationStatus.PROVISIONAL:
+      case Notifications.IosAuthorizationStatus.EPHEMERAL:
+        return "granted";
+      case Notifications.IosAuthorizationStatus.DENIED:
+        return "denied";
+      default:
+        return "undetermined";
+    }
+  }
+
   if (permission.granted) {
     return "granted";
   }
@@ -50,7 +64,16 @@ export const getNotificationPermission = async () =>
 
 export const requestNotificationPermission = async () => {
   await configureNotificationPlatform();
-  return normalizePermission(await Notifications.requestPermissionsAsync());
+  return normalizePermission(
+    await Notifications.requestPermissionsAsync({
+      android: {},
+      ios: {
+        allowAlert: true,
+        allowBadge: true,
+        allowSound: true,
+      },
+    }),
+  );
 };
 
 export const getPendingReminders = async (): Promise<PendingReminder[]> => {
@@ -68,6 +91,31 @@ export const getPendingReminders = async (): Promise<PendingReminder[]> => {
 
 export const cancelReminder = (id: string) =>
   Notifications.cancelScheduledNotificationAsync(id);
+
+const mapReminderResponse = (
+  response: Notifications.NotificationResponse,
+): ReminderResponse => ({
+  id: response.notification.request.identifier,
+  data: response.notification.request.content.data ?? {},
+});
+
+export const getLastReminderResponse = (): ReminderResponse | null => {
+  const response = Notifications.getLastNotificationResponse();
+  return response ? mapReminderResponse(response) : null;
+};
+
+export const addReminderResponseListener = (
+  listener: (response: ReminderResponse) => void,
+) => {
+  const subscription = Notifications.addNotificationResponseReceivedListener(
+    (response) => listener(mapReminderResponse(response)),
+  );
+
+  return () => subscription.remove();
+};
+
+export const clearLastReminderResponse = () =>
+  Notifications.clearLastNotificationResponse();
 
 export const scheduleReminder = async (request: ScheduleRequest) => {
   const channelId =
@@ -92,11 +140,7 @@ export const scheduleReminder = async (request: ScheduleRequest) => {
       channelId,
     };
   } else {
-    trigger = {
-      type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-      seconds: request.seconds ?? 5,
-      channelId,
-    };
+    throw new Error("A reminder requires a date or weekly schedule.");
   }
 
   return Notifications.scheduleNotificationAsync({

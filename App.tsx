@@ -2,8 +2,12 @@ import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import { AppColors } from "./src/styles/colors";
 import MainAppNavStack from "./src/navigation/MainAppNavStack";
-import { NavigationContainer } from "expo-router/react-navigation";
+import {
+  createNavigationContainerRef,
+  NavigationContainer,
+} from "expo-router/react-navigation";
 import { useFonts } from "expo-font";
+import { useState } from "react";
 import { Provider } from "react-redux";
 import { store } from "./src/store/store";
 import i18n from "./src/localization/i18n";
@@ -17,7 +21,10 @@ import NotificationCoordinator from "./src/notifications/NotificationCoordinator
 
 registerSheet("LANG_SHEET", LanguageBottomSheet);
 
+const navigationRef = createNavigationContainerRef();
+
 export default function App() {
+  const [navigationReady, setNavigationReady] = useState(false);
   const [fontsLoaded] = useFonts({
     "Nunito-Bold": require("./src/assets/fonts/nunito/Nunito-Bold.ttf"),
     "Nunito-ExtraBold": require("./src/assets/fonts/nunito/Nunito-ExtraBold.ttf"),
@@ -47,9 +54,15 @@ export default function App() {
         <SheetProvider>
           <Provider store={store}>
             <I18nextProvider i18n={i18n}>
-              <NavigationContainer>
+              <NavigationContainer
+                onReady={() => setNavigationReady(true)}
+                ref={navigationRef}
+              >
                 <MedicationProvider>
-                  <NotificationCoordinator />
+                  <NotificationCoordinator
+                    navigationReady={navigationReady}
+                    navigationRef={navigationRef}
+                  />
                   <FlashMessage position="top" />
                   <MainAppNavStack />
                 </MedicationProvider>

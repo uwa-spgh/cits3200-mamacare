@@ -9,9 +9,9 @@ import { AppState } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
     MEDICATION_STORAGE_KEY,
-    syncMedicationNotifications,
+    syncAllNotifications,
 } from "../notifications/notificationService";
-import { localDateKey } from "../notifications/planning";
+import { localDateKey, parseMedicationTime } from "../notifications/planning";
 
 export type Period = "Morning" | "Afternoon" | "Evening";
 
@@ -100,27 +100,12 @@ const initialMedications: Medication[] = [
 ];
 
 function isMedicationPastDue(time: string) {
-    const match = time
-        .trim()
-        .match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
-
-    if (!match) {
+    const parsedTime = parseMedicationTime(time);
+    if (!parsedTime) {
         return false;
     }
 
-    let hour = Number(match[1]);
-    const minute = Number(match[2]);
-    const period = match[3].toUpperCase();
-
-    if (period === "AM" && hour === 12) {
-        hour = 0;
-    }
-
-    if (period === "PM" && hour !== 12) {
-        hour += 12;
-    }
-
-    const scheduledMinutes = hour * 60 + minute;
+    const scheduledMinutes = parsedTime.hour * 60 + parsedTime.minute;
 
     const now = new Date();
     const currentMinutes =
@@ -355,7 +340,7 @@ export function MedicationProvider({
         }
 
         AsyncStorage.setItem(MEDICATION_STORAGE_KEY, JSON.stringify(medications))
-            .then(() => syncMedicationNotifications(medications))
+            .then(() => syncAllNotifications())
             .catch(() => undefined);
     }, [hasLoadedState, medications]);
 

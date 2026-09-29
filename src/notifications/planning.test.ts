@@ -7,6 +7,7 @@ import {
   ancReminderDates,
   localDateKey,
   medicationReminderDates,
+  medicationReminderOccurrences,
   parseMedicationTime,
 } from "./planning";
 
@@ -15,6 +16,8 @@ test("parses 12-hour medication times", () => {
   assert.deepEqual(parseMedicationTime("12:30 AM"), { hour: 0, minute: 30 });
   assert.deepEqual(parseMedicationTime("12:30 PM"), { hour: 12, minute: 30 });
   assert.deepEqual(parseMedicationTime("9:15 PM"), { hour: 21, minute: 15 });
+  assert.deepEqual(parseMedicationTime("बिहान ८:०५"), { hour: 8, minute: 5 });
+  assert.deepEqual(parseMedicationTime("साँझ ९:१५"), { hour: 21, minute: 15 });
   assert.equal(parseMedicationTime("25:00"), null);
 });
 
@@ -55,6 +58,45 @@ test("taking a medication cancels today but preserves future days", () => {
 
   assert.equal(dates.length, 29);
   assert.equal(localDateKey(dates[0]), "2026-09-24");
+});
+
+test("limits medication reminders to the nearest occurrences across medications", () => {
+  const now = new Date(2026, 8, 23, 8, 0, 0);
+  const occurrences = medicationReminderOccurrences(
+    [
+      {
+        id: "morning",
+        name: "Iron",
+        dosage: "",
+        instructions: "",
+        time: "9:00 AM",
+        taken: false,
+      },
+      {
+        id: "afternoon",
+        name: "Calcium",
+        dosage: "",
+        instructions: "",
+        time: "1:00 PM",
+        taken: false,
+      },
+    ],
+    now,
+    3,
+  );
+
+  assert.equal(occurrences.length, 3);
+  assert.deepEqual(
+    occurrences.map(({ medication }) => medication.id),
+    ["morning", "afternoon", "morning"],
+  );
+  assert.ok(
+    occurrences.every(
+      (occurrence, index) =>
+        index === 0 ||
+        occurrence.date.getTime() >= occurrences[index - 1].date.getTime(),
+    ),
+  );
 });
 
 test("creates ANC reminders exactly 7 days, 24 hours and 1 hour before", () => {

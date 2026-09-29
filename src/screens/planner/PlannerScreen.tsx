@@ -16,7 +16,7 @@ import HomeHeader from "../../components/headers/HomeHeader";
 import DateInput from "../../components/inputs/DateInput";
 import {
   PLANNER_STORAGE_KEY,
-  syncAncNotifications,
+  syncAllNotifications,
 } from "../../notifications/notificationService";
 
 type Visit = {
@@ -309,30 +309,34 @@ export default function PlannerScreen() {
   const { t } = useTranslation();
   const [state, setState] = useState(defaultState);
   const [hasLoadedState, setHasLoadedState] = useState(false);
-  const selectedVisit = useMemo(
-    () => {
-      const visit = visits.find((item) => item.id === state.selectedVisitId) ?? visits[0];
-      const translationKey = `plannerScreen.contacts.${visit.id}`;
+  const translatedVisits = useMemo(
+    () =>
+      visits.map((visit) => {
+        const translationKey = `plannerScreen.contacts.${visit.id}`;
 
-      return {
-        ...visit,
-        title: t(`${translationKey}.title`),
-        timing: t(`${translationKey}.timing`),
-        trimester: t(`${translationKey}.trimester`),
-        date: t(`${translationKey}.date`),
-        summary: t(`${translationKey}.summary`),
-        advice: t(`${translationKey}.advice`, { returnObjects: true }) as unknown as string[],
-        checks: t(`${translationKey}.checks`, { returnObjects: true }) as unknown as string[],
-        dangerSigns: t(`${translationKey}.dangerSigns`, { returnObjects: true }) as unknown as string[],
-      };
-    },
-    [state.selectedVisitId, t],
+        return {
+          ...visit,
+          title: t(`${translationKey}.title`),
+          timing: t(`${translationKey}.timing`),
+          trimester: t(`${translationKey}.trimester`),
+          date: t(`${translationKey}.date`),
+          summary: t(`${translationKey}.summary`),
+          advice: t(`${translationKey}.advice`, {
+            returnObjects: true,
+          }) as unknown as string[],
+          checks: t(`${translationKey}.checks`, {
+            returnObjects: true,
+          }) as unknown as string[],
+          dangerSigns: t(`${translationKey}.dangerSigns`, {
+            returnObjects: true,
+          }) as unknown as string[],
+        };
+      }),
+    [t],
   );
-  const selectedChecks = state.checklist[selectedVisit.id] ?? [];
-  const selectedAppointment = state.appointments[selectedVisit.id] ?? {
-    date: selectedVisit.date,
-    facility: t("plannerScreen.localFacility"),
-  };
+  const selectedVisit =
+    translatedVisits.find((visit) => visit.id === state.selectedVisitId) ??
+    translatedVisits[0];
 
   useEffect(() => {
     let isMounted = true;
@@ -361,57 +365,79 @@ export default function PlannerScreen() {
     }
 
     AsyncStorage.setItem(PLANNER_STORAGE_KEY, JSON.stringify(state))
-      .then(() => syncAncNotifications(state))
+      .then(() => syncAllNotifications())
       .catch(() => undefined);
   }, [hasLoadedState, state]);
 
-  const updateState = (nextState: PlannerState) => {
-    setState(nextState);
-  };
-
   const selectVisit = (visitId: string) => {
-    updateState({ ...state, selectedVisitId: visitId });
+    setState((current) => ({ ...current, selectedVisitId: visitId }));
   };
 
-  const toggleCheck = (item: string) => {
-    const current = state.checklist[selectedVisit.id] ?? [];
-    const next = current.includes(item)
-      ? current.filter((check) => check !== item)
-      : [...current, item];
+  const toggleCheck = (visitId: string, item: string) => {
+    setState((current) => {
+      const currentChecks = current.checklist[visitId] ?? [];
+      const nextChecks = currentChecks.includes(item)
+        ? currentChecks.filter((check) => check !== item)
+        : [...currentChecks, item];
 
-    updateState({
-      ...state,
-      checklist: { ...state.checklist, [selectedVisit.id]: next },
+      return {
+        ...current,
+        checklist: { ...current.checklist, [visitId]: nextChecks },
+      };
     });
   };
 
-  const toggleVisitComplete = () => {
-    const isComplete = state.completedVisits.includes(selectedVisit.id);
-    const completedVisits = isComplete
-      ? state.completedVisits.filter((visitId) => visitId !== selectedVisit.id)
-      : [...state.completedVisits, selectedVisit.id];
+  const toggleVisitComplete = (visitId: string) => {
+    setState((current) => {
+      const isComplete = current.completedVisits.includes(visitId);
+      const completedVisits = isComplete
+        ? current.completedVisits.filter((item) => item !== visitId)
+        : [...current.completedVisits, visitId];
 
-    updateState({ ...state, completedVisits });
+      return { ...current, completedVisits };
+    });
   };
 
-  const updateAppointment = (field: "date" | "facility", value: string) => {
-    updateState({
-      ...state,
+  const updateAppointment = (
+    visitId: string,
+    fallbackAppointment: { date: string; facility: string },
+    field: "date" | "facility",
+    value: string,
+  ) => {
+    setState((current) => ({
+      ...current,
       appointments: {
-        ...state.appointments,
-        [selectedVisit.id]: {
-          ...selectedAppointment,
+        ...current.appointments,
+        [visitId]: {
+          ...(current.appointments[visitId] ?? fallbackAppointment),
           [field]: value,
         },
       },
-    });
+    }));
   };
 
-  const updateNotes = (value: string) => {
-    updateState({
-      ...state,
-      notes: { ...state.notes, [selectedVisit.id]: value },
-    });
+  const updateNotes = (visitId: string, value: string) => {
+    setState((current) => ({
+      ...current,
+      notes: { ...current.notes, [visitId]: value },
+    }));
+  };
+
+  const visitDetails = (visitId?: string) => {
+    const visit =
+      translatedVisits.find((item) => item.id === visitId) ?? selectedVisit;
+    const appointment = state.appointments[visit.id] ?? {
+      date: visit.date,
+      facility: t("plannerScreen.localFacility"),
+    };
+
+    return {
+      appointment,
+      checkedItems: state.checklist[visit.id] ?? [],
+      notes: state.notes[visit.id] ?? "",
+      visit,
+      visitComplete: state.completedVisits.includes(visit.id),
+    };
   };
 
   return (
@@ -425,48 +451,47 @@ export default function PlannerScreen() {
               completedVisits={state.completedVisits}
               onSelectVisit={(visitId) => {
                 selectVisit(visitId);
-                navigation.navigate("VisitChecklist");
+                navigation.navigate("VisitChecklist", { visitId });
               }}
               selectedVisitId={selectedVisit.id}
-              visits={visits.map((visit) => {
-                const translationKey = `plannerScreen.contacts.${visit.id}`;
-                return {
-                  ...visit,
-                  title: t(`${translationKey}.title`),
-                  timing: t(`${translationKey}.timing`),
-                  trimester: t(`${translationKey}.trimester`),
-                  date: t(`${translationKey}.date`),
-                  summary: t(`${translationKey}.summary`),
-                  advice: t(`${translationKey}.advice`, { returnObjects: true }) as unknown as string[],
-                  checks: t(`${translationKey}.checks`, { returnObjects: true }) as unknown as string[],
-                  dangerSigns: t(`${translationKey}.dangerSigns`, { returnObjects: true }) as unknown as string[],
-                };
-              })}
+              visits={translatedVisits}
             />
           </AppSafeView>
         )}
       </Stack.Screen>
       <Stack.Screen name="VisitChecklist">
-        {({ navigation }) => (
-          <AppSafeView style={styles.screen}>
-            <HomeHeader />
-            <VisitChecklist
-              checkedItems={selectedChecks}
-              notes={state.notes[selectedVisit.id] ?? ""}
-              onBack={() => navigation.goBack()}
-              onCompleteVisit={() => {
-                toggleVisitComplete();
-                navigation.goBack();
-              }}
-              onToggleCheck={toggleCheck}
-              onUpdateAppointment={updateAppointment}
-              onUpdateNotes={updateNotes}
-              visit={selectedVisit}
-              appointment={selectedAppointment}
-              visitComplete={state.completedVisits.includes(selectedVisit.id)}
-            />
-          </AppSafeView>
-        )}
+        {({ navigation, route }) => {
+          const params = route.params as { visitId?: string } | undefined;
+          const details = visitDetails(params?.visitId);
+
+          return (
+            <AppSafeView style={styles.screen}>
+              <HomeHeader />
+              <VisitChecklist
+                checkedItems={details.checkedItems}
+                notes={details.notes}
+                onBack={() => navigation.goBack()}
+                onCompleteVisit={() => {
+                  toggleVisitComplete(details.visit.id);
+                  navigation.goBack();
+                }}
+                onToggleCheck={(item) => toggleCheck(details.visit.id, item)}
+                onUpdateAppointment={(field, value) =>
+                  updateAppointment(
+                    details.visit.id,
+                    details.appointment,
+                    field,
+                    value,
+                  )
+                }
+                onUpdateNotes={(value) => updateNotes(details.visit.id, value)}
+                visit={details.visit}
+                appointment={details.appointment}
+                visitComplete={details.visitComplete}
+              />
+            </AppSafeView>
+          );
+        }}
       </Stack.Screen>
     </Stack.Navigator>
   );
