@@ -76,11 +76,7 @@ const ProfileScreen = () => {
                 />
               }
               onPress={() =>
-                Alert.alert(
-                  t("profileScreen.comingSoon"),
-                  t("profileScreen.featureComingLater"),
-                )
-              }
+                navigation.navigate("PersonalInformation")}
               backgroundColor={AppColors.button_primary_accent}
             />
             <JourneyCards

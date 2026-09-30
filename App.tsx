@@ -13,11 +13,13 @@ import { store } from "./src/store/store";
 import i18n from "./src/localization/i18n";
 import { I18nextProvider } from "react-i18next";
 import { MedicationProvider } from "./src/context/MedicationContext";
+import { PersonalInformationProvider } from "./src/context/PersonalInformationContext";
 import { registerSheet } from "react-native-actions-sheet";
 import LanguageBottomSheet from "./src/components/sheets/LanguageBottomSheet";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { SheetProvider } from "react-native-actions-sheet";
 import NotificationCoordinator from "./src/notifications/NotificationCoordinator";
+import "./src/components/sheets/sheets";
 
 registerSheet("LANG_SHEET", LanguageBottomSheet);
 
@@ -59,12 +61,14 @@ export default function App() {
                 ref={navigationRef}
               >
                 <MedicationProvider>
-                  <NotificationCoordinator
-                    navigationReady={navigationReady}
-                    navigationRef={navigationRef}
-                  />
-                  <FlashMessage position="top" />
-                  <MainAppNavStack />
+                  <PersonalInformationProvider>
+                    <NotificationCoordinator
+                      navigationReady={navigationReady}
+                      navigationRef={navigationRef}
+                    />
+                    <FlashMessage position="top" />
+                    <MainAppNavStack />
+                  </PersonalInformationProvider>
                 </MedicationProvider>
               </NavigationContainer>
             </I18nextProvider>
