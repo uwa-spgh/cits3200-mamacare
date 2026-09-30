@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import AppSafeView from "../../components/views/AppSafeView";
@@ -12,11 +12,50 @@ import PregnancySetupCard from "../../components/cards/PregnancySetupCard";
 import DueDateMethod from "../../components/cards/DueDateMethod";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import InputDueDate from "../../components/cards/InputDueDate";
+import { useDispatch } from "react-redux";
+import { setEdd } from "../../store/reducers/dataReducers";
+
+type DateMethod = "LMP" | "EDD";
+
+const PREGNANCY_LENGTH_DAYS = 280;
+const DATE_ENTRY_RANGE_DAYS = 365;
+
+const addDays = (date: Date, days: number) => {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+};
 
 const InitialSetupScreen = () => {
-  const [selectedMethod, setSelectedMethod] = useState("LMP");
+  const [selectedMethod, setSelectedMethod] = useState<DateMethod>("LMP");
+  const [selectedDate, setSelectedDate] = useState("");
+  const dispatch = useDispatch();
   const navigation = useNavigation<any>();
   const { t } = useTranslation();
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const selectMethod = (method: DateMethod) => {
+    setSelectedMethod(method);
+    setSelectedDate("");
+  };
+
+  const continueToNotifications = () => {
+    if (!selectedDate) {
+      return;
+    }
+
+    const enteredDate = new Date(selectedDate);
+    const dueDate =
+      selectedMethod === "LMP"
+        ? addDays(enteredDate, PREGNANCY_LENGTH_DAYS)
+        : enteredDate;
+
+    dispatch(setEdd(dueDate.toISOString()));
+    navigation.navigate("NotificationPermissionScreen");
+  };
+
   return (
     <>
       <AppSafeView style={styles.container}>
@@ -42,7 +81,7 @@ const InitialSetupScreen = () => {
               />
             }
             type="LMP"
-            onPress={() => setSelectedMethod("LMP")}
+            onPress={() => selectMethod("LMP")}
             isSelected={selectedMethod === "LMP"}
           />
           <DueDateMethod
@@ -56,22 +95,34 @@ const InitialSetupScreen = () => {
               />
             }
             type="EDD"
-            onPress={() => setSelectedMethod("EDD")}
+            onPress={() => selectMethod("EDD")}
             isSelected={selectedMethod === "EDD"}
           />
           <InputDueDate
+            maximumDate={
+              selectedMethod === "LMP"
+                ? today
+                : addDays(today, DATE_ENTRY_RANGE_DAYS)
+            }
+            minimumDate={
+              selectedMethod === "LMP"
+                ? addDays(today, -DATE_ENTRY_RANGE_DAYS)
+                : today
+            }
+            onChange={setSelectedDate}
             textEdd={
               selectedMethod === "LMP"
                 ? t("initialSetupScreen.lastPeriodPrompt")
                 : t("initialSetupScreen.dueDatePrompt")
             }
+            value={selectedDate}
           />
         </View>
       </AppSafeView>
       <NavFooter
+        nextDisabled={!selectedDate}
         onPressBack={() => navigation.navigate("LanguageSelectionScreen")}
-        // onPressNext={() => navigation.navigate("WelcomeScreen")}
-        onPressNext={() => navigation.getParent()?.replace("MainAppBottomTabs")}
+        onPressNext={continueToNotifications}
       />
     </>
   );

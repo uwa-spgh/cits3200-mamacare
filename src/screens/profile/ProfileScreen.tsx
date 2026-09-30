@@ -160,12 +160,7 @@ const ProfileScreen = () => {
                     color={AppColors.text_headings}
                   />
                 }
-                onPress={() =>
-                  Alert.alert(
-                    t("profileScreen.comingSoon"),
-                    t("profileScreen.featureComingLater"),
-                  )
-                }
+                onPress={() => navigation.navigate("Notifications")}
                 backgroundColor={AppColors.white}
                 style={{
                   borderWidth: 0,
