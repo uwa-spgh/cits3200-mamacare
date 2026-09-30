@@ -6,6 +6,7 @@ import AddMedicationScreen from "../screens/meds/addMedication";
 import MedicationHistoryScreen from "../screens/meds/history";
 import MedicationDetailsScreen from "../screens/meds/medicationDetails";
 import ProfileScreen from "../screens/profile/ProfileScreen";
+import PersonalInformationScreen from "../screens/profile/PersonalInformationScreen";
 import { useTranslation } from "react-i18next";
 import BackBtn from "../components/buttons/BackBtn";
 import { HeaderTitle } from "expo-router/react-navigation";
@@ -16,6 +17,7 @@ import { Ionicons } from "@expo/vector-icons";
 import ArticleScreen from "../screens/article/[id]"
 import NotificationsScreen from "../screens/notifications/NotificationsScreen";
 import SettingsScreen from "../screens/settings/SettingsScreen";
+
 
 const Stack = createStackNavigator();
 
@@ -87,6 +89,30 @@ export default function MainAppNavStack() {
         name="Notifications"
         component={NotificationsScreen}
         options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
+        name="PersonalInformation"
+        component={PersonalInformationScreen}
+        options={{
+          headerShown: true,
+          headerTitle: "Personal Information",
+          headerStyle: {
+            backgroundColor: AppColors.background_primary,
+          },
+          headerTitleStyle: {
+            fontFamily: AppFonts.Heading1Bold,
+            color: AppColors.button_primary_accent,
+            fontSize: s(20),
+          },
+          headerBackTitleStyle: {
+            fontFamily: AppFonts.Heading1Bold,
+          },
+          headerTintColor: AppColors.text_secondary,
+          headerBackImage: () => (
+            <Ionicons name="chevron-back" size={s(20)} />
+          ),
+        }}
       />
       <Stack.Screen
         name="Article"
