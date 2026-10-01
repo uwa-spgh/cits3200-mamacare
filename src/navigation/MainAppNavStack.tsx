@@ -15,6 +15,7 @@ import { s } from "react-native-size-matters";
 import { Ionicons } from "@expo/vector-icons";
 import ArticleScreen from "../screens/article/[id]"
 import NotificationsScreen from "../screens/notifications/NotificationsScreen";
+import SettingsScreen from "../screens/settings/SettingsScreen";
 
 const Stack = createStackNavigator();
 
@@ -54,6 +55,23 @@ export default function MainAppNavStack() {
         options={{
           headerShown: true,
           headerTitle: t("navTabs.profileTab"),
+          headerStyle: { backgroundColor: AppColors.background_primary },
+          headerTitleStyle: {
+            fontFamily: AppFonts.Heading1Bold,
+            color: AppColors.button_primary_accent,
+            fontSize: s(20),
+          },
+          headerBackTitleStyle: { fontFamily: AppFonts.Heading1Bold },
+          headerTintColor: AppColors.text_secondary,
+          headerBackImage: () => <Ionicons name="chevron-back" size={s(20)} />,
+        }}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          headerShown: true,
+          headerTitle: t("settingsScreen.title"),
           headerStyle: { backgroundColor: AppColors.background_primary },
           headerTitleStyle: {
             fontFamily: AppFonts.Heading1Bold,

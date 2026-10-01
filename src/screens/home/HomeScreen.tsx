@@ -11,11 +11,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import AppSafeView from "../../components/views/AppSafeView";
 import HomeHeader from "../../components/headers/HomeHeader";
-// import { router } from "expo-router";
+import { useTutorialAutoStart } from "../../tutorial";
 
 export default function HomeScreen() {
   const [medicationTaken, setMedicationTaken] = useState(false);
   const { t } = useTranslation();
+  useTutorialAutoStart();
 
   return (
     <AppSafeView>

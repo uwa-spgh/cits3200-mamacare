@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { s, vs } from "react-native-size-matters";
 import AppSafeView from "../../components/views/AppSafeView";
 import type { RootState } from "../../store/store";
+import { markOnboardingComplete } from "../../tutorial";
 import { AppColors } from "../../styles/colors";
 import { AppFonts } from "../../styles/fonts";
 
@@ -52,6 +53,8 @@ const WelcomeScreen = () => {
     : t("welcomeScreen.dateUnavailable");
 
   const getStarted = () => {
+    // TODO: Move markOnboardingComplete() to the last onboarding screen (How it works) once it exists.
+    markOnboardingComplete();
     navigation.getParent()?.replace("MainAppBottomTabs");
   };
 

@@ -18,6 +18,7 @@ import LanguageBottomSheet from "./src/components/sheets/LanguageBottomSheet";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { SheetProvider } from "react-native-actions-sheet";
 import NotificationCoordinator from "./src/notifications/NotificationCoordinator";
+import { TutorialProvider } from "./src/tutorial";
 
 registerSheet("LANG_SHEET", LanguageBottomSheet);
 
@@ -64,7 +65,9 @@ export default function App() {
                     navigationRef={navigationRef}
                   />
                   <FlashMessage position="top" />
-                  <MainAppNavStack />
+                  <TutorialProvider>
+                    <MainAppNavStack />
+                  </TutorialProvider>
                 </MedicationProvider>
               </NavigationContainer>
             </I18nextProvider>
