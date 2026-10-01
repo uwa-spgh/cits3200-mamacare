@@ -8,10 +8,12 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { AppFonts } from "../../styles/fonts";
 import MamaCareTopIcon from "./MamaCareTopIcon";
 import { useNavigation } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 const HomeHeader = () => {
 
    const navigation = useNavigation<any>()
+   const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
@@ -24,7 +26,11 @@ const HomeHeader = () => {
             color={AppColors.text_secondary}
           />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+          accessibilityLabel={t("profileScreen.notifications")}
+          accessibilityRole="button"
+          onPress={() => navigation.navigate("Notifications")}
+        >
           <MaterialIcons
             name="notifications"
             size={s(20)}

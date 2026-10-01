@@ -33,6 +33,27 @@
         "cancel": "Cancel"
     },
 
+    "notificationsScreen": {
+        "title": "Notifications",
+        "subtitle": "Manage the reminders stored and delivered locally on this device.",
+        "permissionTitle": "Device permission",
+        "permission": {
+            "granted": "Notifications are enabled.",
+            "denied": "Notifications are blocked in device settings.",
+            "undetermined": "Permission has not been requested yet."
+        },
+        "enable": "Enable",
+        "reminderTypes": "Reminder types",
+        "anc": "ANC appointments",
+        "ancDescription": "7 days, 24 hours, and 1 hour before",
+        "medication": "Medication",
+        "medicationDescription": "At the scheduled time, kept in a rolling offline buffer",
+        "education": "Pregnancy education",
+        "educationDescription": "Every Saturday at 10:00 AM",
+        "pending": "Pending reminders",
+        "pendingDescription": "The count includes the nearest medication occurrences in the rolling offline buffer."
+    },
+
     "eddCard": {
         "estimatedDueDate": "Estimated Due Date",
         "date": "Oct 12, 2026",
@@ -57,6 +78,50 @@
         "dueDatePrompt": "Enter the estimated due date.",
         "datePlaceholder": "mm/dd/yyyy",
         "privacyNotice": "This information is kept private and is only used to calculate your current week of pregnancy to tailor your health tips."
+    },
+
+    "notificationPermissionScreen": {
+        "title": "Stay on track with MamaCare",
+        "subtitle": "Allow notifications so MamaCare can give you helpful reminders at the right time.",
+        "benefits": {
+            "appointments": {
+                "title": "Never miss an ANC visit",
+                "description": "Get reminders one week, one day, and one hour before your appointment."
+            },
+            "medication": {
+                "title": "Take medication on time",
+                "description": "Receive a reminder exactly when each medication is due."
+            },
+            "education": {
+                "title": "Keep learning each week",
+                "description": "Get one friendly weekly reminder to explore pregnancy information."
+            }
+        },
+        "offline": "Reminders are stored on your phone and still work without internet.",
+        "allow": "Allow Notifications",
+        "notNow": "Not now",
+        "openSettings": "Open Settings",
+        "permissionDeniedTitle": "Notifications are turned off",
+        "permissionDeniedBody": "Your phone can only show the permission request once. Open Settings to allow MamaCare notifications, or choose Not now to continue.",
+        "requestErrorTitle": "Could not request permission",
+        "requestErrorBody": "MamaCare could not open the notification permission request. Please try again or enable notifications later in Profile.",
+        "settingsLater": "You can change this later in Profile → Notifications.",
+        "backAccessibility": "Go back to pregnancy setup"
+    },
+
+    "welcomeScreen": {
+        "title": "Welcome to MamaCare!",
+        "subtitle": "Your journey begins here. We've set up your personalized timeline.",
+        "youAre": "You are",
+        "weeks": "{{week}} Weeks",
+        "pregnant": "Pregnant",
+        "estimatedDueDate": "Estimated Due Date",
+        "markCalendar": "Mark your calendar!",
+        "getStarted": "Get Started",
+        "adjustLater": "You can always adjust these dates in your settings later.",
+        "dateUnavailable": "Date unavailable",
+        "backAccessibility": "Go back to pregnancy setup",
+        "getStartedAccessibility": "Finish setup and get started"
     },
 
     "homeScreen": {
@@ -278,6 +343,7 @@
         "dosagePlaceholder": "e.g. 1 pill",
         "instructionsPlaceholder": "e.g. Take with food",
         "timePlaceholder": "e.g. 8:00 AM",
+        "timeError": "Enter a valid time, such as 8:00 AM.",
         "save": "Save Medication"
     },
 

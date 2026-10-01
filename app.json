@@ -4,19 +4,23 @@
     "slug": "mamaCare",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/splash-icon.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true
     },
     "android": {
+      "permissions": [
+        "android.permission.SCHEDULE_EXACT_ALARM"
+      ],
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.mamacareteamcits3200.mamaCare"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -27,7 +31,7 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#FFF8F7",
-          "image": "./assets/splash-icon.svg",
+          "image": "./assets/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain"
         }
@@ -36,7 +40,20 @@
       "expo-router",
       "expo-status-bar",
       "expo-image",
+      [
+        "expo-notifications",
+        {
+          "color": "#BC1F58",
+          "defaultChannel": "mamacare-important"
+        }
+      ],
       "@react-native-community/datetimepicker"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b6dd1a28-9deb-4010-9346-e663bb322e16"
+      }
+    }
   }
 }

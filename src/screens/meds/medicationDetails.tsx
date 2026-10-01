@@ -13,6 +13,7 @@ import {
 
 import { Period, useMedications } from "../../context/MedicationContext";
 import AppSafeView from "../../components/views/AppSafeView";
+import { parseMedicationTime } from "../../notifications/planning";
 
 type DetailsRoute = {
   key: string;
@@ -35,6 +36,9 @@ export default function MedicationDetailsScreen() {
   const [instructions, setInstructions] = useState("");
   const [time, setTime] = useState("");
   const [period, setPeriod] = useState<Period>("Morning");
+  const isTimeValid = parseMedicationTime(time) !== null;
+  const canSave = Boolean(name.trim()) && isTimeValid;
+  const showTimeError = Boolean(time.trim()) && !isTimeValid;
 
   useEffect(() => {
     if (!medication) {
@@ -134,7 +138,15 @@ export default function MedicationDetailsScreen() {
 
         <Text style={styles.label}>{t("medicationScreen.time")}</Text>
 
-        <TextInput style={styles.input} value={time} onChangeText={setTime} />
+        <TextInput
+          autoCapitalize="characters"
+          style={[styles.input, showTimeError && styles.inputError]}
+          value={time}
+          onChangeText={setTime}
+        />
+        {showTimeError ? (
+          <Text style={styles.errorText}>{t("addMedicationScreen.timeError")}</Text>
+        ) : null}
 
         <Text style={styles.label}>{t("medicationScreen.timeOfDay")}</Text>
 
@@ -164,7 +176,13 @@ export default function MedicationDetailsScreen() {
           })}
         </View>
 
-        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+        <TouchableOpacity
+          accessibilityRole="button"
+          accessibilityState={{ disabled: !canSave }}
+          disabled={!canSave}
+          style={[styles.saveButton, !canSave && styles.saveButtonDisabled]}
+          onPress={handleSave}
+        >
           <Text style={styles.saveButtonText}>{t("medicationDetailsScreen.save")}</Text>
         </TouchableOpacity>
 
@@ -228,6 +246,16 @@ const styles = StyleSheet.create({
     color: "#3E3034",
   },
 
+  inputError: {
+    borderColor: "#B42318",
+  },
+
+  errorText: {
+    color: "#B42318",
+    fontSize: 12,
+    marginTop: 6,
+  },
+
   periodRow: {
     flexDirection: "row",
     gap: 8,
@@ -265,6 +293,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 15,
     alignItems: "center",
+  },
+
+  saveButtonDisabled: {
+    opacity: 0.45,
   },
 
   saveButtonText: {
