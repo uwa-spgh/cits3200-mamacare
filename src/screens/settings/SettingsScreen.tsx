@@ -53,24 +53,6 @@ const SettingsScreen = () => {
           backgroundColor={AppColors.white}
           style={styles.row}
         />
-        {__DEV__ ? (
-          <>
-            <View style={styles.separator} />
-            <JourneyCards
-              title={t("settingsScreen.resetTutorialDev")}
-              icon={
-                <MaterialCommunityIcons
-                  name="bug-outline"
-                  size={s(20)}
-                  color={AppColors.text_headings}
-                />
-              }
-              onPress={resetTutorial}
-              backgroundColor={AppColors.white}
-              style={styles.row}
-            />
-          </>
-        ) : null}
       </View>
     </AppSafeView>
   );

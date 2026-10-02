@@ -456,8 +456,7 @@
         "title": "Settings",
         "openAccessibility": "Open settings",
         "language": "Language",
-        "replayTutorial": "Replay tutorial",
-        "resetTutorialDev": "Reset tutorial (dev)"
+        "replayTutorial": "Replay tutorial"
     },
 
     "tutorial": {
