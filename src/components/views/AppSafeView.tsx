@@ -13,12 +13,20 @@ import { IS_IOS } from "../../constants/constants";
 
 interface AppSafeViewProps {
   children: React.ReactNode;
+  includeBottomInset?: boolean;
   style?: ViewStyle;
 }
 
-const AppSafeView: FC<AppSafeViewProps> = ({ children, style }) => {
+const AppSafeView: FC<AppSafeViewProps> = ({
+  children,
+  includeBottomInset = true,
+  style,
+}) => {
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView
+      edges={includeBottomInset ? undefined : ["top", "left", "right"]}
+      style={styles.safeArea}
+    >
       <View style={[styles.container, style]}>{children}</View>
     </SafeAreaView>
   );

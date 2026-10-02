@@ -19,7 +19,7 @@ export default function HomeScreen() {
   useTutorialAutoStart();
 
   return (
-    <AppSafeView>
+    <AppSafeView includeBottomInset={false}>
       <HomeHeader/>
       <ScrollView
         style={styles.screen}

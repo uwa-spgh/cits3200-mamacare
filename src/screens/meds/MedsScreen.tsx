@@ -203,7 +203,7 @@ export default function MedicationScreen() {
   );
 
   return (
-    <AppSafeView >
+    <AppSafeView includeBottomInset={false}>
       <HomeHeader />
       <ScrollView
         style={styles.screen}

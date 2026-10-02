@@ -444,7 +444,7 @@ export default function PlannerScreen() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="PlannerSchedule">
         {({ navigation }) => (
-          <AppSafeView style={styles.screen}>
+          <AppSafeView includeBottomInset={false} style={styles.screen}>
             <HomeHeader />
             <AppointmentTracker
               appointments={state.appointments}
@@ -465,7 +465,7 @@ export default function PlannerScreen() {
           const details = visitDetails(params?.visitId);
 
           return (
-            <AppSafeView style={styles.screen}>
+            <AppSafeView includeBottomInset={false} style={styles.screen}>
               <HomeHeader />
               <VisitChecklist
                 checkedItems={details.checkedItems}
