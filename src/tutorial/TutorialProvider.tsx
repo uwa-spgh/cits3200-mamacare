@@ -11,6 +11,7 @@ import {
   AccessibilityInfo,
   BackHandler,
   Dimensions,
+  InteractionManager,
   Keyboard,
   StyleSheet,
   View,
@@ -21,6 +22,18 @@ import { measureSettled } from "./measure";
 import { TUTORIAL_STEPS, type TutorialTargetId } from "./steps";
 import { TutorialContext, type TutorialContextValue } from "./TutorialContext";
 import TutorialOverlay, { type MeasuredHole } from "./TutorialOverlay";
+
+const waitForTransitions = (isCancelled: () => boolean) =>
+  new Promise<void>((resolve) => {
+
+    requestAnimationFrame(() => {
+      if (isCancelled()) {
+        resolve();
+        return;
+      }
+      InteractionManager.runAfterInteractions(() => resolve());
+    });
+  });
 
 const useReduceMotion = () => {
   const [reduceMotion, setReduceMotion] = useState(false);
@@ -90,19 +103,24 @@ export default function TutorialProvider({ children }: { children: ReactNode }) 
     measureToken.current = token;
     const step = TUTORIAL_STEPS[index];
 
-    measureSettled({
-      getTarget: () => targets.current.get(step.target)?.current ?? null,
-      getOverlay: () => overlayRef.current,
-      isCancelled: () => token !== measureToken.current,
-    }).then((rect) => {
-      if (token !== measureToken.current) return;
-      if (!rect) {
-        // Target never appeared. Stay pending so the next Home focus retries.
-        endTour("abort");
-        return;
-      }
-      setMeasured({ stepIndex: index, hole: spotlightHole(rect, step.shape) });
-    });
+    const isCancelled = () => token !== measureToken.current;
+
+    waitForTransitions(isCancelled)
+      .then(() =>
+        measureSettled({
+          getTarget: () => targets.current.get(step.target)?.current ?? null,
+          getOverlay: () => overlayRef.current,
+          isCancelled,
+        }),
+      )
+      .then((rect) => {
+        if (isCancelled()) return;
+        if (!rect) {
+          endTour("abort");
+          return;
+        }
+        setMeasured({ stepIndex: index, hole: spotlightHole(rect, step.shape) });
+      });
   }, [endTour]);
 
   const next = useCallback(() => {

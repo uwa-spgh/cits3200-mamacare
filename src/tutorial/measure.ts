@@ -1,4 +1,4 @@
-import { relativeTo, rectsMatch, type Rect } from "./geometry";
+import { isWithinBounds, relativeTo, rectsMatch, type Rect } from "./geometry";
 
 interface Measurable {
   measureInWindow: (
@@ -51,8 +51,8 @@ export const measureSettled = async ({
     ]);
     if (isCancelled()) return null;
 
-    if (target && overlay) {
-      const rect = relativeTo(target, overlay);
+    const rect = target && overlay ? relativeTo(target, overlay) : null;
+    if (rect && overlay && isWithinBounds(rect, overlay)) {
       if (previous && rectsMatch(previous, rect)) return rect;
       previous = rect;
     }

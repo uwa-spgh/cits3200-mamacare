@@ -43,6 +43,12 @@ export const rectsMatch = (a: Rect, b: Rect, tolerance = 0.5) =>
   Math.abs(a.width - b.width) <= tolerance &&
   Math.abs(a.height - b.height) <= tolerance;
 
+export const isWithinBounds = (rect: Rect, bounds: Size, tolerance = 1) =>
+  rect.x >= -tolerance &&
+  rect.y >= -tolerance &&
+  rect.x + rect.width <= bounds.width + tolerance &&
+  rect.y + rect.height <= bounds.height + tolerance;
+
 export const relativeTo = (rect: Rect, origin: { x: number; y: number }): Rect => ({
   x: rect.x - origin.x,
   y: rect.y - origin.y,
