@@ -450,5 +450,61 @@
         "next": "Next",
         "back": "Back",
         "backAccessibility": "Go back"
+    },
+
+    "settingsScreen": {
+        "title": "Settings",
+        "openAccessibility": "Open settings",
+        "language": "Language",
+        "replayTutorial": "Replay tutorial"
+    },
+
+    "tutorial": {
+        "counter": "{{current}} of {{total}}",
+        "buttons": {
+            "skip": "Skip",
+            "next": "Next",
+            "getStarted": "Get started"
+        },
+        "a11y": {
+            "counter": "Step {{current}} of {{total}}",
+            "stepAnnouncement": "App tour, step {{current}} of {{total}}: {{title}}",
+            "skip": "Skip the app tour",
+            "next": "Next tip",
+            "getStarted": "Finish the app tour and get started"
+        },
+        "steps": {
+            "home": {
+                "title": "Home",
+                "message": "Your daily overview: how far along you are, today's medicines and your next clinic visit."
+            },
+            "planner": {
+                "title": "Planner",
+                "message": "Add your ANC clinic visits, change the date if needed, and check what to do at each visit."
+            },
+            "meds": {
+                "title": "Meds",
+                "message": "Add your iron, folic acid and other supplements. Tick them off each day so you don't miss one."
+            },
+            "library": {
+                "title": "Library",
+                "message": "Simple guides on food, birth preparation and caring for your baby. Danger signs are here too."
+            },
+            "topIcons": {
+                "title": "Top icons",
+                "profile": {
+                    "label": "Profile",
+                    "description": "Your name and pregnancy details."
+                },
+                "notifications": {
+                    "label": "Notifications",
+                    "description": "Reminders for medicines and visits."
+                },
+                "settings": {
+                    "label": "Settings",
+                    "description": "App language, and replay this tour."
+                }
+            }
+        }
     }
 }
