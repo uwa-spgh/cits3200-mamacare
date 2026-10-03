@@ -134,15 +134,6 @@ const PersonalInformationScreen = () => {
             phoneNumber: phoneNumber.trim(),
         });
 
-        console.log({
-            fullName,
-            dateOfBirth,
-            height,
-            weight,
-            gender,
-            phoneNumber,
-        });
-
         Alert.alert(
             "Saved",
             "Your personal information has been saved.",

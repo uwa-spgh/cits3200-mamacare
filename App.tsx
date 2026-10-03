@@ -14,6 +14,7 @@ import i18n from "./src/localization/i18n";
 import { I18nextProvider } from "react-i18next";
 import { MedicationProvider } from "./src/context/MedicationContext";
 import { PersonalInformationProvider } from "./src/context/PersonalInformationContext";
+import { MedicalHistoryProvider } from "./src/context/MedicalHistoryContext";
 import { registerSheet } from "react-native-actions-sheet";
 import LanguageBottomSheet from "./src/components/sheets/LanguageBottomSheet";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -62,12 +63,14 @@ export default function App() {
               >
                 <MedicationProvider>
                   <PersonalInformationProvider>
-                    <NotificationCoordinator
-                      navigationReady={navigationReady}
-                      navigationRef={navigationRef}
-                    />
-                    <FlashMessage position="top" />
-                    <MainAppNavStack />
+                    <MedicalHistoryProvider>
+                      <NotificationCoordinator
+                        navigationReady={navigationReady}
+                        navigationRef={navigationRef}
+                      />
+                      <FlashMessage position="top" />
+                      <MainAppNavStack />
+                    </MedicalHistoryProvider>
                   </PersonalInformationProvider>
                 </MedicationProvider>
               </NavigationContainer>

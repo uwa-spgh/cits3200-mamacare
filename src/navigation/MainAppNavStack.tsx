@@ -7,6 +7,7 @@ import MedicationHistoryScreen from "../screens/meds/history";
 import MedicationDetailsScreen from "../screens/meds/medicationDetails";
 import ProfileScreen from "../screens/profile/ProfileScreen";
 import PersonalInformationScreen from "../screens/profile/PersonalInformationScreen";
+import MedicalHistoryScreen from "../screens/profile/MedicalHistoryScreen";
 import { useTranslation } from "react-i18next";
 import BackBtn from "../components/buttons/BackBtn";
 import { HeaderTitle } from "expo-router/react-navigation";
@@ -96,6 +97,31 @@ export default function MainAppNavStack() {
           ),
         }}
       />
+
+      <Stack.Screen
+        name="MedicalHistory"
+        component={MedicalHistoryScreen}
+        options={{
+          headerShown: true,
+          headerTitle: "Medical History",
+          headerStyle: {
+            backgroundColor: AppColors.background_primary,
+          },
+          headerTitleStyle: {
+            fontFamily: AppFonts.Heading1Bold,
+            color: AppColors.button_primary_accent,
+            fontSize: s(20),
+          },
+          headerBackTitleStyle: {
+            fontFamily: AppFonts.Heading1Bold,
+          },
+          headerTintColor: AppColors.text_secondary,
+          headerBackImage: () => (
+            <Ionicons name="chevron-back" size={s(20)} />
+          ),
+        }}
+      />
+
       <Stack.Screen
         name="Article"
         component={ArticleScreen}
