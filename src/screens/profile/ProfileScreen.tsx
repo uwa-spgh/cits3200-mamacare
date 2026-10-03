@@ -88,12 +88,9 @@ const ProfileScreen = () => {
                   color={AppColors.icon_border_green}
                 />
               }
-              onPress={() =>
-                Alert.alert(
-                  t("profileScreen.comingSoon"),
-                  t("profileScreen.featureComingLater"),
-                )
-              }
+              onPress={() => {
+                navigation.navigate("MedicalHistory");
+              }}
               backgroundColor={AppColors.cyan}
             />
             <JourneyCards
