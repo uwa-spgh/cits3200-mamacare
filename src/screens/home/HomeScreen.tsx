@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useMedications } from "../../context/MedicationContext";
+import type { RootState } from "../../store/store";
+
 import {
   Alert,
   Pressable,
@@ -9,15 +12,59 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { useNavigation } from "expo-router/react-navigation";
 import AppSafeView from "../../components/views/AppSafeView";
 import HomeHeader from "../../components/headers/HomeHeader";
 import { useTutorialAutoStart } from "../../tutorial";
 
 export default function HomeScreen() {
-  const [medicationTaken, setMedicationTaken] = useState(false);
-  const { t } = useTranslation();
-  useTutorialAutoStart();
+  const { medications, toggleMedicationTaken } = useMedications();
 
+  const priorityMedication = medications.find(
+  (medication) => !medication.taken,
+);
+  const { t } = useTranslation();
+  const navigation = useNavigation<any>();
+  const edd = useSelector((state: RootState) => state.dataReducer.edd);
+  const userName = useSelector(
+  (state: RootState) => state.dataReducer.userName,
+);
+const firstName = userName.trim().split(/\s+/)[0] || "Asha";
+  const pregnancyProgress = (() => {
+  if (!edd) return null;
+
+  const dueDate = new Date(edd);
+  if (Number.isNaN(dueDate.getTime())) return null;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  dueDate.setHours(0, 0, 0, 0);
+
+  const daysUntilDue = Math.round(
+    (dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+  );
+
+  const pregnancyDays = Math.max(0, 280 - daysUntilDue);
+
+  return {
+    weeks: Math.floor(pregnancyDays / 7),
+    days: pregnancyDays % 7,
+  };
+})();
+  useTutorialAutoStart();
+  const progressPercentage = pregnancyProgress
+  ? Math.min(
+      ((pregnancyProgress.weeks * 7 + pregnancyProgress.days) / 280) * 100,
+      100,
+    )
+  : 0;
+  const trimester = pregnancyProgress
+  ? pregnancyProgress.weeks < 14
+    ? "FIRST TRIMESTER"
+    : pregnancyProgress.weeks < 28
+      ? "SECOND TRIMESTER"
+      : "THIRD TRIMESTER"
+  : t("homeScreen.trimester");
   return (
     <AppSafeView includeBottomInset={false}>
       <HomeHeader/>
@@ -26,20 +73,38 @@ export default function HomeScreen() {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.greeting}>{t("homeScreen.greeting")}</Text>
+        <Text style={styles.greeting}>
+          {t("homeScreen.greeting", { name: firstName })}
+        </Text>
         <Text style={styles.subtitle}>{t("homeScreen.dailyOverview")}</Text>
 
         <View style={styles.progressCard}>
-          <Text style={styles.trimester}>{t("homeScreen.trimester")}</Text>
+          <Text style={styles.trimester}>{trimester}</Text>
 
           <View style={styles.weekRow}>
-            <Text style={styles.week}>{t("homeScreen.weeks")}</Text>
-            <Text style={styles.days}>{t("homeScreen.days")}</Text>
-          </View>
+            <Text style={styles.week}>
+               {pregnancyProgress
+                 ? `${pregnancyProgress.weeks} Weeks`
+                 : t("homeScreen.weeks")}
+            </Text>
+            <Text style={styles.days}>
+               {pregnancyProgress
+                 ? `, ${pregnancyProgress.days} Days`
+                 : t("homeScreen.days")}
+            </Text>
+           </View>
 
           <View style={styles.progressTrack}>
-            <View style={styles.progressFill} />
+            <View
+              style={[
+               styles.progressFill,
+               { width: `${progressPercentage}%` },
+              ]}
+            />
           </View>
+          <Text style={styles.progressPercentageText}>
+            {Math.round(progressPercentage)}%
+          </Text>
         </View>
 
         <View style={styles.babyCard}>
@@ -61,26 +126,34 @@ export default function HomeScreen() {
             <Text style={styles.greenHeading}>{t("homeScreen.medications")}</Text>
           </View>
 
-          <Pressable
-            style={styles.medicationRow}
-            onPress={() => setMedicationTaken(!medicationTaken)}
-          >
-            <View
-              style={[
-                styles.checkbox,
-                medicationTaken && styles.checkboxSelected,
-              ]}
-            >
-              {medicationTaken && (
-                <Ionicons name="checkmark" size={18} color="#FFFFFF" />
-              )}
-            </View>
+          {priorityMedication ? (
+  <Pressable
+    style={styles.medicationRow}
+    onPress={() => toggleMedicationTaken(priorityMedication.id)}
+  >
+    <View style={styles.checkbox} />
 
-            <View>
-              <Text style={styles.itemTitle}>{t("homeScreen.ironAndFolicAcid")}</Text>
-              <Text style={styles.itemSubtitle}>{t("homeScreen.pillWithFood")}</Text>
-            </View>
-          </Pressable>
+    <View>
+      <Text style={styles.itemTitle}>{priorityMedication.name}</Text>
+      <Text style={styles.itemSubtitle}>
+        {`${priorityMedication.dosage} · ${priorityMedication.instructions}`}
+      </Text>
+    </View>
+  </Pressable>
+) : (
+  <View style={styles.medicationRow}>
+    <View style={[styles.checkbox, styles.checkboxSelected]}>
+      <Ionicons name="checkmark" size={18} color="#FFFFFF" />
+    </View>
+
+    <View>
+      <Text style={styles.itemTitle}>All medications taken</Text>
+      <Text style={styles.itemSubtitle}>
+        You have completed today&apos;s medications.
+      </Text>
+    </View>
+  </View>
+)}
 
           <View style={styles.divider} />
 
@@ -108,13 +181,7 @@ export default function HomeScreen() {
         <View style={styles.quickActions}>
           <Pressable
             style={styles.actionButton}
-            onPress={() =>
-              // router.push("/screens/screens/Health-and-Edu-screen")
-              Alert.alert(
-                t("homeScreen.educationLibraryAlertTitle"),
-                t("homeScreen.educationLibraryAlertMessage"),
-              )
-            }
+            onPress={() => navigation.navigate("Library")}
           >
             <Ionicons name="book" size={32} color="#B62555" />
             <Text style={styles.educationText}>{t("homeScreen.educationLibrary")}</Text>
@@ -193,10 +260,16 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   progressFill: {
-    width: "34%",
-    height: "100%",
-    borderRadius: 10,
-    backgroundColor: "#FFFFFF",
+  height: "100%",
+  borderRadius: 10,
+  backgroundColor: "#FFFFFF",
+  },
+  progressPercentageText: {
+  color: "#FFFFFF",
+  fontSize: 12,
+  fontWeight: "600",
+  marginTop: 6,
+  textAlign: "right",
   },
   babyCard: {
     alignItems: "center",

@@ -125,7 +125,7 @@
     },
 
     "homeScreen": {
-        "greeting": "Hello, Asha",
+        "greeting": "Hello, {{name}}",
         "dailyOverview": "Here is your daily overview.",
         "trimester": "SECOND TRIMESTER",
         "weeks": "12 Weeks",
