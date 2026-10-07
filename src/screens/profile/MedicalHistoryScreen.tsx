@@ -1,0 +1,413 @@
+import { useMedicalHistory } from "../../context/MedicalHistoryContext";
+import React, { useState } from "react";
+import {
+    Alert,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import { s, vs } from "react-native-size-matters";
+
+import AppText from "../../components/texts/AppText";
+import { AppColors } from "../../styles/colors";
+import { AppFonts } from "../../styles/fonts";
+
+const commonConditions = [
+    "Gestational Diabetes",
+    "Hypertension",
+    "Anaemia",
+    "Thyroid Condition",
+    "Asthma",
+];
+
+const commonAllergies = [
+    "Penicillin",
+    "Aspirin",
+    "Latex",
+    "Peanuts",
+];
+
+const MedicalHistoryScreen = () => {
+    const {
+        medicalHistory,
+        saveMedicalHistory,
+    } = useMedicalHistory();
+    
+    const [conditions, setConditions] = useState<string[]>(
+        medicalHistory.conditions,
+    );
+
+    const [allergies, setAllergies] = useState<string[]>(
+        medicalHistory.allergies,
+    );
+
+    const [newCondition, setNewCondition] = useState("");
+    const [newAllergy, setNewAllergy] = useState("");
+
+    const customConditions = conditions.filter(
+        (condition) => !commonConditions.includes(condition),
+    );
+
+    const customAllergies = allergies.filter(
+        (allergy) => !commonAllergies.includes(allergy),
+    );
+
+    const toggleCondition = (condition: string) => {
+        setConditions((currentConditions) =>
+            currentConditions.includes(condition)
+                ? currentConditions.filter(
+                    (item) => item !== condition,
+                )
+                : [...currentConditions, condition],
+        );
+    };
+
+    const toggleAllergy = (allergy: string) => {
+        setAllergies((currentAllergies) =>
+            currentAllergies.includes(allergy)
+                ? currentAllergies.filter(
+                    (item) => item !== allergy,
+                )
+                : [...currentAllergies, allergy],
+        );
+    };
+
+    const addCondition = () => {
+        const trimmedCondition = newCondition.trim();
+
+        if (!trimmedCondition) {
+            return;
+        }
+
+        const alreadyExists = conditions.some(
+            (condition) =>
+                condition.toLowerCase() ===
+                trimmedCondition.toLowerCase(),
+        );
+
+        if (!alreadyExists) {
+            setConditions((currentConditions) => [
+                ...currentConditions,
+                trimmedCondition,
+            ]);
+        }
+
+        setNewCondition("");
+    };
+
+    const addAllergy = () => {
+        const trimmedAllergy = newAllergy.trim();
+
+        if (!trimmedAllergy) {
+            return;
+        }
+
+        const alreadyExists = allergies.some(
+            (allergy) =>
+                allergy.toLowerCase() ===
+                trimmedAllergy.toLowerCase(),
+        );
+
+        if (!alreadyExists) {
+            setAllergies((currentAllergies) => [
+                ...currentAllergies,
+                trimmedAllergy,
+            ]);
+        }
+
+        setNewAllergy("");
+    };
+
+    const handleSave = () => {
+        saveMedicalHistory({
+            conditions,
+            allergies,
+        });
+
+        Alert.alert(
+            "Saved",
+            "Your medical history has been saved.",
+        );
+    };
+
+    return (
+        <View style={styles.container}>
+            <ScrollView
+                contentContainerStyle={styles.content}
+                keyboardShouldPersistTaps="handled"
+            >
+                <AppText style={styles.heading}>
+                    Medical History
+                </AppText>
+
+                <AppText style={styles.sectionTitle}>
+                    Medical Conditions
+                </AppText>
+
+                <AppText style={styles.helperText}>
+                    Select any conditions that apply to you.
+                </AppText>
+
+                <View style={styles.chipContainer}>
+                    {commonConditions.map((condition) => {
+                        const selected = conditions.includes(condition);
+
+                        return (
+                            <TouchableOpacity
+                                key={condition}
+                                style={[
+                                    styles.chip,
+                                    selected && styles.chipSelected,
+                                ]}
+                                onPress={() => toggleCondition(condition)}
+                            >
+                                <AppText
+                                    style={{
+                                        ...styles.chipText,
+                                        ...(selected ? styles.chipTextSelected : {}),
+                                    }}
+                                >
+                                    {condition}
+                                </AppText>
+                            </TouchableOpacity>
+                        );
+                    })}
+
+                    {customConditions.map((condition) => (
+                        <TouchableOpacity
+                            key={condition}
+                            style={[
+                                styles.chip,
+                                styles.chipSelected,
+                            ]}
+                            onPress={() => toggleCondition(condition)}
+                        >
+                            <AppText
+                                style={{
+                                    ...styles.chipText,
+                                    ...styles.chipTextSelected,
+                                }}
+                            >
+                                {condition} ×
+                            </AppText>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+
+                <View style={styles.addRow}>
+                    <TextInput
+                        style={styles.addInput}
+                        value={newCondition}
+                        onChangeText={setNewCondition}
+                        placeholder="Add another condition"
+                    />
+
+                    <TouchableOpacity
+                        style={styles.addButton}
+                        onPress={addCondition}
+                    >
+                        <AppText style={styles.addButtonText}>
+                            Add
+                        </AppText>
+                    </TouchableOpacity>
+                </View>
+
+                <AppText style={styles.sectionTitle}>
+                    Allergies
+                </AppText>
+
+                <AppText style={styles.helperText}>
+                    Select or add any allergies you have.
+                </AppText>
+
+                <View style={styles.chipContainer}>
+                    {commonAllergies.map((allergy) => {
+                        const selected = allergies.includes(allergy);
+
+                        return (
+                            <TouchableOpacity
+                                key={allergy}
+                                style={[
+                                    styles.chip,
+                                    selected && styles.chipSelected,
+                                ]}
+                                onPress={() => toggleAllergy(allergy)}
+                            >
+                                <AppText
+                                    style={{
+                                        ...styles.chipText,
+                                        ...(selected ? styles.chipTextSelected : {}),
+                                    }}
+                                >
+                                    {allergy}
+                                </AppText>
+                            </TouchableOpacity>
+                        );
+                    })}
+
+                    {customAllergies.map((allergy) => (
+                        <TouchableOpacity
+                            key={allergy}
+                            style={[
+                                styles.chip,
+                                styles.chipSelected,
+                            ]}
+                            onPress={() => toggleAllergy(allergy)}
+                        >
+                            <AppText
+                                style={{
+                                    ...styles.chipText,
+                                    ...styles.chipTextSelected,
+                                }}
+                            >
+                                {allergy} ×
+                            </AppText>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+
+                <View style={styles.addRow}>
+                    <TextInput
+                        style={styles.addInput}
+                        value={newAllergy}
+                        onChangeText={setNewAllergy}
+                        placeholder="Add another allergy"
+                    />
+
+                    <TouchableOpacity
+                        style={styles.addButton}
+                        onPress={addAllergy}
+                    >
+                        <AppText style={styles.addButtonText}>
+                            Add
+                        </AppText>
+                    </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity
+                    style={styles.saveButton}
+                    onPress={handleSave}
+                >
+                    <AppText style={styles.saveButtonText}>
+                        Save Changes
+                    </AppText>
+                </TouchableOpacity>
+            </ScrollView>
+        </View>
+    );
+};
+
+export default MedicalHistoryScreen;
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: AppColors.background_primary,
+    },
+
+    content: {
+        paddingHorizontal: s(20),
+        paddingTop: vs(22),
+        paddingBottom: vs(30),
+    },
+
+    heading: {
+        fontFamily: AppFonts.Heading1Bold,
+        fontSize: s(20),
+        color: AppColors.text_headings,
+        marginBottom: vs(22),
+    },
+
+    sectionTitle: {
+        fontFamily: AppFonts.TextBold,
+        fontSize: s(13),
+        color: AppColors.text_headings,
+        marginBottom: vs(4),
+    },
+
+    helperText: {
+        fontFamily: AppFonts.TextRegular,
+        fontSize: s(11),
+        color: AppColors.text_secondary,
+        marginBottom: vs(10),
+    },
+
+    chipContainer: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: s(8),
+        marginBottom: vs(12),
+    },
+
+    chip: {
+        borderWidth: 1,
+        borderColor: AppColors.stroke_primary,
+        borderRadius: s(20),
+        paddingHorizontal: s(12),
+        paddingVertical: vs(7),
+        backgroundColor: AppColors.white,
+    },
+
+    chipSelected: {
+        backgroundColor: AppColors.button_primary_accent,
+        borderColor: AppColors.button_primary_accent,
+    },
+
+    chipText: {
+        fontFamily: AppFonts.TextRegular,
+        fontSize: s(11),
+        color: AppColors.text_headings,
+    },
+
+    chipTextSelected: {
+        color: AppColors.white,
+    },
+
+    addRow: {
+        flexDirection: "row",
+        gap: s(8),
+        marginBottom: vs(24),
+    },
+
+    addInput: {
+        flex: 1,
+        borderWidth: 1,
+        borderColor: AppColors.stroke_primary,
+        borderRadius: s(10),
+        backgroundColor: AppColors.white,
+        paddingHorizontal: s(12),
+        paddingVertical: vs(10),
+        fontFamily: AppFonts.TextRegular,
+        color: AppColors.text_headings,
+    },
+
+    addButton: {
+        justifyContent: "center",
+        alignItems: "center",
+        paddingHorizontal: s(16),
+        borderRadius: s(10),
+        backgroundColor: AppColors.button_primary_accent,
+    },
+
+    addButtonText: {
+        fontFamily: AppFonts.TextBold,
+        color: AppColors.white,
+        fontSize: s(12),
+    },
+
+    saveButton: {
+        marginTop: vs(30),
+        backgroundColor: AppColors.button_primary_accent,
+        borderRadius: s(20),
+        paddingVertical: vs(12),
+        alignItems: "center",
+    },
+
+    saveButtonText: {
+        fontFamily: AppFonts.TextBold,
+        color: AppColors.white,
+        fontSize: s(13),
+    },
+});

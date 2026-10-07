@@ -40,7 +40,7 @@ export default function AddMedicationScreen() {
             period,
         });
 
-        navigation.navigate("MainAppBottomTabs");
+        navigation.goBack();
     };
 
     return (

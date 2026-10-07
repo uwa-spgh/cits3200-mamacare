@@ -18,6 +18,35 @@ export default function MedicationHistoryScreen() {
   const navigation = useNavigation<any>();
   const { t } = useTranslation();
 
+  const groupedHistory = adherenceHistory.reduce(
+    (groups, record) => {
+      if (!groups[record.date]) {
+        groups[record.date] = [];
+      }
+
+      groups[record.date].push(record);
+
+      return groups;
+    },
+    {} as Record<string, typeof adherenceHistory>,
+  );
+
+  const sortedDates = Object.keys(groupedHistory).sort(
+    (a, b) => b.localeCompare(a),
+  );
+
+  const formatHistoryDate = (dateKey: string) => {
+    const [year, month, day] = dateKey.split("-").map(Number);
+
+    const date = new Date(year, month - 1, day);
+
+    return date.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  };
+
   return (
     <AppSafeView>
       <ScrollView
@@ -53,47 +82,59 @@ export default function MedicationHistoryScreen() {
             </Text>
           </View>
         ) : (
-          adherenceHistory.map((record) => (
-            <View key={record.id} style={styles.historyCard}>
-              <View
-                style={[
-                  styles.statusIcon,
-                  record.status === "taken"
-                    ? styles.takenIcon
-                    : styles.missedIcon,
-                ]}
-              >
-                <Ionicons
-                  name={record.status === "taken" ? "checkmark" : "close"}
-                  size={18}
-                  color="#FFFFFF"
-                />
+            sortedDates.map((date) => (
+              <View key={date} style={styles.dateSection}>
+                <Text style={styles.dateHeading}>
+                  {formatHistoryDate(date)}
+                </Text>
+
+                {groupedHistory[date].map((record) => (
+                  <View key={record.id} style={styles.historyCard}>
+                    <View
+                      style={[
+                        styles.statusIcon,
+                        record.status === "taken"
+                          ? styles.takenIcon
+                          : styles.missedIcon,
+                      ]}
+                    >
+                      <Ionicons
+                        name={
+                          record.status === "taken"
+                            ? "checkmark"
+                            : "close"
+                        }
+                        size={18}
+                        color="#FFFFFF"
+                      />
+                    </View>
+
+                    <View style={styles.historyContent}>
+                      <Text style={styles.medicationName}>
+                        {record.medicationName}
+                      </Text>
+
+                      <Text style={styles.historyDetails}>
+                        {record.time}
+                      </Text>
+
+                      <Text
+                        style={[
+                          styles.statusText,
+                          record.status === "taken"
+                            ? styles.takenText
+                            : styles.missedText,
+                        ]}
+                      >
+                        {record.status === "taken"
+                          ? t("medicationScreen.taken")
+                          : t("medicationScreen.missed")}
+                      </Text>
+                    </View>
+                  </View>
+                ))}
               </View>
-
-              <View style={styles.historyContent}>
-                <Text style={styles.medicationName}>
-                  {record.medicationName}
-                </Text>
-
-                <Text style={styles.historyDetails}>
-                  {record.date} • {record.time}
-                </Text>
-
-                <Text
-                  style={[
-                    styles.statusText,
-                    record.status === "taken"
-                      ? styles.takenText
-                      : styles.missedText,
-                  ]}
-                >
-                  {record.status === "taken"
-                    ? t("medicationScreen.taken")
-                    : t("medicationScreen.missed")}
-                </Text>
-              </View>
-            </View>
-          ))
+            ))
         )}
       </ScrollView>
     </AppSafeView>
@@ -208,5 +249,16 @@ const styles = StyleSheet.create({
 
   missedText: {
     color: "#C95043",
+  },
+
+  dateSection: {
+    marginBottom: 20,
+  },
+
+  dateHeading: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#4A373C",
+    marginBottom: 10,
   },
 });
