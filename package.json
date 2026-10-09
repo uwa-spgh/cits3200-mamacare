@@ -44,6 +44,8 @@
   "devDependencies": {
     "@types/node": "^26.6.2",
     "@types/react": "~19.2.2",
+    "@types/react-test-renderer": "19.3.0",
+    "react-test-renderer": "19.2.3",
     "tsx": "^4.23.15",
     "typescript": "~6.0.3"
   },
@@ -52,7 +54,15 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "tsx --test src/**/*.test.ts"
+    "test": "node scripts/test.mjs",
+    "test:known-bugs": "node scripts/test.mjs --known-bugs",
+    "test:timezones": "node scripts/test-timezones.mjs",
+    "typecheck": "tsc --noEmit",
+    "build:check": "node scripts/build-check.mjs",
+    "check": "node scripts/check.mjs"
   },
-  "private": true
+  "private": true,
+  "engines": {
+    "node": "^22.13.0 || >=24.3.0"
+  }
 }

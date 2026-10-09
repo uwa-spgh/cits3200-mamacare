@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import AppSafeView from "../../components/views/AppSafeView";
@@ -12,12 +12,12 @@ import PregnancySetupCard from "../../components/cards/PregnancySetupCard";
 import DueDateMethod from "../../components/cards/DueDateMethod";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import InputDueDate from "../../components/cards/InputDueDate";
-import { useDispatch } from "react-redux";
-import { setEdd } from "../../store/reducers/dataReducers";
+import { useSelector } from "react-redux";
+import { saveDueDate, type RootState } from "../../store/store";
+import { calculateDueDate, parseDueDate, PREGNANCY_LENGTH_DAYS } from "../../pregnancy/progress";
 
 type DateMethod = "LMP" | "EDD";
 
-const PREGNANCY_LENGTH_DAYS = 280;
 const DATE_ENTRY_RANGE_DAYS = 365;
 
 const addDays = (date: Date, days: number) => {
@@ -27,9 +27,10 @@ const addDays = (date: Date, days: number) => {
 };
 
 const InitialSetupScreen = () => {
-  const [selectedMethod, setSelectedMethod] = useState<DateMethod>("LMP");
-  const [selectedDate, setSelectedDate] = useState("");
-  const dispatch = useDispatch();
+  const edd = useSelector((state: RootState) => state.dataReducer.edd);
+  const [selectedMethod, setSelectedMethod] = useState<DateMethod>(edd ? "EDD" : "LMP");
+  const [selectedDate, setSelectedDate] = useState(() => parseDueDate(edd)?.toISOString() ?? "");
+  const [saving, setSaving] = useState(false);
   const navigation = useNavigation<any>();
   const { t } = useTranslation();
 
@@ -41,19 +42,22 @@ const InitialSetupScreen = () => {
     setSelectedDate("");
   };
 
-  const continueToNotifications = () => {
-    if (!selectedDate) {
+  const continueToNotifications = async () => {
+    if (saving) return;
+    const dueDate = calculateDueDate(selectedDate, selectedMethod);
+    if (!dueDate) {
+      Alert.alert(t("pregnancy.invalidDate"));
       return;
     }
-
-    const enteredDate = new Date(selectedDate);
-    const dueDate =
-      selectedMethod === "LMP"
-        ? addDays(enteredDate, PREGNANCY_LENGTH_DAYS)
-        : enteredDate;
-
-    dispatch(setEdd(dueDate.toISOString()));
-    navigation.navigate("NotificationPermissionScreen");
+    setSaving(true);
+    try {
+      await saveDueDate(dueDate);
+      navigation.navigate("NotificationPermissionScreen");
+    } catch {
+      Alert.alert(t("pregnancy.saveErrorTitle"), t("pregnancy.saveError"));
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -102,12 +106,12 @@ const InitialSetupScreen = () => {
             maximumDate={
               selectedMethod === "LMP"
                 ? today
-                : addDays(today, DATE_ENTRY_RANGE_DAYS)
+                : addDays(today, PREGNANCY_LENGTH_DAYS)
             }
             minimumDate={
               selectedMethod === "LMP"
                 ? addDays(today, -DATE_ENTRY_RANGE_DAYS)
-                : today
+                : addDays(today, -14)
             }
             onChange={setSelectedDate}
             textEdd={
@@ -120,8 +124,8 @@ const InitialSetupScreen = () => {
         </View>
       </AppSafeView>
       <NavFooter
-        nextDisabled={!selectedDate}
-        onPressBack={() => navigation.navigate("LanguageSelectionScreen")}
+        nextDisabled={!selectedDate || saving}
+        onPressBack={() => { if (!saving) navigation.navigate("LanguageSelectionScreen"); }}
         onPressNext={continueToNotifications}
       />
     </>

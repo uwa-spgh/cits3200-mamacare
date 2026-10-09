@@ -19,6 +19,8 @@ import { AppColors } from "../../styles/colors";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { ScrollView } from "react-native-gesture-handler";
 import EddCard from "../../components/profile/EddCard";
+import { usePregnancyProgress } from "../../pregnancy/usePregnancyProgress";
+import { formatGestation } from "../../pregnancy/format";
 import JourneyCards from "../../components/profile/JourneyCards";
 import { Ionicons } from "@expo/vector-icons";
 import { SheetManager } from "react-native-actions-sheet";
@@ -32,7 +34,8 @@ const ProfileScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation<any>();
 
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const pregnancyProgress = usePregnancyProgress();
 
   return (
     <AppSafeView style={styles.container}>
@@ -46,8 +49,8 @@ const ProfileScreen = () => {
               size={s(20)}
               color={AppColors.button_primary_accent}
             />
-            <AppText style={styles.gestationText}>
-              {t("profileScreen.gestationWeek", { week: 24 })}
+            <AppText style={[styles.gestationText, { flexShrink: 1 }]}>
+              {pregnancyProgress ? formatGestation(pregnancyProgress, t, i18n.language) : t("pregnancy.noDueDate")}
             </AppText>
           </View>
         </View>

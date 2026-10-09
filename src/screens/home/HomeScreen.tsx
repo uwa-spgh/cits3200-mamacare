@@ -16,55 +16,21 @@ import { useNavigation } from "expo-router/react-navigation";
 import AppSafeView from "../../components/views/AppSafeView";
 import HomeHeader from "../../components/headers/HomeHeader";
 import { useTutorialAutoStart } from "../../tutorial";
+import { usePregnancyProgress } from "../../pregnancy/usePregnancyProgress";
+import { formatCountdown, formatGestation, pregnancyLocale } from "../../pregnancy/format";
+import BabySizeCard from "../../components/profile/BabySizeCard";
+import { localDateKey } from "../../notifications/planning";
 
 export default function HomeScreen() {
   const { medications, toggleMedicationTaken } = useMedications();
 
-  const priorityMedication = medications.find(
-  (medication) => !medication.taken,
-);
-  const { t } = useTranslation();
+  const priorityMedication = medications.find((medication) => !medication.taken);
+  const { t, i18n } = useTranslation();
   const navigation = useNavigation<any>();
-  const edd = useSelector((state: RootState) => state.dataReducer.edd);
-  const userName = useSelector(
-  (state: RootState) => state.dataReducer.userName,
-);
-const firstName = userName.trim().split(/\s+/)[0] || "Asha";
-  const pregnancyProgress = (() => {
-  if (!edd) return null;
-
-  const dueDate = new Date(edd);
-  if (Number.isNaN(dueDate.getTime())) return null;
-
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  dueDate.setHours(0, 0, 0, 0);
-
-  const daysUntilDue = Math.round(
-    (dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
-  );
-
-  const pregnancyDays = Math.max(0, 280 - daysUntilDue);
-
-  return {
-    weeks: Math.floor(pregnancyDays / 7),
-    days: pregnancyDays % 7,
-  };
-})();
+  const userName = useSelector((state: RootState) => state.dataReducer.userName);
+  const firstName = userName.trim().split(/\s+/)[0] || "Asha";
+  const pregnancyProgress = usePregnancyProgress();
   useTutorialAutoStart();
-  const progressPercentage = pregnancyProgress
-  ? Math.min(
-      ((pregnancyProgress.weeks * 7 + pregnancyProgress.days) / 280) * 100,
-      100,
-    )
-  : 0;
-  const trimester = pregnancyProgress
-  ? pregnancyProgress.weeks < 14
-    ? "FIRST TRIMESTER"
-    : pregnancyProgress.weeks < 28
-      ? "SECOND TRIMESTER"
-      : "THIRD TRIMESTER"
-  : t("homeScreen.trimester");
   return (
     <AppSafeView includeBottomInset={false}>
       <HomeHeader/>
@@ -79,43 +45,30 @@ const firstName = userName.trim().split(/\s+/)[0] || "Asha";
         <Text style={styles.subtitle}>{t("homeScreen.dailyOverview")}</Text>
 
         <View style={styles.progressCard}>
-          <Text style={styles.trimester}>{trimester}</Text>
-
-          <View style={styles.weekRow}>
-            <Text style={styles.week}>
-               {pregnancyProgress
-                 ? `${pregnancyProgress.weeks} Weeks`
-                 : t("homeScreen.weeks")}
-            </Text>
-            <Text style={styles.days}>
-               {pregnancyProgress
-                 ? `, ${pregnancyProgress.days} Days`
-                 : t("homeScreen.days")}
-            </Text>
-           </View>
-
-          <View style={styles.progressTrack}>
-            <View
-              style={[
-               styles.progressFill,
-               { width: `${progressPercentage}%` },
-              ]}
-            />
-          </View>
-          <Text style={styles.progressPercentageText}>
-            {Math.round(progressPercentage)}%
-          </Text>
+          {pregnancyProgress ? (
+            <>
+              <Text style={styles.trimester}>{t(`pregnancy.trimester${pregnancyProgress.trimester}`)}</Text>
+              <Text style={styles.week}>{formatGestation(pregnancyProgress, t, i18n.language)}</Text>
+              <View style={styles.progressTrack}>
+                <View style={[styles.progressFill, { width: `${pregnancyProgress.progress * 100}%` }]} />
+              </View>
+              <Text style={styles.progressPercentageText}>
+                {new Intl.NumberFormat(pregnancyLocale(i18n.language), { style: "percent", maximumFractionDigits: 0 }).format(pregnancyProgress.progress)}
+              </Text>
+              <Text style={styles.countdown}>{formatCountdown(pregnancyProgress, t, i18n.language)}</Text>
+            </>
+          ) : (
+            <>
+              <Text style={styles.week}>{t("pregnancy.noDueDate")}</Text>
+              <Text style={styles.countdown}>{t("pregnancy.enterDueDate")}</Text>
+              <Pressable accessibilityRole="button" style={styles.addDueDate} onPress={() => navigation.navigate("ProfileScreen")}>
+                <Text style={styles.addDueDateText}>{t("pregnancy.addDueDate")}</Text>
+              </Pressable>
+            </>
+          )}
         </View>
 
-        <View style={styles.babyCard}>
-          <View style={styles.plumOuter}>
-            <View style={styles.leaf} />
-            <View style={styles.plum} />
-          </View>
-
-          <Text style={styles.babyTitle}>{t("homeScreen.babySize")}</Text>
-          <Text style={styles.babyText}>{t("homeScreen.babyLength")}</Text>
-        </View>
+        <BabySizeCard progress={pregnancyProgress} />
 
         <Text style={styles.sectionTitle}>{t("homeScreen.todaysPriority")}</Text>
         <View style={styles.titleUnderline} />
@@ -129,7 +82,7 @@ const firstName = userName.trim().split(/\s+/)[0] || "Asha";
           {priorityMedication ? (
   <Pressable
     style={styles.medicationRow}
-    onPress={() => toggleMedicationTaken(priorityMedication.id)}
+    onPress={() => toggleMedicationTaken(priorityMedication.id, localDateKey(new Date()))}
   >
     <View style={styles.checkbox} />
 
@@ -140,7 +93,7 @@ const firstName = userName.trim().split(/\s+/)[0] || "Asha";
       </Text>
     </View>
   </Pressable>
-) : (
+) : medications.length > 0 ? (
   <View style={styles.medicationRow}>
     <View style={[styles.checkbox, styles.checkboxSelected]}>
       <Ionicons name="checkmark" size={18} color="#FFFFFF" />
@@ -153,6 +106,15 @@ const firstName = userName.trim().split(/\s+/)[0] || "Asha";
       </Text>
     </View>
   </View>
+) : (
+  <Pressable
+    accessibilityRole="button"
+    style={styles.medicationRow}
+    onPress={() => navigation.navigate("AddMedication")}
+  >
+    <Ionicons name="add-circle-outline" size={24} color="#087D67" />
+    <Text style={styles.itemTitle}>{t("medsScreen.addNew")}</Text>
+  </Pressable>
 )}
 
           <View style={styles.divider} />
@@ -237,21 +199,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     letterSpacing: 0.5,
   },
-  weekRow: {
-    flexDirection: "row",
-    alignItems: "baseline",
-    marginTop: 7,
-  },
-  week: {
-    color: "#FFFFFF",
-    fontSize: 26,
-    fontWeight: "700",
-  },
-  days: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "600",
-  },
+  week: { color: "#FFFFFF", fontSize: 26, fontWeight: "700", marginTop: 7 },
   progressTrack: {
     height: 9,
     marginTop: 28,
@@ -271,48 +219,9 @@ const styles = StyleSheet.create({
   marginTop: 6,
   textAlign: "right",
   },
-  babyCard: {
-    alignItems: "center",
-    backgroundColor: "#F9E3E5",
-    borderRadius: 12,
-    paddingVertical: 22,
-    marginBottom: 24,
-  },
-  plumOuter: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
-    backgroundColor: "#FFFFFF",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  plum: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: "#613B60",
-  },
-  leaf: {
-    position: "absolute",
-    top: 5,
-    width: 9,
-    height: 7,
-    borderRadius: 6,
-    backgroundColor: "#4C965A",
-    transform: [{ rotate: "-25deg" }],
-    zIndex: 1,
-  },
-  babyTitle: {
-    marginTop: 12,
-    fontSize: 19,
-    fontWeight: "700",
-    color: "#2B2224",
-  },
-  babyText: {
-    marginTop: 6,
-    fontSize: 13,
-    color: "#66585B",
-  },
+  countdown: { marginTop: 10, fontSize: 14, color: "#FFFFFF" },
+  addDueDate: { alignSelf: "flex-start", backgroundColor: "#FFFFFF", borderRadius: 8, padding: 12, marginTop: 14 },
+  addDueDateText: { color: "#B62555", fontWeight: "700" },
   sectionTitle: {
     fontSize: 20,
     fontWeight: "700",

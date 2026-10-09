@@ -1,0 +1,19 @@
+MamaCare audit verification — 2026-10-09
+Repository: /Users/rileypigneguy/Code/mama-care
+Branch: fix-pregnancy-details
+Baseline HEAD: 445a9ae (local working-tree changes included)
+Runtime: Node 22.23.2
+
+Fresh npm ci: exit 0, 682 packages installed from package-lock.json.
+Full tests: 108 total, 90 pass, 0 unexpected failures, 18 known-defect TODO assertions.
+Strict known defects: 18 total, 0 pass, 18 failures, exit 1 as expected.
+Time zones: Perth, Los Angeles, Kathmandu, Kiritimati; each 26 pass, 0 fail.
+TypeScript: 2 existing errors in SignUPScreen.tsx at lines 29 and 34.
+Expo export: iOS, Android and web pass.
+Combined check: tests PASS, TypeScript FAIL, exports PASS; exit 1.
+npm audit: 13 moderate, 22 high, 1 critical, total 36; exit 1.
+git diff --check: no whitespace errors.
+Local Markdown file/screenshot links: all resolve.
+
+Physical-device delivery, binary installation and clinical review were not performed.
+See ../BUG_REPORT.md and ../TESTING.md for scope, evidence and limitations.

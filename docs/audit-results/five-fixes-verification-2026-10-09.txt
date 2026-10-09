@@ -1,0 +1,21 @@
+Five selected bug fixes — verified 2026-10-09
+Branch: fix-pregnancy-details
+Ownership: live issues, comments and open PR #22 reviewed; see ../OWNERSHIP_REVIEW.md.
+Fixed: BUG-09, BUG-10, BUG-11, BUG-17; critical subfinding of BUG-23.
+Security package: shell-quote 1.12.0 in package-lock.json and fresh installed tree.
+
+Fresh npm ci: pass, 682 packages.
+Full tests: 119 total, 105 pass, 0 unexpected failures, 14 remaining TODO defects.
+Strict remaining defects: 14 failures, exit 1 as expected.
+Time zones: 26 checks pass in each of Perth, Los Angeles, Kathmandu and Kiritimati.
+Expo exports: iOS, Android and web pass.
+TypeScript: two unchanged errors in inactive SignUPScreen.tsx, lines 29 and 34.
+Combined check: tests PASS, TypeScript FAIL, exports PASS; exit 1.
+Audit: zero critical, 22 high, 13 moderate findings remain.
+
+Browser: clearing selected EDD clears parent state and disables Next; empty Home Add New Medication opens the form; named Meds checkbox toggles taken status without navigation; details action still opens details. Final build exposes aria-checked false/true and native accessibility checkbox values 0/1.
+Regression coverage: malformed/null/absent article params and inherited IDs; controlled date/datetime clearing; invalid-input preservation; Home empty/pending/completed states; English/Nepali existing Add action; checkbox checked/disabled states and navigation; security version, line-terminator rejection and quote/parse round trips.
+
+No state providers, localization files, profile/settings/notification screens, emergency contacts or intro screens were changed for this five-fix batch. Prior authorized working-tree changes remain.
+Native screen-reader/device notification delivery remains unverified.
+Verification was completed before publication; these changes have not yet been merged.

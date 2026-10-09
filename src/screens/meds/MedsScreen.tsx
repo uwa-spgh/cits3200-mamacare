@@ -206,69 +206,80 @@ export default function MedicationScreen() {
           const isMissed = status === "missed";
 
           return (
-            <TouchableOpacity
+            <View
               key={medication.id}
               style={[
                 styles.medicationCard,
                 isMissed && styles.overdueMedicationCard,
               ]}
-              activeOpacity={0.8}
-              onPress={() =>
-                navigation.navigate("MedicationDetails", { id: medication.id })
-              }
             >
-              <View style={styles.medicationIcon}>
-                <Ionicons name="medical" size={18} color="#8B6570" />
-              </View>
+              <TouchableOpacity
+                style={styles.medicationDetailsButton}
+                activeOpacity={0.8}
+                accessibilityRole="button"
+                accessibilityLabel={`${medication.name}, ${medication.dosage}, ${medication.instructions}, ${medication.time}`}
+                onPress={() => navigation.navigate("MedicationDetails", { id: medication.id })}
+              >
+                <View style={styles.medicationIcon}>
+                  <Ionicons name="medical" size={18} color="#8B6570" />
+                </View>
 
-              <View style={styles.medicationContent}>
-                <Text
-                  style={[
-                    styles.medicationName,
-                    isTaken && styles.takenMedicationName,
-                  ]}
-                >
-                  {medication.name}
-                </Text>
+                <View style={styles.medicationContent}>
+                  <Text
+                    style={[
+                      styles.medicationName,
+                      isTaken && styles.takenMedicationName,
+                    ]}
+                  >
+                    {medication.name}
+                  </Text>
 
-                <Text style={styles.medicationDetails}>
-                  {medication.dosage} • {medication.instructions}
-                </Text>
+                  <Text style={styles.medicationDetails}>
+                    {medication.dosage} • {medication.instructions}
+                  </Text>
 
-                {isTaken ? (
-                  <View style={styles.statusRow}>
-                    <Ionicons
-                      name="checkmark-circle"
-                      size={13}
-                      color="#57A868"
-                    />
+                  {isTaken ? (
+                    <View style={styles.statusRow}>
+                      <Ionicons
+                        name="checkmark-circle"
+                        size={13}
+                        color="#57A868"
+                      />
 
-                    <Text style={styles.takenStatus}>
-                      {t("medicationScreen.takenAt", {
-                        time: medication.time,
-                      })}
-                    </Text>
-                  </View>
-                ) : isMissed ? (
-                  <View style={styles.statusRow}>
-                    <Ionicons name="time" size={13} color="#F28C28" />
+                      <Text style={styles.takenStatus}>
+                        {t("medicationScreen.takenAt", {
+                          time: medication.time,
+                        })}
+                      </Text>
+                    </View>
+                  ) : isMissed ? (
+                    <View style={styles.statusRow}>
+                      <Ionicons name="time" size={13} color="#F28C28" />
 
-                    <Text style={styles.overdueStatus}>
+                      <Text style={styles.overdueStatus}>
+                        {t("medicationScreen.dueAt", {
+                          time: medication.time,
+                        })}
+                      </Text>
+                    </View>
+                  ) : (
+                    <Text style={styles.upcomingStatus}>
                       {t("medicationScreen.dueAt", {
                         time: medication.time,
                       })}
                     </Text>
-                  </View>
-                ) : (
-                  <Text style={styles.upcomingStatus}>
-                    {t("medicationScreen.dueAt", {
-                      time: medication.time,
-                    })}
-                  </Text>
-                )}
-              </View>
+                  )}
+                </View>
+              </TouchableOpacity>
 
               <TouchableOpacity
+                accessible
+                accessibilityRole="checkbox"
+                accessibilityLabel={`${medication.name}, ${medication.time}`}
+                accessibilityState={{ checked: isTaken, disabled: !isSelectedDateEditable }}
+                aria-checked={isTaken}
+                aria-disabled={!isSelectedDateEditable}
+                disabled={!isSelectedDateEditable}
                 style={[
                   styles.checkCircle,
                   isTaken && styles.checkCircleTaken,
@@ -299,7 +310,7 @@ export default function MedicationScreen() {
                   />
                 )}
               </TouchableOpacity>
-            </TouchableOpacity>
+            </View>
           );
         })}
         </View>
@@ -609,6 +620,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 12,
     marginBottom: 8,
+  },
+
+  medicationDetailsButton: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
   },
 
   overdueMedicationCard: {
