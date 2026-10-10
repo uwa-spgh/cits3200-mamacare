@@ -6,6 +6,7 @@ import { s, vs } from "react-native-size-matters";
 import AppText from "../texts/AppText";
 import { AppColors } from "../../styles/colors";
 import { AppFonts } from "../../styles/fonts";
+import { useTranslation } from "react-i18next";
 
 const genderOptions = [
     "Female",
@@ -16,6 +17,7 @@ const genderOptions = [
 ];
 
 const GenderBottomSheet = () => {
+    const { t } = useTranslation();
     const handleSelect = (value: string) => {
         SheetManager.hide("GENDER_SHEET", {
             payload: value,
@@ -25,7 +27,9 @@ const GenderBottomSheet = () => {
     return (
         <ActionSheet id="GENDER_SHEET">
             <View style={styles.container}>
-                <AppText style={styles.heading}>Select Gender</AppText>
+                <AppText style={styles.heading}>
+                    {t("genderBottomSheet.title")}
+                </AppText>
 
                 {genderOptions.map((option) => (
                     <TouchableOpacity
@@ -33,7 +37,9 @@ const GenderBottomSheet = () => {
                         style={styles.option}
                         onPress={() => handleSelect(option)}
                     >
-                        <AppText style={styles.optionText}>{option}</AppText>
+                        <AppText style={styles.optionText}>
+                            {t(`genderBottomSheet.options.${option.toLowerCase().replace(/[^a-z]+/g, "")}`)}
+                        </AppText>
                     </TouchableOpacity>
                 ))}
             </View>

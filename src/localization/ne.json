@@ -204,6 +204,7 @@
 
     "homeScreen": {
         "greeting": "नमस्ते,",
+        "defaultName": "तपाईं",
         "dailyOverview": "यहाँ तपाईंको दैनिक अवलोकन छ।",
         "todaysPriority": "आजको प्राथमिकता",
         "medications": "औषधिहरू",
@@ -213,6 +214,9 @@
         "clinicCheckup": "क्लिनिक जाँच",
         "hospital": "सिटी जनरल अस्पताल",
         "daysLabel": "दिन",
+        "allMedicationsTaken": "सबै औषधि लिइयो",
+        "allMedicationsCompleted": "आजका सबै औषधि लिनुभएको छ।",
+        "profileAccessibility": "प्रोफाइल खोल्नुहोस्",
         "quickActions": "द्रुत कार्यहरू",
         "educationLibrary": "शिक्षा\nपुस्तकालय",
         "trackSymptoms": "लक्षण\nट्र्याक",
@@ -395,6 +399,65 @@
         }
     },
 
+    "personalInformationScreen": {
+        "title": "व्यक्तिगत जानकारी",
+        "fullName": "पूरा नाम",
+        "fullNamePlaceholder": "पूरा नाम लेख्नुहोस्",
+        "dateOfBirth": "जन्म मिति",
+        "dateOfBirthPlaceholder": "जन्म मिति छान्नुहोस्",
+        "height": "उचाइ",
+        "heightPlaceholder": "१७०",
+        "centimeters": "सेमी",
+        "weight": "तौल",
+        "weightPlaceholder": "६५",
+        "kilograms": "केजी",
+        "gender": "लिङ्ग",
+        "genderPlaceholder": "लिङ्ग छान्नुहोस्",
+        "phoneNumber": "फोन नम्बर",
+        "phoneNumberPlaceholder": "फोन नम्बर लेख्नुहोस्",
+        "save": "परिवर्तनहरू सुरक्षित गर्नुहोस्",
+        "savedTitle": "सुरक्षित भयो",
+        "savedMessage": "तपाईंको व्यक्तिगत जानकारी सुरक्षित भयो।"
+    },
+
+    "medicalHistoryScreen": {
+        "title": "चिकित्सा इतिहास",
+        "conditionsTitle": "स्वास्थ्य अवस्था",
+        "conditionsHelper": "तपाईंलाई लागू हुने स्वास्थ्य अवस्था छान्नुहोस्।",
+        "allergiesTitle": "एलर्जी",
+        "allergiesHelper": "तपाईंलाई भएका एलर्जी छान्नुहोस् वा थप्नुहोस्।",
+        "addConditionPlaceholder": "अर्को स्वास्थ्य अवस्था थप्नुहोस्",
+        "addAllergyPlaceholder": "अर्को एलर्जी थप्नुहोस्",
+        "add": "थप्नुहोस्",
+        "save": "परिवर्तनहरू सुरक्षित गर्नुहोस्",
+        "savedTitle": "सुरक्षित भयो",
+        "savedMessage": "तपाईंको चिकित्सा इतिहास सुरक्षित भयो।",
+        "conditions": {
+            "gestationalDiabetes": "गर्भावस्थाको मधुमेह",
+            "hypertension": "उच्च रक्तचाप",
+            "anaemia": "रक्तअल्पता",
+            "thyroidCondition": "थाइराइड समस्या",
+            "asthma": "दम"
+        },
+        "allergies": {
+            "penicillin": "पेनिसिलिन",
+            "aspirin": "एस्पिरिन",
+            "latex": "लेटेक्स",
+            "peanuts": "बदाम"
+        }
+    },
+
+    "genderBottomSheet": {
+        "title": "लिङ्ग छान्नुहोस्",
+        "options": {
+            "female": "महिला",
+            "male": "पुरुष",
+            "nonbinary": "गैर-द्विआधारी",
+            "other": "अन्य",
+            "prefernottosay": "भन्न चाहन्नँ"
+        }
+    },
+
     "medicationScreen": {
         "medicationName": "औषधि वा पूरकको नाम",
         "dosage": "मात्रा",
@@ -407,7 +470,9 @@
         "taken": "लिइयो",
         "missed": "छुट्यो",
         "takenAt": "{{time}} मा लिइयो",
-        "dueAt": "{{time}} मा लिनुपर्ने"
+        "dueAt": "{{time}} मा लिनुपर्ने",
+        "medicationAccessibility": "{{name}}, {{dosage}}, {{instructions}}, {{time}}",
+        "medicationToggleAccessibility": "{{name}} लाई {{time}} मा लिएको चिन्ह लगाउनुहोस्"
     },
 
     "addMedicationScreen": {
@@ -442,8 +507,18 @@
         "thu": "बिहि",
         "fri": "शुक्र",
         "todaysProgress": "आजको प्रगति",
+        "yesterdaysProgress": "हिजोको प्रगति",
+        "progressForDate": "{{date}} को प्रगति",
+        "progress": "प्रगति",
         "takenCount": "{{total}} मध्ये {{taken}} लिइयो",
         "todaysSchedule": "आजको तालिका",
+        "yesterdaysSchedule": "हिजोको तालिका",
+        "scheduleForDate": "{{date}} को तालिका",
+        "schedule": "तालिका",
+        "emptyTodayTitle": "अहिलेसम्म औषधि थपिएको छैन",
+        "emptyDateTitle": "यो मितिका लागि औषधि छैन",
+        "emptyTodayDescription": "आफ्नो दैनिक तालिका ट्र्याक गर्न औषधिहरू थप्नुहोस्।",
+        "emptyDateDescription": "यो मितिका लागि कुनै औषधि निर्धारित थिएन।",
         "addNew": "नयाँ औषधि थप्नुहोस्",
         "viewHistory": "सेवन इतिहास हेर्नुहोस्"
     },
@@ -459,7 +534,9 @@
         "planner": "योजना",
         "visitChecklist": "भ्रमण जाँचसूची",
         "appointmentDateTime": "भेटघाटको मिति र समय",
+        "defaultAppointmentDate": "मंगलबार, अक्टोबर २४ - बिहान १०:००",
         "facilityProvider": "संस्था वा सेवा प्रदायक",
+        "facilityPlaceholder": "संस्था वा सेवा प्रदायकको नाम लेख्नुहोस्",
         "beforeDuringVisit": "तपाईंको भ्रमण अघि र दौरान",
         "healthAdvice": "स्वास्थ्य सल्लाह",
         "dangerSigns": "खतराका संकेतहरू",

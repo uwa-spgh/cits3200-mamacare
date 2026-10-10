@@ -13,18 +13,24 @@ import AppText from "../../components/texts/AppText";
 import { AppColors } from "../../styles/colors";
 import { AppFonts } from "../../styles/fonts";
 import { SheetManager } from "react-native-actions-sheet";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import {
     setPersonalInformation,
     type PersonalInformation,
 } from "../../store/reducers/dataReducers";
 import type { RootState } from "../../store/store";
+import { toIntlLocale } from "../../localization/localeMap";
 
 import DateTimePicker, {
     DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 
+const genderKey = (gender: string) =>
+    gender.toLowerCase().replace(/[^a-z]+/g, "");
+
 const PersonalInformationScreen = () => {
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const personalInformation = useSelector(
         (state: RootState) => state.dataReducer.personalInformation,
@@ -75,7 +81,7 @@ const PersonalInformationScreen = () => {
     }, [personalInformation, userName]);
 
     const formatDate = (date: Date) => {
-        return date.toLocaleDateString("en-GB", {
+        return date.toLocaleDateString(toIntlLocale(i18n.language), {
             day: "numeric",
             month: "long",
             year: "numeric",
@@ -111,8 +117,8 @@ const PersonalInformationScreen = () => {
         dispatch(setPersonalInformation(savedInformation));
 
         Alert.alert(
-            "Saved",
-            "Your personal information has been saved.",
+            t("personalInformationScreen.savedTitle"),
+            t("personalInformationScreen.savedMessage"),
         );
     };
 
@@ -122,20 +128,26 @@ const PersonalInformationScreen = () => {
                 contentContainerStyle={styles.content}
                 keyboardShouldPersistTaps="handled"
             >
-                <AppText style={styles.heading}>Personal Information</AppText>
+                <AppText style={styles.heading}>
+                    {t("personalInformationScreen.title")}
+                </AppText>
 
                 <View style={styles.fieldContainer}>
-                    <AppText style={styles.label}>Full Name</AppText>
+                    <AppText style={styles.label}>
+                        {t("personalInformationScreen.fullName")}
+                    </AppText>
                     <TextInput
                         style={styles.input}
                         value={fullName}
                         onChangeText={setFullName}
-                        placeholder="Enter full name"
+                        placeholder={t("personalInformationScreen.fullNamePlaceholder")}
                     />
                 </View>
 
                 <View style={styles.fieldContainer}>
-                    <AppText style={styles.label}>Date of Birth</AppText>
+                    <AppText style={styles.label}>
+                        {t("personalInformationScreen.dateOfBirth")}
+                    </AppText>
 
                     <TouchableOpacity
                         style={styles.input}
@@ -147,7 +159,9 @@ const PersonalInformationScreen = () => {
                                 ...(!dateOfBirth ? styles.placeholderText : {}),
                             }}
                         >
-                            {dateOfBirth ? formatDate(dateOfBirth) : "Select date of birth"}
+                            {dateOfBirth
+                                ? formatDate(dateOfBirth)
+                                : t("personalInformationScreen.dateOfBirthPlaceholder")}
                         </AppText>
                     </TouchableOpacity>
 
@@ -165,7 +179,9 @@ const PersonalInformationScreen = () => {
 
                 <View style={styles.row}>
                     <View style={styles.halfField}>
-                        <AppText style={styles.label}>Height</AppText>
+                        <AppText style={styles.label}>
+                            {t("personalInformationScreen.height")}
+                        </AppText>
                         <View style={styles.unitInput}>
                             <TextInput
                                 style={styles.inputFlex}
@@ -173,15 +189,19 @@ const PersonalInformationScreen = () => {
                                 onChangeText={(text) =>
                                     setHeight(text.replace(/[^0-9]/g, ""))
                                 }
-                                placeholder="170"
+                                placeholder={t("personalInformationScreen.heightPlaceholder")}
                                 keyboardType="numeric"
                             />
-                            <AppText style={styles.unit}>cm</AppText>
+                            <AppText style={styles.unit}>
+                                {t("personalInformationScreen.centimeters")}
+                            </AppText>
                         </View>
                     </View>
 
                     <View style={styles.halfField}>
-                        <AppText style={styles.label}>Weight</AppText>
+                        <AppText style={styles.label}>
+                            {t("personalInformationScreen.weight")}
+                        </AppText>
                         <View style={styles.unitInput}>
                             <TextInput
                                 style={styles.inputFlex}
@@ -189,16 +209,20 @@ const PersonalInformationScreen = () => {
                                 onChangeText={(text) =>
                                     setWeight(text.replace(/[^0-9.]/g, ""))
                                 }
-                                placeholder="65"
+                                placeholder={t("personalInformationScreen.weightPlaceholder")}
                                 keyboardType="decimal-pad"
                             />
-                            <AppText style={styles.unit}>kg</AppText>
+                            <AppText style={styles.unit}>
+                                {t("personalInformationScreen.kilograms")}
+                            </AppText>
                         </View>
                     </View>
                 </View>
 
                 <View style={styles.fieldContainer}>
-                    <AppText style={styles.label}>Gender</AppText>
+                    <AppText style={styles.label}>
+                        {t("personalInformationScreen.gender")}
+                    </AppText>
 
                     <TouchableOpacity
                         style={styles.input}
@@ -217,26 +241,32 @@ const PersonalInformationScreen = () => {
                                 ...(!gender ? styles.placeholderText : {}),
                             }}
                         >
-                            {gender || "Select gender"}
+                            {gender
+                                ? t(`genderBottomSheet.options.${genderKey(gender)}`)
+                                : t("personalInformationScreen.genderPlaceholder")}
                         </AppText>
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.fieldContainer}>
-                    <AppText style={styles.label}>Phone Number</AppText>
+                    <AppText style={styles.label}>
+                        {t("personalInformationScreen.phoneNumber")}
+                    </AppText>
                     <TextInput
                         style={styles.input}
                         value={phoneNumber}
                         onChangeText={(text) =>
                             setPhoneNumber(text.replace(/[^0-9+\s]/g, ""))
                         }
-                        placeholder="Enter phone number"
+                        placeholder={t("personalInformationScreen.phoneNumberPlaceholder")}
                         keyboardType="phone-pad"
                     />
                 </View>
 
                 <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-                    <AppText style={styles.saveButtonText}>Save Changes</AppText>
+                    <AppText style={styles.saveButtonText}>
+                        {t("personalInformationScreen.save")}
+                    </AppText>
                 </TouchableOpacity>
             </ScrollView>
         </View>

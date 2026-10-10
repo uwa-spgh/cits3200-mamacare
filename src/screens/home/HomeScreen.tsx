@@ -46,8 +46,9 @@ export default function HomeScreen() {
     const userName = useSelector(
       (state: RootState) => state.dataReducer.userName,
     );
-    const firstName = userName.trim().split(/\s+/)[0];
+    const firstName = userName.trim().split(/\s+/)[0] || t("homeScreen.defaultName");
     const pregnancyProgress = usePregnancyProgress();
+    const numberFormat = new Intl.NumberFormat(pregnancyLocale(i18n.language));
     useTutorialAutoStart();
     return (
       <AppSafeView includeBottomInset={false}>
@@ -151,9 +152,11 @@ export default function HomeScreen() {
                 </View>
 
                 <View>
-                  <Text style={styles.itemTitle}>All medications taken</Text>
+                  <Text style={styles.itemTitle}>
+                    {t("homeScreen.allMedicationsTaken")}
+                  </Text>
                   <Text style={styles.itemSubtitle}>
-                    You have completed today&apos;s medications.
+                    {t("homeScreen.allMedicationsCompleted")}
                   </Text>
                 </View>
               </View>
@@ -188,7 +191,7 @@ export default function HomeScreen() {
               </View>
 
               <View style={styles.daysBadge}>
-                <Text style={styles.daysNumber}>14</Text>
+                <Text style={styles.daysNumber}>{numberFormat.format(14)}</Text>
                 <Text style={styles.daysLabel}>
                   {t("homeScreen.daysLabel")}
                 </Text>

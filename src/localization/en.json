@@ -205,6 +205,7 @@
 
     "homeScreen": {
         "greeting": "Hello,",
+        "defaultName": "there",
         "dailyOverview": "Here is your daily overview.",
         "todaysPriority": "Today's Priority",
         "medications": "Medications",
@@ -214,6 +215,9 @@
         "clinicCheckup": "Clinic Checkup",
         "hospital": "City General Hospital",
         "daysLabel": "DAYS",
+        "allMedicationsTaken": "All medications taken",
+        "allMedicationsCompleted": "You have completed today's medications.",
+        "profileAccessibility": "Open profile",
         "quickActions": "Quick Actions",
         "educationLibrary": "Education\nLibrary",
         "trackSymptoms": "Track\nSymptoms",
@@ -396,6 +400,65 @@
         }
     },
 
+    "personalInformationScreen": {
+        "title": "Personal Information",
+        "fullName": "Full Name",
+        "fullNamePlaceholder": "Enter full name",
+        "dateOfBirth": "Date of Birth",
+        "dateOfBirthPlaceholder": "Select date of birth",
+        "height": "Height",
+        "heightPlaceholder": "170",
+        "centimeters": "cm",
+        "weight": "Weight",
+        "weightPlaceholder": "65",
+        "kilograms": "kg",
+        "gender": "Gender",
+        "genderPlaceholder": "Select gender",
+        "phoneNumber": "Phone Number",
+        "phoneNumberPlaceholder": "Enter phone number",
+        "save": "Save Changes",
+        "savedTitle": "Saved",
+        "savedMessage": "Your personal information has been saved."
+    },
+
+    "medicalHistoryScreen": {
+        "title": "Medical History",
+        "conditionsTitle": "Medical Conditions",
+        "conditionsHelper": "Select any conditions that apply to you.",
+        "allergiesTitle": "Allergies",
+        "allergiesHelper": "Select or add any allergies you have.",
+        "addConditionPlaceholder": "Add another condition",
+        "addAllergyPlaceholder": "Add another allergy",
+        "add": "Add",
+        "save": "Save Changes",
+        "savedTitle": "Saved",
+        "savedMessage": "Your medical history has been saved.",
+        "conditions": {
+            "gestationalDiabetes": "Gestational Diabetes",
+            "hypertension": "Hypertension",
+            "anaemia": "Anaemia",
+            "thyroidCondition": "Thyroid Condition",
+            "asthma": "Asthma"
+        },
+        "allergies": {
+            "penicillin": "Penicillin",
+            "aspirin": "Aspirin",
+            "latex": "Latex",
+            "peanuts": "Peanuts"
+        }
+    },
+
+    "genderBottomSheet": {
+        "title": "Select Gender",
+        "options": {
+            "female": "Female",
+            "male": "Male",
+            "nonbinary": "Non-binary",
+            "other": "Other",
+            "prefernottosay": "Prefer not to say"
+        }
+    },
+
     "medicationScreen": {
         "medicationName": "Medication or supplement name",
         "dosage": "Dosage",
@@ -408,7 +471,9 @@
         "taken": "Taken",
         "missed": "Missed",
         "takenAt": "Taken at {{time}}",
-        "dueAt": "Due at {{time}}"
+        "dueAt": "Due at {{time}}",
+        "medicationAccessibility": "{{name}}, {{dosage}}, {{instructions}}, {{time}}",
+        "medicationToggleAccessibility": "Mark {{name}} at {{time}} as taken"
     },
 
     "addMedicationScreen": {
@@ -443,8 +508,18 @@
         "thu": "Thu",
         "fri": "Fri",
         "todaysProgress": "Today's Progress",
+        "yesterdaysProgress": "Yesterday's Progress",
+        "progressForDate": "{{date}} Progress",
+        "progress": "Progress",
         "takenCount": "{{taken}} of {{total}} taken",
         "todaysSchedule": "Today's Schedule",
+        "yesterdaysSchedule": "Yesterday's Schedule",
+        "scheduleForDate": "{{date}} Schedule",
+        "schedule": "Schedule",
+        "emptyTodayTitle": "No medications added yet",
+        "emptyDateTitle": "No medications scheduled",
+        "emptyTodayDescription": "Add your medications to keep track of your daily schedule.",
+        "emptyDateDescription": "There were no medications scheduled for this date.",
         "addNew": "Add New Medication",
         "viewHistory": "View Adherence History"
     },
@@ -460,7 +535,9 @@
         "planner": "Planner",
         "visitChecklist": "Visit Checklist",
         "appointmentDateTime": "Appointment date and time",
+        "defaultAppointmentDate": "Tuesday, Oct 24 - 10:00 AM",
         "facilityProvider": "Facility or provider",
+        "facilityPlaceholder": "Enter facility or provider",
         "beforeDuringVisit": "Before and During Your Visit",
         "healthAdvice": "Health Advice",
         "dangerSigns": "Danger Signs",
