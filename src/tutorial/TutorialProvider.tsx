@@ -119,7 +119,15 @@ export default function TutorialProvider({ children }: { children: ReactNode }) 
           endTour("abort");
           return;
         }
-        setMeasured({ stepIndex: index, hole: spotlightHole(rect, step.shape) });
+        const correctedRect =
+          step.target === "tab.home"
+            ? { ...rect, x: 0 }
+            : rect;
+
+        setMeasured({
+          stepIndex: index,
+          hole: spotlightHole(correctedRect, step.shape),
+        });
       });
   }, [endTour]);
 
