@@ -92,8 +92,8 @@ export default function TutorialOverlay({
     fade(cardOpacity, 1, reduceMotion);
 
     const title = titleRef.current;
-    if (title) AccessibilityInfo.sendAccessibilityEvent(title, "focus");
-    AccessibilityInfo.announceForAccessibilityWithOptions(
+    if (title) AccessibilityInfo.sendAccessibilityEvent?.(title, "focus");
+    AccessibilityInfo.announceForAccessibilityWithOptions?.(
       t("tutorial.a11y.stepAnnouncement", {
         current: readyStep + 1,
         total: TUTORIAL_STEPS.length,

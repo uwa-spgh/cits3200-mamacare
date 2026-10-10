@@ -2,9 +2,9 @@
 // every completed onboarding pass makes the tour pending, the next time Home gains
 // focus it starts, and finishing or skipping clears it.
 //
-// State lives in memory on purpose. Onboarding currently repeats on every launch,
-// so the tour should too. If onboarding later becomes first-run only, the tour
-// follows automatically because markOnboardingComplete() will only run once.
+// State lives in memory. Completing onboarding or choosing Settings replay marks
+// the tour pending. Returning users with a saved EDD bypass onboarding, so a
+// process restart alone does not mark the tour pending.
 
 type Listener = () => void;
 

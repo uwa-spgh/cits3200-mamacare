@@ -18,10 +18,11 @@ type ArticleRouteParams = {
 };
 
 export default function ArticleScreen() {
-  const { id } = useRoute<RouteProp<ArticleRouteParams, "Article">>().params;
+  const route = useRoute<RouteProp<ArticleRouteParams, "Article">>();
+  const id = typeof route.params?.id === "string" ? route.params.id : undefined;
   const { t } = useTranslation();
   const topic = EDUCATION_TOPICS.find((item) => item.id === id);
-  const article = id ? ARTICLES[id] : undefined;
+  const article = topic && id ? ARTICLES[id] : undefined;
 
   const translatedArticle = article && {
     ...article,

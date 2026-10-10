@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import { AppColors } from "./src/styles/colors";
 import MainAppNavStack from "./src/navigation/MainAppNavStack";
@@ -7,9 +7,9 @@ import {
   NavigationContainer,
 } from "expo-router/react-navigation";
 import { useFonts } from "expo-font";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Provider } from "react-redux";
-import { store } from "./src/store/store";
+import { hydrateDueDate, store } from "./src/store/store";
 import i18n from "./src/localization/i18n";
 import { I18nextProvider } from "react-i18next";
 import { MedicationProvider } from "./src/context/MedicationContext";
@@ -28,6 +28,19 @@ const navigationRef = createNavigationContainerRef();
 
 export default function App() {
   const [navigationReady, setNavigationReady] = useState(false);
+  const [pregnancyReady, setPregnancyReady] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  useEffect(() => {
+    let mounted = true;
+    setLoadError(false);
+    hydrateDueDate().then(() => {
+      if (mounted) setPregnancyReady(true);
+    }).catch(() => {
+      if (mounted) setLoadError(true);
+    });
+    return () => { mounted = false; };
+  }, [loadAttempt]);
   const [fontsLoaded] = useFonts({
     "Nunito-Bold": require("./src/assets/fonts/nunito/Nunito-Bold.ttf"),
     "Nunito-ExtraBold": require("./src/assets/fonts/nunito/Nunito-ExtraBold.ttf"),
@@ -47,7 +60,20 @@ export default function App() {
     "Inter-Light": require("./src/assets/fonts/inter/Inter_18pt-Light.ttf"),
   });
 
-  if (!fontsLoaded) {
+  if (loadError) {
+    return (
+      <View style={[styles.container, { padding: 24 }]}>
+        <Text style={{ textAlign: "center", marginBottom: 16 }}>
+          {i18n.t("pregnancy.loadError")}
+        </Text>
+        <Pressable accessibilityRole="button" onPress={() => setLoadAttempt((attempt) => attempt + 1)}>
+          <Text style={{ color: AppColors.button_primary_accent }}>{i18n.t("pregnancy.retry")}</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
+  if (!fontsLoaded || !pregnancyReady) {
     return <ActivityIndicator size={"large"} />;
   }
 

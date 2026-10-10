@@ -50,6 +50,10 @@ export default function DateInput({
     max: toDateLimit(maximumDate),
     min: toDateLimit(minimumDate),
     onChange: (event: { currentTarget: { value: string } }) => {
+      if (event.currentTarget.value === "") {
+        onChange("");
+        return;
+      }
       const nextDate = new Date(
         mode === "datetime" ? event.currentTarget.value : `${event.currentTarget.value}T00:00:00`,
       );

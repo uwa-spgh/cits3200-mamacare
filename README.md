@@ -1,105 +1,82 @@
 # MamaCare
 
-MamaCare is an Expo/React Native pregnancy support app. Its reminders are local notifications: the phone stores and delivers them, so reminder delivery does not require an internet connection or a MamaCare server.
+MamaCare is a pregnancy support app built with Expo SDK 57, React Native and TypeScript. It includes pregnancy progress, a local medication tracker, an antenatal care (ANC) planner, an education library and English/Nepali content.
 
-## Development setup
+**Current status: development prototype.** The October 2026 audit found data loss and inaccurate appointment displays. Read the [bug report](docs/BUG_REPORT.md) before relying on saved records. Accounts, cloud backup and clinical validation are not implemented.
 
-Expo SDK 57 requires Node.js 22.13 or newer. This project has been verified with Node 22.23.2.
+## Start developing
+
+Use the repository in the Code folder:
 
 ```bash
-nvm use 22.23.2
+cd ~/Code/mama-care
+nvm install
+nvm use
 npm ci
-npm test
 npm start
 ```
 
-The web build remains supported, but notifications are intentionally a no-op on web. Test reminder delivery on iOS or Android.
+`.nvmrc` pins Node 22.23.2. The [versioned Expo SDK 57 documentation](https://docs.expo.dev/versions/v57.0.0/) specifies Node 22.13.x minimum; the package engine range also follows the supported Node 24 minimum. Read those docs when changing Expo code or native configuration.
 
-## Notification decisions for issue #29
+### Open on a phone
 
-| Reminder | Timing | Delivery behaviour |
-| --- | --- | --- |
-| ANC appointment | 7 days, 24 hours, and 1 hour before the appointment | Past reminder times are skipped. Completing the visit cancels its remaining reminders. |
-| Medication | Exactly at the medication's scheduled time | Valid 12-hour times such as `8:00 AM` are required. Occurrences are prepared up to 30 days ahead, with the nearest reminders filling the available device-safe queue. Opening the app, editing the medication, or changing its status refreshes this buffer. |
-| Pregnancy education | Every Saturday at 10:00 AM local time | A friendly weekly reminder with normal priority. |
+This project includes `expo-dev-client`, so Expo normally starts in **development build** mode. Install the matching MamaCare development build on the phone, keep the computer and phone on the same network, and open the current development link. A previously saved server address may become stale when the computer's IP address changes.
 
-Medication reminders use separate one-off occurrences rather than one repeating alarm. This lets MamaCare cancel today's occurrence when a medication is marked as taken without cancelling tomorrow's reminder. A medication marked as taken is reset for the new local day.
-
-MamaCare keeps at most 60 owned reminders pending because iOS retains only a limited number of pending local notifications per app. ANC and the repeating weekly education reminder are scheduled first, then the nearest medication occurrences across all medications fill the remaining slots in chronological order. Any later medication occurrences are deferred rather than deleted from the user's medication data.
-
-The medication schedule is therefore a rolling nearest-reminder queue, not a guaranteed 30-day buffer. Thirty days is the maximum planning horizon for each medication, but the actual time covered becomes shorter when a user has multiple daily medications or many upcoming ANC reminders. The queue is rebuilt whenever MamaCare becomes active or medication, appointment, language, or reminder settings change. A delivered notification does not by itself reopen MamaCare or refill the queue, so a user who does not open the app again may eventually exhaust the scheduled reminders. The Notifications screen shows the current pending-reminder count.
-
-### Changes to underlying data
-
-- Editing an appointment or medication cancels its old pending reminders and schedules replacements. The user experiences this as an update; no obsolete alert remains.
-- Deleting a medication cancels all its pending reminders.
-- Marking a medication as taken before its time cancels today's occurrence only. Unmarking it before the scheduled time restores today's reminder.
-- Completing an ANC visit cancels the visit's remaining reminders. Marking it incomplete schedules any offsets that are still in the future.
-- Changing the app language rebuilds all pending ANC, medication, and education reminders using the new language. A notification that has already been delivered cannot be rewritten.
-- Turning off a reminder category cancels its pending notifications. Turning it back on rebuilds them from saved app data.
-- Tapping a medication reminder opens that medication's details. Tapping an ANC reminder opens that visit's checklist, and tapping the weekly education reminder opens the Library. This works when MamaCare is already running and when a notification launches the app.
-
-### Permissions and platform configuration
-
-MamaCare first shows an onboarding explanation after pregnancy date setup. The native permission prompt appears only after the user taps **Allow Notifications**. Choosing **Not now** does not block onboarding, and permission can be enabled later under **Profile → Notifications**. iOS and Android only show their native permission dialog while permission is still undetermined; after a denial, MamaCare explains this and offers to open the device settings instead of silently continuing. Android notification channels are created before the permission request.
-
-Android declares `SCHEDULE_EXACT_ALARM` so scheduled medication and ANC times can be exact on Android 12 and newer when the device grants the app **Alarms & reminders** access. On most fresh Android 14-and-newer installs this special access is off by default. Expo falls back to an inexact alarm when access is unavailable, so a reminder remains scheduled but Android may deliver it later than the requested minute. This permission is separate from the normal notification prompt and should be checked during Android release testing. The `expo-notifications` config plugin is included in `app.json`; native configuration changes require rebuilding the native development app to take full effect.
-
-## Testing notifications
-
-### 1. Automated scheduling checks
-
-Run:
+If the phone cannot reach the computer over Wi-Fi, stop the existing server and use:
 
 ```bash
-npm test
+npm start -- --dev-client --tunnel
 ```
 
-These tests use a fixed clock and verify:
+A tunnel forwards the development connection through a public relay. It can get around local network isolation, requires internet access and can be slower. It does not publish a standalone app, save records to the cloud, or replace the installed development build. Expo may prompt to install its tunnel helper.
 
-- 12-hour medication times are parsed correctly;
-- a due medication produces a 30-day schedule;
-- marking it taken removes today but preserves future occurrences;
-- the available queue slots are filled by the nearest medication occurrences across all medications;
-- ANC reminders are exactly 7 days, 24 hours, and 1 hour early;
-- expired ANC offsets and invalid placeholder dates are ignored;
-- medication, ANC, and education notification payloads select the correct destination.
+The development QR contains a custom `exp+mamacare://` link. If the camera reports no useful data, open the installed development app's launcher and use its scanner or enter the displayed server URL. Use the **current** link rather than a saved old connection. Pressing `s` switches Expo's launch target to Expo Go; use the development build for native reminder testing.
 
-### 2. Medication lifecycle test
+The `xcrun simctl` warning concerns the Mac's simulator setup. The server may still run for a physical phone. Simulator testing requires the Xcode setup specified in the versioned Expo docs.
 
-1. Add a medication whose time is a few minutes in the future.
-2. Return to **Profile → Notifications** and confirm the pending-reminder count increases.
-3. Lock the phone or put MamaCare in the background and confirm the notification arrives at the entered time.
-4. Tap the delivered notification and confirm MamaCare opens that medication's details.
-5. Edit the medication to another near-future time and confirm it arrives at the new time rather than the old one.
-6. Mark it as taken before the new time and confirm today's notification does not arrive.
-7. Delete the medication and confirm the pending-reminder count decreases.
+### Open in a browser
 
-### 3. ANC lifecycle test
+```bash
+npm run web
+```
 
-1. Open Planner and give an incomplete ANC visit a real future appointment date and time.
-2. Open **Profile → Notifications** and confirm its reminders are included in the pending count.
-3. Tap a delivered ANC notification and confirm MamaCare opens the matching visit checklist.
-4. Change the appointment time and confirm the pending count remains consistent.
-5. Mark the visit complete and confirm the pending count decreases for any remaining reminders.
+Web is useful for screen checks. Local notifications are deliberately unsupported there; the permission screen currently presents this poorly (BUG-20). Personal Information's birth date picker also does not work on web (BUG-18).
 
-For a visible delivery without waiting seven days, set an appointment to 7 days and a few minutes from now. Its seven-day reminder will then fire in a few minutes.
+## What is implemented
 
-### 4. Language and preference test
+| Area | Current behaviour |
+| --- | --- |
+| Pregnancy | EDD/LMP setup, saved due date, calendar-based weeks/days, trimester, countdown and weekly baby size. Home and Profile use the shared calculation. |
+| Medications | Add/edit/remove, daily taken status, history, overdue status and local storage. Loading failures and history hydration have known data loss defects. |
+| ANC Planner | Eight contacts, checklists, notes, appointment editing and completion. New-user defaults contain sample clinical records; Home does not reflect appointments. |
+| Education | Seven articles, topic search/filtering, general danger signs and danger signs for all eight ANC contacts. |
+| Notifications | Native local reminders, permission onboarding, category settings, queue rebuilding and notification tap routing. Actual phone delivery still needs device QA. |
+| Profile | EDD editing and personal/medical forms. Personal information and medical history currently last only for the running session. |
+| Language and tour | English/Nepali selection and a five-step tour with replay. Language does not survive restart; Nepali settings/tour translations are incomplete. |
+| Accounts and other tools | Sign-in/signup routes are disabled. Symptom tracking, emergency contacts and help/support show coming-soon messages. Profile picture editing is not wired. |
 
-1. Ensure at least one real medication or ANC reminder is pending.
-2. Change the app language from Profile.
-3. Turn each reminder category off and confirm the pending count decreases.
-4. Turn it on and confirm the current reminders are rebuilt.
+## Run checks
 
-### 5. Denied-permission test
+```bash
+npm test                 # passing checks plus explicitly labelled known-defect TODO tests
+npm run test:known-bugs   # strict reproductions; currently exits with failure
+npm run test:timezones    # date/reminder checks in four time zones
+npm run typecheck        # currently fails on two inactive signup errors
+npm run build:check      # exports iOS, Android and web to a temporary directory
+npm run check            # tests, type check and bundles; runs all three even if one fails
+```
 
-1. Disable MamaCare notifications in the phone's system settings.
-2. Return to **Profile → Notifications**.
-3. Confirm the screen reports that notifications are blocked.
-4. Tap **Enable**, re-enable notifications in device settings, and return to MamaCare.
-5. Schedule a near-future medication reminder and confirm it is delivered.
+Audit baseline: **105 passing tests, 14 known-defect TODO tests, zero unexpected test failures**. The 14 TODO assertions actually reproduce bugs; they are not skipped or counted as passes. The strict command reports all 14 as failures. Four time-zone runs pass, and all three platforms bundle. `npm run check` still exits with failure because of the signup type errors. These checks do not establish native notification delivery or release readiness.
 
-For final Android validation, use a rebuilt development or release app rather than relying only on Expo Go, because exact-alarm permission and notification channel configuration are native build settings.
+## Documentation
 
-On Android 14 or newer, repeat the medication delivery test once with **Settings → Apps → Special app access → Alarms & reminders → MamaCare** disabled and once with it enabled. The disabled case verifies that a reminder is still scheduled using Android's inexact fallback; the enabled case verifies exact-minute delivery.
+- [User guide](docs/USER_GUIDE.md): where features are and how to check persistence.
+- [Architecture and storage](docs/ARCHITECTURE.md): navigation, providers, stored data and data flows.
+- [Testing guide](docs/TESTING.md): runnable commands, coverage, mocks and the device QA checklist.
+- [Ownership review](docs/OWNERSHIP_REVIEW.md): selected fixes and teammate scopes reserved.
+- [Bug report](docs/BUG_REPORT.md): findings, reproduction steps, priorities and evidence.
+- [Notification design and device checks](docs/NOTIFICATIONS.md): scheduling rules, limitations and native permissions.
+
+## Working on a bug
+
+Use the existing branch or create a descriptive branch for new work. Keep local changes before pulling or switching branches. Reproduce the matching BUG test in strict mode, make the fix, and convert its `knownBug(...)` test to an ordinary `test(...)` once it passes. Add coverage for the fix's boundaries and update the report's status. See [Testing](docs/TESTING.md) for individual-file commands.

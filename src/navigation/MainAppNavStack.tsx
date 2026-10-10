@@ -1,3 +1,6 @@
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
+import { parseDueDate } from "../pregnancy/progress";
 import { createStackNavigator } from "expo-router/js-stack";
 import AuthStack from "./AuthStak";
 import MainAppBottomTabs from "./MainAppBottomTabs";
@@ -24,9 +27,11 @@ const Stack = createStackNavigator();
 
 export default function MainAppNavStack() {
   const { t } = useTranslation();
+  const edd = useSelector((state: RootState) => state.dataReducer.edd);
 
   return (
     <Stack.Navigator
+      initialRouteName={parseDueDate(edd) ? "MainAppBottomTabs" : "AuthStack"}
       screenOptions={{
         headerShown: false,
         headerBackTitle: t("buttonArrows.back"),
