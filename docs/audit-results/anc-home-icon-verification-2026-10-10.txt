@@ -1,0 +1,15 @@
+ANC, Home medication and app icon follow-up — 2026-10-10
+Branch: fix-anc-home-app-icon; base: 820262d (merged PR #39).
+
+New-user Planner defaults: anc-1 selected, no completed visits. Existing saved history is preserved. Sample appointments remain a separate open portion of BUG-06.
+Home: all medications remain visible with individually named checkboxes. Taken doses can be unticked, including when the whole list is complete. Uses the existing date-specific medication toggle and storage.
+Icon: confirmed flower from assets/mamaCare_Logo.svg, exported without redrawing; configured for default/iOS, Android adaptive/themed icons and web favicon. Source logo and splash assets preserved.
+
+Node: 22.23.2.
+Full suite: 119 tests, 106 pass, 13 known-defect TODO assertions, no unexpected failures.
+Strict known bugs: 13 failures, exit 1 as expected. Repaired completion-default assertion now lives in the normal regression file.
+iOS, Android, web bundle exports: pass.
+TypeScript: two existing inactive SignUPScreen.tsx errors remain at lines 29 and 34; no new errors.
+Icon dimensions/alpha: default 1024 square opaque; adaptive foreground and monochrome 1024 square transparent; web 64 square opaque. Exported assets visually inspected.
+Native launcher masks, themed icons and installed phone behaviour remain unverified. A new native build/reinstallation is needed for the phone icon change.
+Verification was completed before publication; these changes have not yet been merged.

@@ -4,7 +4,7 @@
     "slug": "mamaCare",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/flower-icon.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
@@ -15,16 +15,15 @@
         "android.permission.SCHEDULE_EXACT_ALARM"
       ],
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "backgroundColor": "#FFF8F7",
+        "foregroundImage": "./assets/flower-adaptive-foreground.png",
+        "monochromeImage": "./assets/flower-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.mamacareteamcits3200.mamaCare"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/flower-favicon.png"
     },
     "plugins": [
       "@react-native-vector-icons/material-icons",
