@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native"; 
 import React from "react";
 import { s, vs } from "react-native-size-matters";
 import AppSafeView from "../../components/views/AppSafeView";
@@ -35,19 +35,38 @@ const LanguageSelectionScreen = () => {
         <View style={styles.btsContainer}>
           <AppButton
             title={t("languageSelectionScreen.englishOption")}
-            style={styles.btnEnglish}
+            style={[
+              styles.languageButton,
+              language === "en"
+                ? styles.btnSelected
+                : styles.btnUnselected,
+            ]}
+            textColor={
+              language === "en"
+                ? "#FFFFFF"
+                : AppColors.text_secondary
+            }
             onPress={() => {
-              dispatch(setLanguage('en'))
-              void i18n.changeLanguage('en')
+              dispatch(setLanguage("en"));
+              void i18n.changeLanguage("en");
             }}
           />
           <AppButton
             title={t("languageSelectionScreen.nepaliOption")}
-            style={styles.btnNepali}
-            textColor={AppColors.text_secondary}
+            style={[
+              styles.languageButton,
+              language === "ne"
+                ? styles.btnSelected
+                : styles.btnUnselected,
+            ]}
+            textColor={
+              language === "ne"
+                ? "#FFFFFF"
+                : AppColors.text_secondary
+            }
             onPress={() => {
-              dispatch(setLanguage('ne'))
-              void i18n.changeLanguage('ne')
+              dispatch(setLanguage("ne"));
+              void i18n.changeLanguage("ne");
             }}
           />
         </View>
@@ -80,19 +99,25 @@ const styles = StyleSheet.create({
     fontFamily: AppFonts.TextRegular,
   },
 
-  btnEnglish: {
-    marginTop: s(50),
+  languageButton: {
+    marginVertical: vs(5),
   },
 
-  btnNepali: {
+  btnSelected: {
+    backgroundColor: AppColors.button_primary_accent,
+    borderColor: AppColors.button_primary_accent,
+    borderWidth: s(2),
+  },
+
+  btnUnselected: {
     backgroundColor: AppColors.bg_button_secondary,
     borderColor: AppColors.stroke_primary,
     borderWidth: s(2),
-    marginVertical: vs(10),
   },
 
   btsContainer: {
     width: "100%",
     paddingHorizontal: s(20),
+    marginTop: s(50),
   },
 });

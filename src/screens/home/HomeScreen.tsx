@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { PLANNER_STORAGE_KEY } from "../../notifications/notificationService";
 import { useSelector } from "react-redux";
 import { useMedications } from "../../context/MedicationContext";
-import type { RootState } from "../../store/store";
 
 import {
   Alert,
@@ -77,7 +76,8 @@ export default function HomeScreen() {
   );
   const { t, i18n } = useTranslation();
   const userName = useSelector(
-    (state: RootState) => state.dataReducer.userName,
+    (state: { dataReducer: { userName: string } }) =>
+      state.dataReducer.userName,
   );
   const firstName = userName.trim().split(/\s+/)[0] || "Asha";
   const pregnancyProgress = usePregnancyProgress();
