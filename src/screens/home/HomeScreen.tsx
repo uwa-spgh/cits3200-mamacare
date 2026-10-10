@@ -46,7 +46,7 @@ export default function HomeScreen() {
     const userName = useSelector(
       (state: RootState) => state.dataReducer.userName,
     );
-    const firstName = userName.trim().split(/\s+/)[0] || "Asha";
+    const firstName = userName.trim().split(/\s+/)[0];
     const pregnancyProgress = usePregnancyProgress();
     useTutorialAutoStart();
     return (
@@ -58,7 +58,7 @@ export default function HomeScreen() {
           showsVerticalScrollIndicator={false}
         >
           <Text style={styles.greeting}>
-            {t("homeScreen.greeting")} {userName.split(" ")[0]}
+            {t("homeScreen.greeting")} {firstName}
           </Text>
           <Text style={styles.subtitle}>{t("homeScreen.dailyOverview")}</Text>
 

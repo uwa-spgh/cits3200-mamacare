@@ -6,13 +6,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import AppSafeView from "../../components/views/AppSafeView";
 import ProfilePicture from "../../components/profile/ProfilePicture";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import AppText from "../../components/texts/AppText";
-import { setUserName } from "../../store/reducers/dataReducers";
 import { s, vs } from "react-native-size-matters";
 import { AppFonts } from "../../styles/fonts";
 import { AppColors } from "../../styles/colors";
@@ -25,7 +24,6 @@ import JourneyCards from "../../components/profile/JourneyCards";
 import { Ionicons } from "@expo/vector-icons";
 import { SheetManager } from "react-native-actions-sheet";
 import { useNavigation } from "expo-router/react-navigation";
-import NameInputModal from "../../components/ modals/modalProfile";
 import { setLanguage } from "../../store/reducers/dataReducers";
 import i18n from "../../localization/i18n";
 
@@ -37,7 +35,6 @@ const ProfileScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation<any>();
 
-  const [isNameModalVisible, setNameModalVisible] = useState(false);
   const { t, i18n } = useTranslation();
   const pregnancyProgress = usePregnancyProgress();
 
@@ -46,24 +43,7 @@ const ProfileScreen = () => {
       <ScrollView style={styles.scrollArea}>
         <View style={styles.profileInfo}>
           <ProfilePicture />
-          <AppText style={styles.userName}>
-            {userName}{" "}
-            <TouchableOpacity onPress={() => setNameModalVisible(true)}>
-              <AppText
-                style={{
-                  fontFamily: AppFonts.Heading2Regular,
-                  color: AppColors.text_green,
-                  fontSize: s(13),
-                  alignContent: "center",
-                  justifyContent: "center",
-                  textDecorationLine: "underline",
-                }}
-              >
-                {" "}
-                Edit
-              </AppText>
-            </TouchableOpacity>
-          </AppText>
+          <AppText style={styles.userName}>{userName}</AppText>
           <View style={styles.gestation}>
             <MaterialCommunityIcons
               name="baby-face"
@@ -269,17 +249,6 @@ const ProfileScreen = () => {
             </AppText>
           </View>
         </TouchableOpacity>
-        <NameInputModal
-          visible={isNameModalVisible}
-          initialValue=""
-          onSubmit={(newName) => {
-            dispatch(setUserName(newName));
-            setNameModalVisible(false);
-          }}
-          onClose={() => {
-            setNameModalVisible(false);
-          }}
-        />
       </ScrollView>
     </AppSafeView>
   );

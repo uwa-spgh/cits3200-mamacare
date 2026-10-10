@@ -12,19 +12,6 @@ import PregnancySetupCard from "../../components/cards/PregnancySetupCard";
 import DueDateMethod from "../../components/cards/DueDateMethod";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import InputDueDate from "../../components/cards/InputDueDate";
-<<<<<<< HEAD
-import { useDispatch, useSelector } from "react-redux";
-import { useGestationalAge } from "../../helpers/useGestationalAge";
-
-
-const InitialSetupScreen = () => {
-
-  const dispatch = useDispatch();
-  const { ga, isPostpartum, babyAge, conflict, shouldPromptBirth } =
-    useGestationalAge();
-
-  const [selectedMethod, setSelectedMethod] = useState("LMP");
-=======
 import { useSelector } from "react-redux";
 import { saveDueDate, type RootState } from "../../store/store";
 import { calculateDueDate, parseDueDate, PREGNANCY_LENGTH_DAYS } from "../../pregnancy/progress";
@@ -44,7 +31,6 @@ const InitialSetupScreen = () => {
   const [selectedMethod, setSelectedMethod] = useState<DateMethod>(edd ? "EDD" : "LMP");
   const [selectedDate, setSelectedDate] = useState(() => parseDueDate(edd)?.toISOString() ?? "");
   const [saving, setSaving] = useState(false);
->>>>>>> main
   const navigation = useNavigation<any>();
   const { t } = useTranslation();
 

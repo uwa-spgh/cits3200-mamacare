@@ -204,7 +204,7 @@
     },
 
     "homeScreen": {
-        "greeting": "Hello, {{name}}",
+        "greeting": "Hello,",
         "dailyOverview": "Here is your daily overview.",
         "todaysPriority": "Today's Priority",
         "medications": "Medications",

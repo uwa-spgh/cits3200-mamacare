@@ -1,7 +1,14 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Modal,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { s, vs } from "react-native-size-matters";
 import { Image } from "expo-image";
-import React from "react";
+import React, { useState } from "react";
 import { AppColors } from "../../styles/colors";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import * as ImagePicker from "expo-image-picker";
@@ -10,6 +17,8 @@ import { setProfilePicture } from "../../store/reducers/dataReducers";
 
 const ProfilePicture = () => {
   const dispatch = useDispatch();
+  const [isPickingImage, setIsPickingImage] = useState(false);
+  const [isLoadingPicker, setIsLoadingPicker] = useState(false);
 
   const userPicture = useSelector(
     (state: { dataReducer: { userPicture: string } }) =>
@@ -17,26 +26,48 @@ const ProfilePicture = () => {
   );
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
+    if (isPickingImage) return;
+    setIsPickingImage(true);
+    setIsLoadingPicker(true);
 
-    if (!result.canceled) {
-      dispatch(setProfilePicture(result.assets[0].uri));
+    try {
+      await new Promise<void>((resolve) => setTimeout(resolve, 300));
+      setIsLoadingPicker(false);
+      await new Promise<void>((resolve) => setTimeout(resolve, 300));
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ["images"],
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        dispatch(setProfilePicture(result.assets[0].uri));
+      }
+    } catch {
+      Alert.alert(
+        "Unable to select image",
+        "The photo library could not be opened. Please try again.",
+      );
+    } finally {
+      setIsLoadingPicker(false);
+      setIsPickingImage(false);
     }
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity activeOpacity={0.9} style={styles.edit}>
+      <TouchableOpacity
+        activeOpacity={0.9}
+        disabled={isPickingImage}
+        onPress={pickImage}
+        style={styles.edit}
+      >
         <MaterialIcons
           name="edit"
           size={s(20)}
           color={AppColors.white}
-          onPress={pickImage}
         />
       </TouchableOpacity>
 
@@ -51,6 +82,21 @@ const ProfilePicture = () => {
           />
         </View>
       )}
+      <Modal
+        animationType="fade"
+        onRequestClose={() => {}}
+        statusBarTranslucent
+        transparent
+        visible={isLoadingPicker}
+      >
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator
+            accessibilityLabel="Selecting profile image"
+            color={AppColors.button_primary_accent}
+            size="large"
+          />
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -89,5 +135,12 @@ const styles = StyleSheet.create({
     zIndex: 1,
     bottom: 1,
     right: 1,
+  },
+
+  loadingOverlay: {
+    ...StyleSheet.absoluteFill,
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.35)",
+    justifyContent: "center",
   },
 });

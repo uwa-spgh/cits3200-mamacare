@@ -203,7 +203,7 @@
     },
 
     "homeScreen": {
-        "greeting": "नमस्ते, {{name}}",
+        "greeting": "नमस्ते,",
         "dailyOverview": "यहाँ तपाईंको दैनिक अवलोकन छ।",
         "todaysPriority": "आजको प्राथमिकता",
         "medications": "औषधिहरू",
