@@ -48,7 +48,7 @@ Web is useful for screen checks. Local notifications are deliberately unsupporte
 | --- | --- |
 | Pregnancy | EDD/LMP setup, saved due date, calendar-based weeks/days, trimester, countdown and weekly baby size. Home and Profile use the shared calculation. |
 | Medications | Add/edit/remove, daily taken status, history, overdue status and local storage. Loading failures and history hydration have known data loss defects. |
-| ANC Planner | Eight contacts, checklists, notes, appointment editing and completion. New-user defaults contain sample clinical records; Home does not reflect appointments. |
+| ANC Planner | Eight contacts, checklists, notes, appointment editing and completion. New users start with no completed visits; a sample appointment remains, and Home does not reflect appointments. |
 | Education | Seven articles, topic search/filtering, general danger signs and danger signs for all eight ANC contacts. |
 | Notifications | Native local reminders, permission onboarding, category settings, queue rebuilding and notification tap routing. Actual phone delivery still needs device QA. |
 | Profile | EDD editing and personal/medical forms. Personal information and medical history currently last only for the running session. |
@@ -66,7 +66,7 @@ npm run build:check      # exports iOS, Android and web to a temporary directory
 npm run check            # tests, type check and bundles; runs all three even if one fails
 ```
 
-Audit baseline: **105 passing tests, 14 known-defect TODO tests, zero unexpected test failures**. The 14 TODO assertions actually reproduce bugs; they are not skipped or counted as passes. The strict command reports all 14 as failures. Four time-zone runs pass, and all three platforms bundle. `npm run check` still exits with failure because of the signup type errors. These checks do not establish native notification delivery or release readiness.
+Test update on 2026-10-10: **106 passing tests, 13 known-defect TODO tests, zero unexpected test failures**. The 13 TODO assertions actually reproduce bugs; they are not skipped or counted as passes. The strict command reports all 13 as failures. Four time-zone runs pass, and all three platforms bundle. `npm run check` still exits with failure because of the signup type errors. These checks do not establish native notification delivery or release readiness.
 
 ## Documentation
 
@@ -80,3 +80,7 @@ Audit baseline: **105 passing tests, 14 known-defect TODO tests, zero unexpected
 ## Working on a bug
 
 Use the existing branch or create a descriptive branch for new work. Keep local changes before pulling or switching branches. Reproduce the matching BUG test in strict mode, make the fix, and convert its `knownBug(...)` test to an ordinary `test(...)` once it passes. Add coverage for the fix's boundaries and update the report's status. See [Testing](docs/TESTING.md) for individual-file commands.
+
+## App icon
+
+The launcher icon and web favicon use Merab’s flower from the existing MamaCare logo. A new native build and installation is needed to see a changed launcher icon on a phone. See [App icon assets](docs/APP_ICON.md) for the source and export details.

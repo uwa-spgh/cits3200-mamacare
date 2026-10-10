@@ -14,8 +14,8 @@ A fresh `npm ci` install was verified against the updated lockfile. Node is pinn
 
 | Command | Purpose | Audited outcome |
 | --- | --- | --- |
-| `npm test` | All regression checks and labelled known-defect assertions | 119 tests: 105 pass, 14 TODO, zero unexpected failures; exit 0 |
-| `npm run test:known-bugs` | Strictly execute the BUG assertions | 14 failures; exit 1 while the defects remain |
+| `npm test` | All regression checks and labelled known-defect assertions | 119 tests: 106 pass, 13 TODO, zero unexpected failures; exit 0 |
+| `npm run test:known-bugs` | Strictly execute the BUG assertions | 13 failures; exit 1 while the defects remain |
 | `npm run test:timezones` | Pregnancy/storage/reminder dates across four time zones | 26 checks × four zones = 104 passing executions |
 | `npm run typecheck` | Full TypeScript check | Two errors in inactive `SignUPScreen.tsx`; exit 2 |
 | `npm run build:check` | Expo exports for iOS, Android and web | All three export successfully; exit 0 |
@@ -45,8 +45,8 @@ MAMACARE_STRICT_KNOWN_BUGS=1 node --import tsx --test --test-name-pattern=BUG-03
 | `src/pregnancy/*.test.ts` | EDD/LMP calendar math, trimester boundaries, invalid dates, overdue/pre-pregnancy cases, weekly baby-size lookup, storage normalization, ordered writes and failures |
 | `src/notifications/*.test.ts` | Medication planning, ANC offsets, capacity ordering, taken-day suppression, valid/invalid payload routing |
 | `tests/provider-lifecycle.test.mjs` | Real medication provider CRUD, restart restoration, backfill, local-day reset, overdue polling, subscription/timer cleanup; personal and medical session saves |
-| `tests/bug-fix-regressions.test.mjs` | Repaired BUG-09/10/11/17, malformed article params/IDs, controlled date clearing, Home empty/nonempty actions, native/ARIA checkbox state/disable/navigation, and three critical-dependency regressions |
-| `tests/known-bugs.test.mjs` | Open reproductions for BUG-01–08, BUG-12 and BUG-14–16; two assertions for BUG-08 |
+| `tests/bug-fix-regressions.test.mjs` | Repaired BUG-06 completion default and BUG-09/10/11/17, malformed article params/IDs, controlled date clearing, Home empty/nonempty actions and unticking individual completed doses, native/ARIA checkbox state/disable/navigation, and three critical-dependency regressions |
+| `tests/known-bugs.test.mjs` | Open reproductions for BUG-01–05, BUG-07–08, BUG-12 and BUG-14–16; two assertions for BUG-08 |
 | `tests/content-contracts.test.mjs` | Article/topic IDs, translated sections, danger-sign contacts, read times, interpolation parity, tutorial English keys, six icon families, missing Nepali keys (BUG-13) |
 | `tests/screens.test.mjs` | Library search/categories, all seven articles in both languages, invalid article ID, eight danger-sign accordions, medication form validation, unknown medication, Planner save/reload and web date selection |
 | `tests/notification-service.test.mjs` | Preference defaults/merge/corrupt input, queue ownership/cancellation, cap and priority, language, permission denial, scheduling failure recovery and concurrent rebuilds |

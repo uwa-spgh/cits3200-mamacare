@@ -293,8 +293,8 @@ const visits: Visit[] = [
 ];
 
 const defaultState: PlannerState = {
-  selectedVisitId: "anc-2",
-  completedVisits: ["anc-1"],
+  selectedVisitId: "anc-1",
+  completedVisits: [],
   checklist: {},
   notes: {},
   appointments: {

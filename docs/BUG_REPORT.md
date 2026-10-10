@@ -137,6 +137,8 @@ No real user medical information was needed. UI record deletion was not performe
 
 **P1 — New Planner state contains a fabricated completed visit and appointment.** Evidence: automated default-state test and browser check.
 
+Update 2026-10-10: new-user defaults now select contact 1 with no completed visits. Existing saved completion history is preserved. The fabricated appointment portion of this finding remains open. The completion assertion is now an ordinary regression test; the results table above records the 2026-10-09 audit.
+
 - Source: [Planner defaultState](../src/screens/planner/PlannerScreen.tsx).
 - Reproduce: open Planner on a clean storage origin. Contact 1 is completed and contact 2 has “Tuesday, Oct 24 - 10:00 AM,” City General Hospital, Ward C.
 - Expected: no clinical visit completed without user confirmation; no real appointment until the user creates one. Actual: sample data is presented as user history. The sample date is also not a valid machine timestamp, so it produces no reminders.
