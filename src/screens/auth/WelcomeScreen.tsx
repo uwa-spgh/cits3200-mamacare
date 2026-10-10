@@ -9,48 +9,21 @@ import {
   View,
 } from "react-native";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 import { s, vs } from "react-native-size-matters";
 import AppSafeView from "../../components/views/AppSafeView";
-import type { RootState } from "../../store/store";
+import { usePregnancyProgress } from "../../pregnancy/usePregnancyProgress";
+import { formatDueDate, formatGestation } from "../../pregnancy/format";
 import { markOnboardingComplete } from "../../tutorial";
 import { AppColors } from "../../styles/colors";
 import { AppFonts } from "../../styles/fonts";
 
-const PREGNANCY_LENGTH_DAYS = 280;
-const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
-
-const getPregnancyWeek = (dueDate: Date) => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const normalizedDueDate = new Date(dueDate);
-  normalizedDueDate.setHours(0, 0, 0, 0);
-
-  const daysUntilDueDate = Math.round(
-    (normalizedDueDate.getTime() - today.getTime()) / MILLISECONDS_PER_DAY,
-  );
-  const elapsedDays = PREGNANCY_LENGTH_DAYS - daysUntilDueDate;
-
-  return Math.max(0, Math.min(40, Math.floor(elapsedDays / 7)));
-};
-
 const WelcomeScreen = () => {
   const navigation = useNavigation<any>();
   const { i18n, t } = useTranslation();
-  const storedDueDate = useSelector(
-    (state: RootState) => state.dataReducer.edd,
-  );
-  const dueDate = new Date(storedDueDate);
-  const hasValidDueDate = !Number.isNaN(dueDate.getTime());
-  const pregnancyWeek = hasValidDueDate ? getPregnancyWeek(dueDate) : 0;
-  const formattedDueDate = hasValidDueDate
-    ? new Intl.DateTimeFormat(i18n.language === "ne" ? "ne-NP" : "en-US", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      }).format(dueDate)
-    : t("welcomeScreen.dateUnavailable");
+  const pregnancyProgress = usePregnancyProgress();
+  const formattedDueDate = pregnancyProgress
+    ? formatDueDate(pregnancyProgress, i18n.language)
+    : t("pregnancy.noDueDate");
 
   const getStarted = () => {
     // TODO: Move markOnboardingComplete() to the last onboarding screen (How it works) once it exists.
@@ -103,7 +76,7 @@ const WelcomeScreen = () => {
             </View>
             <Text style={styles.cardLabel}>{t("welcomeScreen.youAre")}</Text>
             <Text style={styles.pregnancyValue}>
-              {t("welcomeScreen.weeks", { week: pregnancyWeek })}
+              {pregnancyProgress ? formatGestation(pregnancyProgress, t, i18n.language) : t("pregnancy.noDueDate")}
             </Text>
             <Text style={styles.cardSupportingText}>
               {t("welcomeScreen.pregnant")}
