@@ -219,11 +219,8 @@
         "profileAccessibility": "Open profile",
         "quickActions": "Quick Actions",
         "educationLibrary": "Education\nLibrary",
-        "trackSymptoms": "Track\nSymptoms",
         "educationLibraryAlertTitle": "Education Library",
-        "educationLibraryAlertMessage": "The education library screen will be added later.",
-        "trackSymptomsAlertTitle": "Track Symptoms",
-        "trackSymptomsAlertMessage": "The symptom tracking screen will be added later."
+        "educationLibraryAlertMessage": "The education library screen will be added later."
     },
 
     "libraryScreen": {

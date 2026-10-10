@@ -251,7 +251,6 @@ export default function HomeScreen() {
               <Text style={styles.itemSubtitle}>
                 {nextAncAppointment?.facility ?? "Set appointment in Planner"}
               </Text>
-
             </View>
 
             <View style={styles.daysBadge}>
@@ -276,25 +275,20 @@ export default function HomeScreen() {
               </Text>
             </Pressable>
 
-            <Pressable
-              style={styles.actionButton}
-              onPress={() =>
-                Alert.alert(
-                  t("homeScreen.trackSymptomsAlertTitle"),
-                  t("homeScreen.trackSymptomsAlertMessage"),
-                )
-              }
-            >
-              <Ionicons name="pulse" size={34} color="#087D67" />
-              <Text style={styles.symptomText}>
-                {t("homeScreen.trackSymptoms")}
-              </Text>
-            </Pressable>
-          </View>
-        </ScrollView>
-      </AppSafeView>
-    );
-  }
+          <Pressable
+            style={styles.actionButton}
+            onPress={() => navigation.navigate("DangerSigns")}
+          >
+            <Ionicons name="warning-outline" size={34} color="#B62555" />
+            <Text style={styles.educationText}>
+              {t("libraryScreen.dangerSigns")}
+            </Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </AppSafeView>
+  );
+}
 
 const styles = StyleSheet.create({
   screen: {
