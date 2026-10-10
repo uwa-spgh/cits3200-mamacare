@@ -1,5 +1,23 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { DataState, GestationSource } from "../../types/types";
+import type { GestationSource } from "../../types/types";
+
+export type PersonalInformation = {
+  fullName: string;
+  dateOfBirth: string | null;
+  height: string;
+  weight: string;
+  gender: string;
+  phoneNumber: string;
+};
+
+const initialPersonalInformation: PersonalInformation = {
+  fullName: "",
+  dateOfBirth: null,
+  height: "",
+  weight: "",
+  gender: "",
+  phoneNumber: "",
+};
 
 const initialState = {
   language: "en",
@@ -10,6 +28,7 @@ const initialState = {
   gestationSource: "auto",
   birthDate: "",
   dismissedBirthPromptAt: "",
+  personalInformation: initialPersonalInformation,
 };
 
 export const dataReducer = createSlice({
@@ -21,6 +40,13 @@ export const dataReducer = createSlice({
     },
     setUserName: (state, action: PayloadAction<string>) => {
       state.userName = action.payload;
+    },
+    setPersonalInformation: (
+      state,
+      action: PayloadAction<PersonalInformation>,
+    ) => {
+      state.personalInformation = action.payload;
+      state.userName = action.payload.fullName;
     },
     setEdd: (state, action: PayloadAction<string>) => {
       state.edd = action.payload;
@@ -47,6 +73,12 @@ export const dataReducer = createSlice({
   },
 });
 
-export const { setLanguage, setUserName, setEdd, setProfilePicture } = dataReducer.actions;
+export const {
+  setLanguage,
+  setUserName,
+  setPersonalInformation,
+  setEdd,
+  setProfilePicture,
+} = dataReducer.actions;
 
 export default dataReducer.reducer;
