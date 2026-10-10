@@ -10,7 +10,7 @@ Home shows weeks/days, trimester and days remaining from the saved EDD. Open the
 
 | Location | Actions |
 | --- | --- |
-| Home tab | Pregnancy summary, medication preview, ANC preview and symptom-tracking placeholder |
+| Home tab | Pregnancy summary, medication checkboxes, ANC preview and symptom-tracking placeholder |
 | Planner tab | Open an ANC contact; check items, add notes, change appointment date/time/facility and mark complete |
 | Meds tab | Add medication, open details to edit, mark/unmark taken, and view adherence history |
 | Library tab | Search/filter topics, read articles, and open Danger Signs with contact-specific sections |
@@ -46,4 +46,4 @@ Development server connectivity and saved-record persistence are separate: losin
 
 ## Known display issues
 
-Home's ANC card still shows a fixed 14 days and a sample hospital regardless of Planner. New Planner state marks the first visit complete without user action. An empty medication list now offers Add New Medication; the all-taken message is only shown for a nonempty completed list. Check Planner/medication details directly while these findings remain open.
+Home's ANC card still shows a fixed 14 days and a sample hospital regardless of Planner. New Planner users start on contact 1 with no visits marked complete; previously saved completions are preserved. The sample appointment in Planner remains a known issue. An empty medication list offers Add New Medication. Home keeps each medication visible: tap its checkbox to mark today's dose taken, or tap the checked box again to undo it. The all-taken message appears only when every medication is checked.

@@ -50,12 +50,6 @@ knownBug(test, 'BUG-05', 'two medications added within the same millisecond have
   await act(async () => { mounted.current().addMedication(med); mounted.current().addMedication({ ...med, name: 'Second fixture' }); });
   assert.equal(new Set(mounted.current().medications.map(m => m.id)).size, 2);
 });
-knownBug(test, 'BUG-06', 'new Planner users have no visit recorded as completed', async t => {
-  const h = appHarness();
-  const renderer = await h.mount(h.load('src/screens/planner/PlannerScreen.tsx').default);
-  t.after(async () => { await act(async () => renderer.unmount()); });
-  assert.equal(JSON.parse(h.values.get('mamacare:planner')).completedVisits.length, 0);
-});
 knownBug(test, 'BUG-07', 'changing language preserves the meaning of a checked ANC item', async t => {
   const h = appHarness();
   h.setPlannerRoute('VisitChecklist', { visitId: 'anc-2' });

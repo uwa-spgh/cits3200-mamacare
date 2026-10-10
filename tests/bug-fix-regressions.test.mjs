@@ -15,8 +15,12 @@ async function mount(h, path, t, props) {
 function homeHarness(medications = []) {
   const h = appHarness();
   const toggles = [];
+  let current = medications.map(medication => ({ ...medication }));
   h.mocks.set('react-redux', { useSelector: selector => selector({ dataReducer: { userName: 'Audit User' } }) });
-  h.mocks.set(resolve(root, 'src/context/MedicationContext.tsx'), { useMedications: () => ({ medications, toggleMedicationTaken: (...args) => toggles.push(args) }) });
+  h.mocks.set(resolve(root, 'src/context/MedicationContext.tsx'), { useMedications: () => ({ medications: current, toggleMedicationTaken: (...args) => {
+    toggles.push(args);
+    current = current.map(medication => medication.id === args[0] ? { ...medication, taken: !medication.taken } : medication);
+  } }) });
   h.mocks.set(resolve(root, 'src/pregnancy/usePregnancyProgress.ts'), { usePregnancyProgress: () => null });
   return { h, toggles };
 }
@@ -62,16 +66,30 @@ test('BUG-11: empty Home offers the existing localized Add Medication action', a
     assert.equal(text(renderer.toJSON()).includes('All medications taken'), false);
   }
 });
-test('BUG-11: untaken and completed nonempty lists retain their distinct Home actions', async t => {
+test('BUG-11: Home medication lists allow marking and undoing each dose', async t => {
   const pending = homeHarness([med]);
   const renderer = await mount(pending.h, 'src/screens/home/HomeScreen.tsx', t);
   await pressWithText(renderer, med.name);
   assert.deepEqual(pending.toggles[0], [med.id, '2026-10-09']);
   assert.equal(text(renderer.toJSON()).includes('All medications taken'), false);
-  const complete = homeHarness([{ ...med, taken: true }]);
+  const complete = homeHarness([{ ...med, taken: true }, { ...med, id: 'second-med', name: 'Second fixture', taken: true }]);
   const completed = await mount(complete.h, 'src/screens/home/HomeScreen.tsx', t);
   assert.ok(text(completed.toJSON()).includes('All medications taken'));
+  const checkbox = completed.root.findAllByType('Pressable').find(node => node.props.accessibilityRole === 'checkbox');
+  assert.equal(checkbox.props.accessibilityState.checked, true);
+  assert.equal(checkbox.props['aria-checked'], true);
+  await act(async () => checkbox.props.onPress());
+  assert.deepEqual(complete.toggles[0], [med.id, '2026-10-09']);
   assert.equal(text(completed.toJSON()).includes(complete.h.i18n.t('medsScreen.addNew')), false);
+  await act(async () => completed.update(React.createElement(complete.h.load('src/screens/home/HomeScreen.tsx').default)));
+  const checkboxes = completed.root.findAllByType('Pressable').filter(node => node.props.accessibilityRole === 'checkbox');
+  assert.equal(checkboxes.length, 2);
+  assert.equal(checkboxes[0].props.accessibilityState.checked, false);
+  assert.equal(checkboxes[0].props['aria-checked'], false);
+  assert.equal(checkboxes[1].props.accessibilityState.checked, true);
+  assert.equal(text(completed.toJSON()).includes('All medications taken'), false);
+  await act(async () => checkboxes[1].props.onPress());
+  assert.deepEqual(complete.toggles.at(-1), ['second-med', '2026-10-09']);
 });
 
 test('BUG-17: checkbox toggles its checked state without opening medication details', async t => {
@@ -169,4 +187,13 @@ test('BUG-17: medication taken control exposes its name and checked state to acc
   assert.equal(checkbox.props.accessibilityRole, 'checkbox');
   assert.ok(checkbox.props.accessibilityLabel?.includes(med.name));
   assert.equal(checkbox.props.accessibilityState?.checked, false);
+});
+
+test('BUG-06: new Planner users have no visit recorded as completed', async t => {
+  const h = appHarness();
+  const renderer = await h.mount(h.load('src/screens/planner/PlannerScreen.tsx').default);
+  t.after(async () => { await act(async () => renderer.unmount()); });
+  const state = JSON.parse(h.values.get('mamacare:planner'));
+  assert.equal(state.completedVisits.length, 0);
+  assert.equal(state.selectedVisitId, 'anc-1');
 });

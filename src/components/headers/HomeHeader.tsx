@@ -21,7 +21,11 @@ const HomeHeader = () => {
     <View style={styles.container}>
       <MamaCareTopIcon/>
       <View {...iconsTutorialTarget} style={styles.containerIcons}>
-        <TouchableOpacity onPress={() => navigation.navigate("ProfileScreen")}>
+        <TouchableOpacity
+          accessibilityLabel={t("homeScreen.profileAccessibility")}
+          accessibilityRole="button"
+          onPress={() => navigation.navigate("ProfileScreen")}
+        >
           <MaterialCommunityIcons
             name="account"
             size={s(20)}

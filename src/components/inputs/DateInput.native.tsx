@@ -7,6 +7,7 @@ import { Modal, Platform, Pressable, StyleSheet, Text, View } from "react-native
 import { useTranslation } from "react-i18next";
 import { AppColors } from "../../styles/colors";
 import type { DateInputProps } from "./DateInput.types";
+import { toIntlLocale } from "../../localization/localeMap";
 
 const parseDate = (value?: string) => {
   if (!value) {
@@ -17,9 +18,9 @@ const parseDate = (value?: string) => {
   return Number.isNaN(date.getTime()) ? undefined : date;
 };
 
-const formatDate = (date: Date, mode: DateInputProps["mode"]) =>
+const formatDate = (date: Date, mode: DateInputProps["mode"], locale: string) =>
   date.toLocaleString(
-    undefined,
+    toIntlLocale(locale),
     mode === "datetime"
       ? {
           day: "numeric",
@@ -42,6 +43,7 @@ export default function DateInput({
   onChange,
   placeholder,
   value,
+  locale = 'en'
 }: DateInputProps) {
   const { t } = useTranslation();
   const parsedValue = parseDate(value);
@@ -121,7 +123,7 @@ export default function DateInput({
     <>
       <Pressable onPress={openPicker} style={styles.input}>
         <Text style={[styles.inputText, !parsedValue && styles.placeholderText]}>
-          {parsedValue ? formatDate(parsedValue, mode) : placeholder}
+          {parsedValue ? formatDate(parsedValue, mode, locale) : placeholder}
         </Text>
         <Ionicons color={AppColors.button_primary_accent} name="calendar-outline" size={20} />
       </Pressable>

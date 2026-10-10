@@ -19,7 +19,9 @@ import { useTranslation } from "react-i18next";
 import { useNavigation } from "expo-router/react-navigation";
 import AppSafeView from "../../components/views/AppSafeView";
 import HomeHeader from "../../components/headers/HomeHeader";
-import { useTutorialAutoStart } from "../../tutorial";
+
+// import { router } from "expo-router";
+import { useTutorialAutoStart } from "../../tutorial/useTutorialAutoStart";
 import { usePregnancyProgress } from "../../pregnancy/usePregnancyProgress";
 import {
   formatCountdown,
@@ -170,13 +172,15 @@ export default function HomeScreen() {
                   {t("pregnancy.addDueDate")}
                 </Text>
               </Pressable>
-            </>
+                       </>
           )}
         </View>
 
         <BabySizeCard progress={pregnancyProgress} />
 
-        <Text style={styles.sectionTitle}>{t("homeScreen.todaysPriority")}</Text>
+        <Text style={styles.sectionTitle}>
+          {t("homeScreen.todaysPriority")}
+        </Text>
         <View style={styles.titleUnderline} />
 
         <View style={styles.priorityCard}>
@@ -256,36 +260,41 @@ export default function HomeScreen() {
             </View>
           </View>
         </View>
+          <Text style={styles.sectionTitle}>
+            {t("homeScreen.quickActions")}
+          </Text>
+          <View style={styles.titleUnderline} />
 
-        <Text style={styles.sectionTitle}>{t("homeScreen.quickActions")}</Text>
-        <View style={styles.titleUnderline} />
+          <View style={styles.quickActions}>
+            <Pressable
+              style={styles.actionButton}
+              onPress={() => navigation.navigate("Library")}
+            >
+              <Ionicons name="book" size={32} color="#B62555" />
+              <Text style={styles.educationText}>
+                {t("homeScreen.educationLibrary")}
+              </Text>
+            </Pressable>
 
-        <View style={styles.quickActions}>
-          <Pressable
-            style={styles.actionButton}
-            onPress={() => navigation.navigate("Library")}
-          >
-            <Ionicons name="book" size={32} color="#B62555" />
-            <Text style={styles.educationText}>{t("homeScreen.educationLibrary")}</Text>
-          </Pressable>
-
-          <Pressable
-            style={styles.actionButton}
-            onPress={() =>
-              Alert.alert(
-                t("homeScreen.trackSymptomsAlertTitle"),
-                t("homeScreen.trackSymptomsAlertMessage"),
-              )
-            }
-          >
-            <Ionicons name="pulse" size={34} color="#087D67" />
-            <Text style={styles.symptomText}>{t("homeScreen.trackSymptoms")}</Text>
-          </Pressable>
-        </View>
-      </ScrollView>
-    </AppSafeView>
-  );
-}
+            <Pressable
+              style={styles.actionButton}
+              onPress={() =>
+                Alert.alert(
+                  t("homeScreen.trackSymptomsAlertTitle"),
+                  t("homeScreen.trackSymptomsAlertMessage"),
+                )
+              }
+            >
+              <Ionicons name="pulse" size={34} color="#087D67" />
+              <Text style={styles.symptomText}>
+                {t("homeScreen.trackSymptoms")}
+              </Text>
+            </Pressable>
+          </View>
+        </ScrollView>
+      </AppSafeView>
+    );
+  }
 
 const styles = StyleSheet.create({
   screen: {

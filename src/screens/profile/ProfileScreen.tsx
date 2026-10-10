@@ -12,7 +12,6 @@ import ProfilePicture from "../../components/profile/ProfilePicture";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import AppText from "../../components/texts/AppText";
-import { setUserName } from "../../store/reducers/dataReducers";
 import { s, vs } from "react-native-size-matters";
 import { AppFonts } from "../../styles/fonts";
 import { AppColors } from "../../styles/colors";
@@ -25,6 +24,8 @@ import JourneyCards from "../../components/profile/JourneyCards";
 import { Ionicons } from "@expo/vector-icons";
 import { SheetManager } from "react-native-actions-sheet";
 import { useNavigation } from "expo-router/react-navigation";
+import { setLanguage } from "../../store/reducers/dataReducers";
+import i18n from "../../localization/i18n";
 
 const ProfileScreen = () => {
   const userName = useSelector(
@@ -137,7 +138,16 @@ const ProfileScreen = () => {
                     color={AppColors.text_headings}
                   />
                 }
-                onPress={() => SheetManager.show("LANG_SHEET")}
+                onPress={() =>
+                  SheetManager.show("LANG_SHEET", {
+                    payload: {
+                      onConfirm: (code: string) => {
+                        dispatch(setLanguage(code));
+                        i18n.changeLanguage(code);
+                      },
+                    },
+                  })
+                }
                 backgroundColor={AppColors.white}
                 style={{
                   borderWidth: 0,
@@ -227,12 +237,16 @@ const ProfileScreen = () => {
               size={s(20)}
               color={AppColors.text_headings}
             />
-            <AppText style={{
-              fontFamily: AppFonts.TextRegular,
-              color: AppColors.text_headings,
-              fontSize: s(13),
-              marginLeft: s(5)}}
-            >{t("profileScreen.logout")}</AppText>
+            <AppText
+              style={{
+                fontFamily: AppFonts.TextRegular,
+                color: AppColors.text_headings,
+                fontSize: s(13),
+                marginLeft: s(5),
+              }}
+            >
+              {t("profileScreen.logout")}
+            </AppText>
           </View>
         </TouchableOpacity>
       </ScrollView>
@@ -260,9 +274,13 @@ const styles = StyleSheet.create({
   },
 
   userName: {
+    flexDirection: "row",
     marginTop: s(15),
     fontFamily: AppFonts.TextBold,
     color: AppColors.text_headings,
+    alignContent: "center",
+    justifyContent: "center",
+    alignSelf: "center",
   },
 
   gestation: {

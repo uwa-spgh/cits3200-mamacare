@@ -5,6 +5,7 @@ import { useNavigation } from "expo-router";
 import Svg, { Circle, Path } from "react-native-svg";
 import { Medication, useMedications } from "../../context/MedicationContext";
 import { localDateKey } from "../../notifications/planning";
+import { toIntlLocale } from "../../localization/localeMap";
 import {
   ScrollView,
   StyleSheet,
@@ -15,7 +16,7 @@ import {
 import AppSafeView from "../../components/views/AppSafeView";
 import HomeHeader from "../../components/headers/HomeHeader";
 
-const getPreviousFourteenDays = () => {
+const getPreviousFourteenDays = (locale: string) => {
   const dates = [];
   const today = new Date();
 
@@ -25,10 +26,12 @@ const getPreviousFourteenDays = () => {
 
     dates.push({
       key: localDateKey(date),
-      day: date.toLocaleDateString("en-GB", {
+      day: date.toLocaleDateString(locale, {
         weekday: "short",
       }),
-      date: date.getDate().toString(),
+      date: date.toLocaleDateString(locale, {
+        day: "numeric",
+      }),
       fullDate: date,
     });
   }
@@ -80,9 +83,15 @@ const describeArc = (
 
 export default function MedicationScreen() {
   const navigation = useNavigation<any>();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  const dates = getPreviousFourteenDays();
+  const locale = toIntlLocale(i18n.language);
+  const numberFormat = new Intl.NumberFormat(locale);
+  const percentFormat = new Intl.NumberFormat(locale, {
+    style: "percent",
+    maximumFractionDigits: 0,
+  });
+  const dates = getPreviousFourteenDays(locale);
 
   const [selectedDate, setSelectedDate] = useState(
     localDateKey(new Date()),
@@ -155,26 +164,26 @@ export default function MedicationScreen() {
   )?.fullDate;
 
   const progressTitle = isTodaySelected
-    ? "Today's Progress"
+    ? t("medsScreen.todaysProgress")
     : isYesterdaySelected
-      ? "Yesterday's Progress"
+      ? t("medsScreen.yesterdaysProgress")
       : selectedDateLabel
-        ? `${selectedDateLabel.toLocaleDateString("en-GB", {
+        ? t("medsScreen.progressForDate", { date: selectedDateLabel.toLocaleDateString(locale, {
           day: "numeric",
           month: "long",
-        })} Progress`
-        : "Progress";
+        }) })
+        : t("medsScreen.progress");
 
   const scheduleTitle = isTodaySelected
-    ? "Today's Schedule"
+    ? t("medsScreen.todaysSchedule")
     : isYesterdaySelected
-      ? "Yesterday's Schedule"
+      ? t("medsScreen.yesterdaysSchedule")
       : selectedDateLabel
-        ? `${selectedDateLabel.toLocaleDateString("en-GB", {
+        ? t("medsScreen.scheduleForDate", { date: selectedDateLabel.toLocaleDateString(locale, {
           day: "numeric",
           month: "long",
-        })} Schedule`
-        : "Schedule";
+        }) })
+        : t("medsScreen.schedule");
 
   const isSelectedDateEditable =
     selectedDate === todayKey ||
@@ -217,7 +226,12 @@ export default function MedicationScreen() {
                 style={styles.medicationDetailsButton}
                 activeOpacity={0.8}
                 accessibilityRole="button"
-                accessibilityLabel={`${medication.name}, ${medication.dosage}, ${medication.instructions}, ${medication.time}`}
+                accessibilityLabel={t("medicationScreen.medicationAccessibility", {
+                  name: medication.name,
+                  dosage: medication.dosage,
+                  instructions: medication.instructions,
+                  time: medication.time,
+                })}
                 onPress={() => navigation.navigate("MedicationDetails", { id: medication.id })}
               >
                 <View style={styles.medicationIcon}>
@@ -275,7 +289,10 @@ export default function MedicationScreen() {
               <TouchableOpacity
                 accessible
                 accessibilityRole="checkbox"
-                accessibilityLabel={`${medication.name}, ${medication.time}`}
+                accessibilityLabel={t("medicationScreen.medicationToggleAccessibility", {
+                  name: medication.name,
+                  time: medication.time,
+                })}
                 accessibilityState={{ checked: isTaken, disabled: !isSelectedDateEditable }}
                 aria-checked={isTaken}
                 aria-disabled={!isSelectedDateEditable}
@@ -391,7 +408,10 @@ export default function MedicationScreen() {
             </Text>
 
             <Text style={styles.progressSubtitle}>
-              {t("medsScreen.takenCount", { taken: takenCount, total: totalCount })}
+              {t("medsScreen.takenCount", {
+                taken: numberFormat.format(takenCount),
+                total: numberFormat.format(totalCount),
+              })}
             </Text>
           </View>
 
@@ -420,7 +440,9 @@ export default function MedicationScreen() {
             </Svg>
 
             <View style={styles.progressTextContainer}>
-              <Text style={styles.progressPercent}>{progressPercent}%</Text>
+              <Text style={styles.progressPercent}>
+                {percentFormat.format(progressPercent / 100)}
+              </Text>
             </View>
           </View>
         </View>
@@ -438,15 +460,19 @@ export default function MedicationScreen() {
             />
 
             <Text style={styles.emptyMedicationTitle}>
-              {isTodaySelected
-                ? "No medications added yet"
-                : "No medications scheduled"}
+              {t(
+                isTodaySelected
+                  ? "medsScreen.emptyTodayTitle"
+                  : "medsScreen.emptyDateTitle",
+              )}
             </Text>
 
             <Text style={styles.emptyMedicationText}>
-              {isTodaySelected
-                ? "Add your medications to keep track of your daily schedule."
-                : "There were no medications scheduled for this date."}
+              {t(
+                isTodaySelected
+                  ? "medsScreen.emptyTodayDescription"
+                  : "medsScreen.emptyDateDescription",
+              )}
             </Text>
           </View>
         ) : (

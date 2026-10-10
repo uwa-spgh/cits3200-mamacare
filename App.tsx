@@ -7,8 +7,9 @@ import {
   NavigationContainer,
 } from "expo-router/react-navigation";
 import { useFonts } from "expo-font";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Provider } from "react-redux";
+import { persistor } from "./src/store/store";
 import { hydrateDueDate, store } from "./src/store/store";
 import i18n from "./src/localization/i18n";
 import { I18nextProvider } from "react-i18next";
@@ -19,6 +20,42 @@ import { registerSheet } from "react-native-actions-sheet";
 import LanguageBottomSheet from "./src/components/sheets/LanguageBottomSheet";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { SheetProvider } from "react-native-actions-sheet";
+import { PersistGate } from "redux-persist/integration/react";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+
+registerSheet("LANG_SHEET", LanguageBottomSheet);
+
+ function PersistenceDebug() {
+  const language = useSelector(
+    (state: { dataReducer: { language: string } }) =>
+      state.dataReducer.language
+  );
+
+  useEffect(() => {
+    console.log("[Persistence test] Redux language:", language);
+  }, [language]);
+
+  return null;
+}
+
+function LanguageSync() {
+  const language = useSelector(
+    (state: { dataReducer: { language: string } }) =>
+      state.dataReducer.language
+  );
+
+  useEffect(() => {
+    console.log("[LanguageSync] Redux language:", language);
+    console.log("[LanguageSync] i18n language before:", i18n.language);
+
+    if (i18n.language !== language) {
+      i18n.changeLanguage(language);
+    }
+  }, [language]);
+
+  return null;
+}
 import NotificationCoordinator from "./src/notifications/NotificationCoordinator";
 import { TutorialProvider } from "./src/tutorial";
 import "./src/components/sheets/sheets";
@@ -82,6 +119,9 @@ export default function App() {
       <SafeAreaProvider>
         <SheetProvider>
           <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <PersistenceDebug />
+              <LanguageSync />
             <I18nextProvider i18n={i18n}>
               <NavigationContainer
                 onReady={() => setNavigationReady(true)}
@@ -103,6 +143,7 @@ export default function App() {
                 </MedicationProvider>
               </NavigationContainer>
             </I18nextProvider>
+            </PersistGate>
           </Provider>
         </SheetProvider>
       </SafeAreaProvider>
