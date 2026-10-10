@@ -3,7 +3,7 @@ import type { DataState, GestationSource } from "../../types/types";
 
 const initialState = {
   language: "en",
-  userName: "Asha Sharma",
+  userName: "",
   userPicture: "../../assets/images/michael-dam-mEZ3PoFGs_k-unsplash.jpg",
   edd: "",
   lmp: "",
@@ -48,3 +48,5 @@ export const dataReducer = createSlice({
 });
 
 export const { setLanguage, setUserName, setEdd, setProfilePicture } = dataReducer.actions;
+
+export default dataReducer.reducer;

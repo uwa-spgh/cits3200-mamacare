@@ -24,6 +24,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { SheetManager } from "react-native-actions-sheet";
 import { useNavigation } from "expo-router/react-navigation";
 import NameInputModal from "../../components/ modals/modalProfile";
+import { setLanguage } from "../../store/reducers/dataReducers";
+import i18n from "../../localization/i18n";
 
 const ProfileScreen = () => {
   const userName = useSelector(
@@ -45,14 +47,19 @@ const ProfileScreen = () => {
           <AppText style={styles.userName}>
             {userName}{" "}
             <TouchableOpacity onPress={() => setNameModalVisible(true)}>
-              <AppText style={{
-                fontFamily: AppFonts.Heading2Regular,
-                color: AppColors.text_green,
-                fontSize: s(13),
-                alignContent: 'center',
-                justifyContent: 'center',
-                textDecorationLine: 'underline'
-              }}>   Edit</AppText>
+              <AppText
+                style={{
+                  fontFamily: AppFonts.Heading2Regular,
+                  color: AppColors.text_green,
+                  fontSize: s(13),
+                  alignContent: "center",
+                  justifyContent: "center",
+                  textDecorationLine: "underline",
+                }}
+              >
+                {" "}
+                Edit
+              </AppText>
             </TouchableOpacity>
           </AppText>
           <View style={styles.gestation}>
@@ -156,7 +163,16 @@ const ProfileScreen = () => {
                     color={AppColors.text_headings}
                   />
                 }
-                onPress={() => SheetManager.show("LANG_SHEET")}
+                onPress={() =>
+                  SheetManager.show("LANG_SHEET", {
+                    payload: {
+                      onConfirm: (code: string) => {
+                        dispatch(setLanguage(code));
+                        i18n.changeLanguage(code);
+                      },
+                    },
+                  })
+                }
                 backgroundColor={AppColors.white}
                 style={{
                   borderWidth: 0,
@@ -299,13 +315,13 @@ const styles = StyleSheet.create({
   },
 
   userName: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: s(15),
     fontFamily: AppFonts.TextBold,
     color: AppColors.text_headings,
-    alignContent: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center'
+    alignContent: "center",
+    justifyContent: "center",
+    alignSelf: "center",
   },
 
   gestation: {
