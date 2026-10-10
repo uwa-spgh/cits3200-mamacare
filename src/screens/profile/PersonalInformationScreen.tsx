@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Alert,
     StyleSheet,
@@ -13,24 +13,34 @@ import AppText from "../../components/texts/AppText";
 import { AppColors } from "../../styles/colors";
 import { AppFonts } from "../../styles/fonts";
 import { SheetManager } from "react-native-actions-sheet";
-import { usePersonalInformation } from "../../context/PersonalInformationContext";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    setPersonalInformation,
+    type PersonalInformation,
+} from "../../store/reducers/dataReducers";
+import type { RootState } from "../../store/store";
 
 import DateTimePicker, {
     DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 
 const PersonalInformationScreen = () => {
-    const {
-        personalInformation,
-        savePersonalInformation,
-    } = usePersonalInformation();
+    const dispatch = useDispatch();
+    const personalInformation = useSelector(
+        (state: RootState) => state.dataReducer.personalInformation,
+    );
+    const userName = useSelector(
+        (state: RootState) => state.dataReducer.userName,
+    );
 
     const [fullName, setFullName] = useState(
-        personalInformation.fullName,
+        personalInformation.fullName || userName,
     );
 
     const [dateOfBirth, setDateOfBirth] = useState<Date | null>(
-        personalInformation.dateOfBirth,
+        personalInformation.dateOfBirth
+            ? new Date(`${personalInformation.dateOfBirth}T00:00:00`)
+            : null,
     );
 
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -50,6 +60,19 @@ const PersonalInformationScreen = () => {
     const [phoneNumber, setPhoneNumber] = useState(
         personalInformation.phoneNumber,
     );
+
+    useEffect(() => {
+        setFullName(personalInformation.fullName || userName);
+        setDateOfBirth(
+            personalInformation.dateOfBirth
+                ? new Date(`${personalInformation.dateOfBirth}T00:00:00`)
+                : null,
+        );
+        setHeight(personalInformation.height);
+        setWeight(personalInformation.weight);
+        setGender(personalInformation.gender);
+        setPhoneNumber(personalInformation.phoneNumber);
+    }, [personalInformation, userName]);
 
     const formatDate = (date: Date) => {
         return date.toLocaleDateString("en-GB", {
@@ -71,68 +94,21 @@ const PersonalInformationScreen = () => {
     };
 
     const handleSave = () => {
-        if (!fullName.trim()) {
-            Alert.alert(
-                "Missing information",
-                "Please enter your full name."
-            );
-            return;
-        }
-
-        if (!dateOfBirth) {
-            Alert.alert(
-                "Missing information",
-                "Please select your date of birth."
-            );
-            return;
-        }
-
-        const heightNumber = Number(height);
-
-        if (!height || heightNumber < 50 || heightNumber > 250) {
-            Alert.alert(
-                "Invalid height",
-                "Please enter a height between 50 and 250 cm."
-            );
-            return;
-        }
-
-        const weightNumber = Number(weight);
-
-        if (!weight || weightNumber < 20 || weightNumber > 300) {
-            Alert.alert(
-                "Invalid weight",
-                "Please enter a weight between 20 and 300 kg."
-            );
-            return;
-        }
-
-        if (!gender) {
-            Alert.alert(
-                "Missing information",
-                "Please select a gender option."
-            );
-            return;
-        }
-
-        const phoneDigits = phoneNumber.replace(/\D/g, "");
-
-        if (phoneDigits.length < 7 || phoneDigits.length > 15) {
-            Alert.alert(
-                "Invalid phone number",
-                "Please enter a valid phone number."
-            );
-            return;
-        }
-
-        savePersonalInformation({
+        const savedInformation: PersonalInformation = {
             fullName: fullName.trim(),
-            dateOfBirth,
+            dateOfBirth: dateOfBirth
+                ? [
+                    dateOfBirth.getFullYear(),
+                    String(dateOfBirth.getMonth() + 1).padStart(2, "0"),
+                    String(dateOfBirth.getDate()).padStart(2, "0"),
+                ].join("-")
+                : null,
             height,
             weight,
             gender,
             phoneNumber: phoneNumber.trim(),
-        });
+        };
+        dispatch(setPersonalInformation(savedInformation));
 
         Alert.alert(
             "Saved",
