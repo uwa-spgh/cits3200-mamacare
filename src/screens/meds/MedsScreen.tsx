@@ -6,6 +6,8 @@ import Svg, { Circle, Path } from "react-native-svg";
 import { Medication, useMedications } from "../../context/MedicationContext";
 import { localDateKey } from "../../notifications/planning";
 import { toIntlLocale } from "../../localization/localeMap";
+import { AppColors } from "../../styles/colors";
+import { s } from "react-native-size-matters";
 import {
   ScrollView,
   StyleSheet,
@@ -347,8 +349,10 @@ export default function MedicationScreen() {
   );
 
   return (
-    <AppSafeView includeBottomInset={false}>
+    <AppSafeView includeBottomInset={false} style={styles.screen}>
       <HomeHeader />
+      <View style={styles.headerDivider} />
+
       <ScrollView
         style={styles.screen}
         contentContainerStyle={styles.container}
@@ -519,14 +523,14 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    padding: 16,
-    paddingBottom: 30,
+    padding: 22,
+    paddingBottom: 32,
   },
 
   title: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: "#BE1E50",
+    color: "#3F3034",
+    fontSize: 24,
+    fontWeight: "900",
     marginBottom: 16,
   },
 
@@ -789,5 +793,11 @@ const styles = StyleSheet.create({
     color: "#78666C",
     textAlign: "center",
     lineHeight: 18,
+  },
+
+  headerDivider: {
+    height: s(1),
+    backgroundColor: AppColors.stroke_primary,
+    width: "100%",
   },
 });

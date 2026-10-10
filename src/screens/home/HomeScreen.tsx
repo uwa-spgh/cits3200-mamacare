@@ -114,6 +114,8 @@ export default function HomeScreen() {
   return (
     <AppSafeView includeBottomInset={false}>
       <HomeHeader />
+      <View style={styles.headerDivider} />
+
       <ScrollView
         style={styles.screen}
         contentContainerStyle={styles.content}
@@ -474,5 +476,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "700",
     lineHeight: 21,
+  },
+  headerDivider: {
+    height: 1,
+    backgroundColor: "#DFBEC3",
+    width: "100%",
   },
 });
