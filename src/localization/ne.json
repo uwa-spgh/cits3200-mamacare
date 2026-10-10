@@ -112,6 +112,15 @@
         "cancel": "रद्द गर्नुहोस्"
     },
 
+    "settingsScreen": {
+        "title": "सेटिङहरू",
+        "appSettings": "एप सेटिङहरू",
+        "openAccessibility": "सेटिङहरू खोल्नुहोस्",
+        "language": "भाषा",
+        "notifications": "सूचनाहरू",
+        "replayTutorial": "ट्युटोरियल फेरि चलाउनुहोस्"
+    },
+
     "notificationsScreen": {
         "title": "सूचनाहरू",
         "subtitle": "यस उपकरणमा स्थानीय रूपमा राखिएका र पठाइने सम्झनाहरू व्यवस्थापन गर्नुहोस्।",

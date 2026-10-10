@@ -601,8 +601,10 @@
 
     "settingsScreen": {
         "title": "Settings",
+        "appSettings": "App Settings",
         "openAccessibility": "Open settings",
         "language": "Language",
+        "notifications": "Notifications",
         "replayTutorial": "Replay tutorial"
     },
 
