@@ -14,6 +14,7 @@ import {
 import AppSafeView from "../../components/views/AppSafeView";
 import HomeHeader from "../../components/headers/HomeHeader";
 import DateInput from "../../components/inputs/DateInput";
+import { toIntlLocale } from "../../localization/localeMap";
 import {
   PLANNER_STORAGE_KEY,
   syncAllNotifications,
@@ -48,14 +49,15 @@ const PINK = "#FBE4EA";
 const BORDER = "#E9B8C4";
 const TEXT = "#33252A";
 const Stack = createStackNavigator();
+const DEFAULT_APPOINTMENT_DATE = "Tuesday, Oct 24 - 10:00 AM";
 
-const formatAppointmentDate = (value: string) => {
+const formatAppointmentDate = (value: string, locale: string) => {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
     return value;
   }
 
-  return date.toLocaleString(undefined, {
+  return date.toLocaleString(locale, {
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
@@ -299,7 +301,7 @@ const defaultState: PlannerState = {
   notes: {},
   appointments: {
     "anc-2": {
-      date: "Tuesday, Oct 24 - 10:00 AM",
+      date: DEFAULT_APPOINTMENT_DATE,
       facility: "City General Hospital, Ward C",
     },
   },
@@ -510,7 +512,8 @@ function AppointmentTracker({
   selectedVisitId: string;
   visits: Visit[];
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = toIntlLocale(i18n.language);
   const nextVisit = visits.find((visit) => !completedVisits.includes(visit.id));
   const nextAppointment = nextVisit
     ? appointments[nextVisit.id] ?? {
@@ -535,7 +538,9 @@ function AppointmentTracker({
             <View style={styles.detailRow}>
               <Ionicons name="time-outline" color="#FFFFFF" size={18} />
               <Text style={styles.nextDetailText}>
-                {formatAppointmentDate(nextAppointment.date)}
+                {nextAppointment.date === DEFAULT_APPOINTMENT_DATE
+                  ? t("plannerScreen.defaultAppointmentDate")
+                  : formatAppointmentDate(nextAppointment.date, locale)}
               </Text>
             </View>
             <View style={styles.detailRow}>
@@ -646,7 +651,7 @@ function VisitChecklist({
   visit: Visit;
   visitComplete: boolean;
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   return (
     <ScrollView contentContainerStyle={styles.content}>
       <Pressable onPress={onBack} style={styles.backInline}>
@@ -665,6 +670,7 @@ function VisitChecklist({
       <View style={styles.editCard}>
         <Text style={styles.inputLabel}>{t("plannerScreen.appointmentDateTime")}</Text>
         <DateInput
+          locale={i18n.language}
           mode="datetime"
           onChange={(value) => onUpdateAppointment("date", value)}
           placeholder={t("plannerScreen.appointmentDateTime")}
@@ -673,6 +679,7 @@ function VisitChecklist({
         <Text style={styles.inputLabel}>{t("plannerScreen.facilityProvider")}</Text>
         <TextInput
           onChangeText={(value) => onUpdateAppointment("facility", value)}
+          placeholder={t("plannerScreen.facilityPlaceholder")}
           style={styles.input}
           value={appointment.facility}
         />

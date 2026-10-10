@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Alert,
     StyleSheet,
@@ -13,24 +13,40 @@ import AppText from "../../components/texts/AppText";
 import { AppColors } from "../../styles/colors";
 import { AppFonts } from "../../styles/fonts";
 import { SheetManager } from "react-native-actions-sheet";
-import { usePersonalInformation } from "../../context/PersonalInformationContext";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    setPersonalInformation,
+    type PersonalInformation,
+} from "../../store/reducers/dataReducers";
+import type { RootState } from "../../store/store";
+import { toIntlLocale } from "../../localization/localeMap";
 
 import DateTimePicker, {
     DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 
+const genderKey = (gender: string) =>
+    gender.toLowerCase().replace(/[^a-z]+/g, "");
+
 const PersonalInformationScreen = () => {
-    const {
-        personalInformation,
-        savePersonalInformation,
-    } = usePersonalInformation();
+    const { t, i18n } = useTranslation();
+    const dispatch = useDispatch();
+    const personalInformation = useSelector(
+        (state: RootState) => state.dataReducer.personalInformation,
+    );
+    const userName = useSelector(
+        (state: RootState) => state.dataReducer.userName,
+    );
 
     const [fullName, setFullName] = useState(
-        personalInformation.fullName,
+        personalInformation.fullName || userName,
     );
 
     const [dateOfBirth, setDateOfBirth] = useState<Date | null>(
-        personalInformation.dateOfBirth,
+        personalInformation.dateOfBirth
+            ? new Date(`${personalInformation.dateOfBirth}T00:00:00`)
+            : null,
     );
 
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -51,8 +67,21 @@ const PersonalInformationScreen = () => {
         personalInformation.phoneNumber,
     );
 
+    useEffect(() => {
+        setFullName(personalInformation.fullName || userName);
+        setDateOfBirth(
+            personalInformation.dateOfBirth
+                ? new Date(`${personalInformation.dateOfBirth}T00:00:00`)
+                : null,
+        );
+        setHeight(personalInformation.height);
+        setWeight(personalInformation.weight);
+        setGender(personalInformation.gender);
+        setPhoneNumber(personalInformation.phoneNumber);
+    }, [personalInformation, userName]);
+
     const formatDate = (date: Date) => {
-        return date.toLocaleDateString("en-GB", {
+        return date.toLocaleDateString(toIntlLocale(i18n.language), {
             day: "numeric",
             month: "long",
             year: "numeric",
@@ -71,72 +100,25 @@ const PersonalInformationScreen = () => {
     };
 
     const handleSave = () => {
-        if (!fullName.trim()) {
-            Alert.alert(
-                "Missing information",
-                "Please enter your full name."
-            );
-            return;
-        }
-
-        if (!dateOfBirth) {
-            Alert.alert(
-                "Missing information",
-                "Please select your date of birth."
-            );
-            return;
-        }
-
-        const heightNumber = Number(height);
-
-        if (!height || heightNumber < 50 || heightNumber > 250) {
-            Alert.alert(
-                "Invalid height",
-                "Please enter a height between 50 and 250 cm."
-            );
-            return;
-        }
-
-        const weightNumber = Number(weight);
-
-        if (!weight || weightNumber < 20 || weightNumber > 300) {
-            Alert.alert(
-                "Invalid weight",
-                "Please enter a weight between 20 and 300 kg."
-            );
-            return;
-        }
-
-        if (!gender) {
-            Alert.alert(
-                "Missing information",
-                "Please select a gender option."
-            );
-            return;
-        }
-
-        const phoneDigits = phoneNumber.replace(/\D/g, "");
-
-        if (phoneDigits.length < 7 || phoneDigits.length > 15) {
-            Alert.alert(
-                "Invalid phone number",
-                "Please enter a valid phone number."
-            );
-            return;
-        }
-
-        savePersonalInformation({
+        const savedInformation: PersonalInformation = {
             fullName: fullName.trim(),
-            dateOfBirth,
+            dateOfBirth: dateOfBirth
+                ? [
+                    dateOfBirth.getFullYear(),
+                    String(dateOfBirth.getMonth() + 1).padStart(2, "0"),
+                    String(dateOfBirth.getDate()).padStart(2, "0"),
+                ].join("-")
+                : null,
             height,
             weight,
             gender,
             phoneNumber: phoneNumber.trim(),
-        });
+        };
+        dispatch(setPersonalInformation(savedInformation));
 
         Alert.alert(
-            "Saved",
-            "Your personal information has been saved.",
+            t("personalInformationScreen.savedTitle"),
+            t("personalInformationScreen.savedMessage"),
         );
     };
 
@@ -146,20 +128,26 @@ const PersonalInformationScreen = () => {
                 contentContainerStyle={styles.content}
                 keyboardShouldPersistTaps="handled"
             >
-                <AppText style={styles.heading}>Personal Information</AppText>
+                <AppText style={styles.heading}>
+                    {t("personalInformationScreen.title")}
+                </AppText>
 
                 <View style={styles.fieldContainer}>
-                    <AppText style={styles.label}>Full Name</AppText>
+                    <AppText style={styles.label}>
+                        {t("personalInformationScreen.fullName")}
+                    </AppText>
                     <TextInput
                         style={styles.input}
                         value={fullName}
                         onChangeText={setFullName}
-                        placeholder="Enter full name"
+                        placeholder={t("personalInformationScreen.fullNamePlaceholder")}
                     />
                 </View>
 
                 <View style={styles.fieldContainer}>
-                    <AppText style={styles.label}>Date of Birth</AppText>
+                    <AppText style={styles.label}>
+                        {t("personalInformationScreen.dateOfBirth")}
+                    </AppText>
 
                     <TouchableOpacity
                         style={styles.input}
@@ -171,7 +159,9 @@ const PersonalInformationScreen = () => {
                                 ...(!dateOfBirth ? styles.placeholderText : {}),
                             }}
                         >
-                            {dateOfBirth ? formatDate(dateOfBirth) : "Select date of birth"}
+                            {dateOfBirth
+                                ? formatDate(dateOfBirth)
+                                : t("personalInformationScreen.dateOfBirthPlaceholder")}
                         </AppText>
                     </TouchableOpacity>
 
@@ -189,7 +179,9 @@ const PersonalInformationScreen = () => {
 
                 <View style={styles.row}>
                     <View style={styles.halfField}>
-                        <AppText style={styles.label}>Height</AppText>
+                        <AppText style={styles.label}>
+                            {t("personalInformationScreen.height")}
+                        </AppText>
                         <View style={styles.unitInput}>
                             <TextInput
                                 style={styles.inputFlex}
@@ -197,15 +189,19 @@ const PersonalInformationScreen = () => {
                                 onChangeText={(text) =>
                                     setHeight(text.replace(/[^0-9]/g, ""))
                                 }
-                                placeholder="170"
+                                placeholder={t("personalInformationScreen.heightPlaceholder")}
                                 keyboardType="numeric"
                             />
-                            <AppText style={styles.unit}>cm</AppText>
+                            <AppText style={styles.unit}>
+                                {t("personalInformationScreen.centimeters")}
+                            </AppText>
                         </View>
                     </View>
 
                     <View style={styles.halfField}>
-                        <AppText style={styles.label}>Weight</AppText>
+                        <AppText style={styles.label}>
+                            {t("personalInformationScreen.weight")}
+                        </AppText>
                         <View style={styles.unitInput}>
                             <TextInput
                                 style={styles.inputFlex}
@@ -213,16 +209,20 @@ const PersonalInformationScreen = () => {
                                 onChangeText={(text) =>
                                     setWeight(text.replace(/[^0-9.]/g, ""))
                                 }
-                                placeholder="65"
+                                placeholder={t("personalInformationScreen.weightPlaceholder")}
                                 keyboardType="decimal-pad"
                             />
-                            <AppText style={styles.unit}>kg</AppText>
+                            <AppText style={styles.unit}>
+                                {t("personalInformationScreen.kilograms")}
+                            </AppText>
                         </View>
                     </View>
                 </View>
 
                 <View style={styles.fieldContainer}>
-                    <AppText style={styles.label}>Gender</AppText>
+                    <AppText style={styles.label}>
+                        {t("personalInformationScreen.gender")}
+                    </AppText>
 
                     <TouchableOpacity
                         style={styles.input}
@@ -241,26 +241,32 @@ const PersonalInformationScreen = () => {
                                 ...(!gender ? styles.placeholderText : {}),
                             }}
                         >
-                            {gender || "Select gender"}
+                            {gender
+                                ? t(`genderBottomSheet.options.${genderKey(gender)}`)
+                                : t("personalInformationScreen.genderPlaceholder")}
                         </AppText>
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.fieldContainer}>
-                    <AppText style={styles.label}>Phone Number</AppText>
+                    <AppText style={styles.label}>
+                        {t("personalInformationScreen.phoneNumber")}
+                    </AppText>
                     <TextInput
                         style={styles.input}
                         value={phoneNumber}
                         onChangeText={(text) =>
                             setPhoneNumber(text.replace(/[^0-9+\s]/g, ""))
                         }
-                        placeholder="Enter phone number"
+                        placeholder={t("personalInformationScreen.phoneNumberPlaceholder")}
                         keyboardType="phone-pad"
                     />
                 </View>
 
                 <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-                    <AppText style={styles.saveButtonText}>Save Changes</AppText>
+                    <AppText style={styles.saveButtonText}>
+                        {t("personalInformationScreen.save")}
+                    </AppText>
                 </TouchableOpacity>
             </ScrollView>
         </View>

@@ -13,23 +13,25 @@ import { s, vs } from "react-native-size-matters";
 import AppText from "../../components/texts/AppText";
 import { AppColors } from "../../styles/colors";
 import { AppFonts } from "../../styles/fonts";
+import { useTranslation } from "react-i18next";
 
 const commonConditions = [
-    "Gestational Diabetes",
-    "Hypertension",
-    "Anaemia",
-    "Thyroid Condition",
-    "Asthma",
+    { value: "Gestational Diabetes", key: "gestationalDiabetes" },
+    { value: "Hypertension", key: "hypertension" },
+    { value: "Anaemia", key: "anaemia" },
+    { value: "Thyroid Condition", key: "thyroidCondition" },
+    { value: "Asthma", key: "asthma" },
 ];
 
 const commonAllergies = [
-    "Penicillin",
-    "Aspirin",
-    "Latex",
-    "Peanuts",
+    { value: "Penicillin", key: "penicillin" },
+    { value: "Aspirin", key: "aspirin" },
+    { value: "Latex", key: "latex" },
+    { value: "Peanuts", key: "peanuts" },
 ];
 
 const MedicalHistoryScreen = () => {
+    const { t } = useTranslation();
     const {
         medicalHistory,
         saveMedicalHistory,
@@ -47,11 +49,11 @@ const MedicalHistoryScreen = () => {
     const [newAllergy, setNewAllergy] = useState("");
 
     const customConditions = conditions.filter(
-        (condition) => !commonConditions.includes(condition),
+        (condition) => !commonConditions.some((item) => item.value === condition),
     );
 
     const customAllergies = allergies.filter(
-        (allergy) => !commonAllergies.includes(allergy),
+        (allergy) => !commonAllergies.some((item) => item.value === allergy),
     );
 
     const toggleCondition = (condition: string) => {
@@ -127,8 +129,8 @@ const MedicalHistoryScreen = () => {
         });
 
         Alert.alert(
-            "Saved",
-            "Your medical history has been saved.",
+            t("medicalHistoryScreen.savedTitle"),
+            t("medicalHistoryScreen.savedMessage"),
         );
     };
 
@@ -139,29 +141,29 @@ const MedicalHistoryScreen = () => {
                 keyboardShouldPersistTaps="handled"
             >
                 <AppText style={styles.heading}>
-                    Medical History
+                    {t("medicalHistoryScreen.title")}
                 </AppText>
 
                 <AppText style={styles.sectionTitle}>
-                    Medical Conditions
+                    {t("medicalHistoryScreen.conditionsTitle")}
                 </AppText>
 
                 <AppText style={styles.helperText}>
-                    Select any conditions that apply to you.
+                    {t("medicalHistoryScreen.conditionsHelper")}
                 </AppText>
 
                 <View style={styles.chipContainer}>
-                    {commonConditions.map((condition) => {
-                        const selected = conditions.includes(condition);
+                    {commonConditions.map(({ value, key }) => {
+                        const selected = conditions.includes(value);
 
                         return (
                             <TouchableOpacity
-                                key={condition}
+                                key={value}
                                 style={[
                                     styles.chip,
                                     selected && styles.chipSelected,
                                 ]}
-                                onPress={() => toggleCondition(condition)}
+                                onPress={() => toggleCondition(value)}
                             >
                                 <AppText
                                     style={{
@@ -169,7 +171,7 @@ const MedicalHistoryScreen = () => {
                                         ...(selected ? styles.chipTextSelected : {}),
                                     }}
                                 >
-                                    {condition}
+                                    {t(`medicalHistoryScreen.conditions.${key}`)}
                                 </AppText>
                             </TouchableOpacity>
                         );
@@ -201,7 +203,7 @@ const MedicalHistoryScreen = () => {
                         style={styles.addInput}
                         value={newCondition}
                         onChangeText={setNewCondition}
-                        placeholder="Add another condition"
+                        placeholder={t("medicalHistoryScreen.addConditionPlaceholder")}
                     />
 
                     <TouchableOpacity
@@ -209,31 +211,31 @@ const MedicalHistoryScreen = () => {
                         onPress={addCondition}
                     >
                         <AppText style={styles.addButtonText}>
-                            Add
+                            {t("medicalHistoryScreen.add")}
                         </AppText>
                     </TouchableOpacity>
                 </View>
 
                 <AppText style={styles.sectionTitle}>
-                    Allergies
+                    {t("medicalHistoryScreen.allergiesTitle")}
                 </AppText>
 
                 <AppText style={styles.helperText}>
-                    Select or add any allergies you have.
+                    {t("medicalHistoryScreen.allergiesHelper")}
                 </AppText>
 
                 <View style={styles.chipContainer}>
-                    {commonAllergies.map((allergy) => {
-                        const selected = allergies.includes(allergy);
+                    {commonAllergies.map(({ value, key }) => {
+                        const selected = allergies.includes(value);
 
                         return (
                             <TouchableOpacity
-                                key={allergy}
+                                key={value}
                                 style={[
                                     styles.chip,
                                     selected && styles.chipSelected,
                                 ]}
-                                onPress={() => toggleAllergy(allergy)}
+                                onPress={() => toggleAllergy(value)}
                             >
                                 <AppText
                                     style={{
@@ -241,7 +243,7 @@ const MedicalHistoryScreen = () => {
                                         ...(selected ? styles.chipTextSelected : {}),
                                     }}
                                 >
-                                    {allergy}
+                                    {t(`medicalHistoryScreen.allergies.${key}`)}
                                 </AppText>
                             </TouchableOpacity>
                         );
@@ -273,7 +275,7 @@ const MedicalHistoryScreen = () => {
                         style={styles.addInput}
                         value={newAllergy}
                         onChangeText={setNewAllergy}
-                        placeholder="Add another allergy"
+                        placeholder={t("medicalHistoryScreen.addAllergyPlaceholder")}
                     />
 
                     <TouchableOpacity
@@ -281,7 +283,7 @@ const MedicalHistoryScreen = () => {
                         onPress={addAllergy}
                     >
                         <AppText style={styles.addButtonText}>
-                            Add
+                            {t("medicalHistoryScreen.add")}
                         </AppText>
                     </TouchableOpacity>
                 </View>
@@ -291,7 +293,7 @@ const MedicalHistoryScreen = () => {
                     onPress={handleSave}
                 >
                     <AppText style={styles.saveButtonText}>
-                        Save Changes
+                        {t("medicalHistoryScreen.save")}
                     </AppText>
                 </TouchableOpacity>
             </ScrollView>

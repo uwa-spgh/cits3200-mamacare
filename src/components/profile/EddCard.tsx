@@ -10,25 +10,60 @@ import DateInput from "../inputs/DateInput";
 import { useTranslation } from "react-i18next";
 import { usePregnancyProgress } from "../../pregnancy/usePregnancyProgress";
 import { formatCountdown, formatDueDate, pregnancyLocale } from "../../pregnancy/format";
-import { normalizeDueDate } from "../../pregnancy/progress";
+import {
+  calculateDueDate,
+  normalizeDueDate,
+  PREGNANCY_LENGTH_DAYS,
+} from "../../pregnancy/progress";
 import { saveDueDate } from "../../store/store";
+import DueDateMethod from "../cards/DueDateMethod";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+
+type DateMethod = "LMP" | "EDD";
+
+const DATE_ENTRY_RANGE_DAYS = 365;
+
+const addDays = (date: Date, days: number) => {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+};
 
 export default function EddCard() {
   const { t, i18n } = useTranslation();
   const progress = usePregnancyProgress();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState("");
+  const [selectedMethod, setSelectedMethod] = useState<DateMethod>("LMP");
   const [saving, setSaving] = useState(false);
-  const maximumDate = new Date();
-  maximumDate.setDate(maximumDate.getDate() + 280);
-  const minimumDate = new Date();
-  minimumDate.setDate(minimumDate.getDate() - 365);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const maximumDate = addDays(
+    today,
+    selectedMethod === "LMP" ? 0 : PREGNANCY_LENGTH_DAYS,
+  );
+  const minimumDate = addDays(
+    today,
+    selectedMethod === "LMP" ? -DATE_ENTRY_RANGE_DAYS : -14,
+  );
+
+  const selectMethod = (method: DateMethod) => {
+    if (method !== selectedMethod) {
+      setDraft("");
+      setSelectedMethod(method);
+    }
+  };
 
   const save = async () => {
-    if (!normalizeDueDate(draft) || saving) return;
+    if (saving) return;
+    const dueDate = calculateDueDate(draft, selectedMethod);
+    if (!dueDate) {
+      Alert.alert(t("pregnancy.invalidDate"));
+      return;
+    }
     setSaving(true);
     try {
-      await saveDueDate(draft);
+      await saveDueDate(dueDate);
       setEditing(false);
     } catch {
       Alert.alert(t("pregnancy.saveErrorTitle"), t("pregnancy.saveError"));
@@ -64,8 +99,51 @@ export default function EddCard() {
 
       {editing || !progress ? (
         <View style={styles.editor}>
-          <AppText style={styles.hint}>{t("pregnancy.dueDateHint")}</AppText>
-          <DateInput value={draft} onChange={setDraft} minimumDate={minimumDate} maximumDate={maximumDate} placeholder={t("pregnancy.estimatedDueDate")} />
+          <AppText style={styles.hint}>
+            {t("initialSetupScreen.calculateDates")}
+          </AppText>
+          <DueDateMethod
+            title={t("initialSetupScreen.lastPeriodTitle")}
+            textContent={t("initialSetupScreen.lastPeriodDescription")}
+            icon={
+              <MaterialCommunityIcons
+                name="calendar-month"
+                size={s(20)}
+                color={AppColors.stroke_primary}
+              />
+            }
+            type="LMP"
+            onPress={() => selectMethod("LMP")}
+            isSelected={selectedMethod === "LMP"}
+          />
+          <DueDateMethod
+            title={t("initialSetupScreen.dueDateTitle")}
+            textContent={t("initialSetupScreen.dueDateDescription")}
+            icon={
+              <MaterialCommunityIcons
+                name="baby-face"
+                size={s(20)}
+                color={AppColors.stroke_primary}
+              />
+            }
+            type="EDD"
+            onPress={() => selectMethod("EDD")}
+            isSelected={selectedMethod === "EDD"}
+          />
+          <AppText style={styles.hint}>
+            {t(
+              selectedMethod === "LMP"
+                ? "initialSetupScreen.lastPeriodPrompt"
+                : "initialSetupScreen.dueDatePrompt",
+            )}
+          </AppText>
+          <DateInput
+            value={draft}
+            onChange={setDraft}
+            minimumDate={minimumDate}
+            maximumDate={maximumDate}
+            placeholder={t("initialSetupScreen.datePlaceholder")}
+          />
           <View style={styles.actions}>
             {progress ? <Pressable disabled={saving} accessibilityRole="button" style={styles.button} onPress={() => setEditing(false)}>
               <AppText style={styles.label}>{t("pregnancy.cancel")}</AppText>
@@ -77,6 +155,7 @@ export default function EddCard() {
           </View>
         </View>
       ) : <Pressable accessibilityRole="button" style={styles.button} onPress={() => {
+        setSelectedMethod("EDD");
         setDraft(progress.dueDate.toISOString());
         setEditing(true);
       }}><AppText style={styles.accent}>{t("pregnancy.editDueDate")}</AppText></Pressable>}

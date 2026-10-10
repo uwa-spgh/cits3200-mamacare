@@ -38,7 +38,7 @@ const LanguageSelectionScreen = () => {
             style={styles.btnEnglish}
             onPress={() => {
               dispatch(setLanguage('en'))
-              i18n.changeLanguage('en')
+              void i18n.changeLanguage('en')
             }}
           />
           <AppButton
@@ -47,7 +47,7 @@ const LanguageSelectionScreen = () => {
             textColor={AppColors.text_secondary}
             onPress={() => {
               dispatch(setLanguage('ne'))
-              i18n.changeLanguage('ne')
+              void i18n.changeLanguage('ne')
             }}
           />
         </View>
