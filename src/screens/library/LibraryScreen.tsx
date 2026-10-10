@@ -41,7 +41,7 @@ export default function HealthAndEducationScreen() {
   const navigation = useNavigation<any>();
 
   return (
-    <AppSafeView>
+    <AppSafeView includeBottomInset={false}>
       <HomeHeader />
       <ScrollView
         contentContainerStyle={styles.content}

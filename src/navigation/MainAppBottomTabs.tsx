@@ -8,6 +8,7 @@ import { s, vs } from "react-native-size-matters";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { IS_ANDROID } from "../constants/constants";
 import { useTranslation } from "react-i18next";
+import { TutorialTabBarButton } from "../tutorial";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,6 +38,7 @@ export default function MainAppBottomTabs() {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="home" size={size} color={color} />
           ),
+          tabBarButton: (props) => <TutorialTabBarButton {...props} target="tab.home" />,
           title: t("navTabs.homeTab"),
         }}
       />
@@ -45,6 +47,7 @@ export default function MainAppBottomTabs() {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="calendar-alt" size={size} color={color}/>
           ),
+          tabBarButton: (props) => <TutorialTabBarButton {...props} target="tab.planner" />,
           title: t("navTabs.plannerTab"),
         }}/>
       <Tab.Screen
@@ -54,6 +57,7 @@ export default function MainAppBottomTabs() {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="pills" size={size} color={color}/>
           ),
+          tabBarButton: (props) => <TutorialTabBarButton {...props} target="tab.meds" />,
           title: t("navTabs.medsTab"),
         }}
       />
@@ -62,6 +66,7 @@ export default function MainAppBottomTabs() {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="university" size={size} color={color}/>
           ),
+          tabBarButton: (props) => <TutorialTabBarButton {...props} target="tab.library" />,
           title:t("navTabs.libraryTab"),
         }}/>
     </Tab.Navigator>

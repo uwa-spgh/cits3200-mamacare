@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import AppSafeView from "../../components/views/AppSafeView";
@@ -12,6 +12,7 @@ import PregnancySetupCard from "../../components/cards/PregnancySetupCard";
 import DueDateMethod from "../../components/cards/DueDateMethod";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import InputDueDate from "../../components/cards/InputDueDate";
+<<<<<<< HEAD
 import { useDispatch, useSelector } from "react-redux";
 import { useGestationalAge } from "../../helpers/useGestationalAge";
 
@@ -23,8 +24,56 @@ const InitialSetupScreen = () => {
     useGestationalAge();
 
   const [selectedMethod, setSelectedMethod] = useState("LMP");
+=======
+import { useSelector } from "react-redux";
+import { saveDueDate, type RootState } from "../../store/store";
+import { calculateDueDate, parseDueDate, PREGNANCY_LENGTH_DAYS } from "../../pregnancy/progress";
+
+type DateMethod = "LMP" | "EDD";
+
+const DATE_ENTRY_RANGE_DAYS = 365;
+
+const addDays = (date: Date, days: number) => {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+};
+
+const InitialSetupScreen = () => {
+  const edd = useSelector((state: RootState) => state.dataReducer.edd);
+  const [selectedMethod, setSelectedMethod] = useState<DateMethod>(edd ? "EDD" : "LMP");
+  const [selectedDate, setSelectedDate] = useState(() => parseDueDate(edd)?.toISOString() ?? "");
+  const [saving, setSaving] = useState(false);
+>>>>>>> main
   const navigation = useNavigation<any>();
   const { t } = useTranslation();
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const selectMethod = (method: DateMethod) => {
+    setSelectedMethod(method);
+    setSelectedDate("");
+  };
+
+  const continueToNotifications = async () => {
+    if (saving) return;
+    const dueDate = calculateDueDate(selectedDate, selectedMethod);
+    if (!dueDate) {
+      Alert.alert(t("pregnancy.invalidDate"));
+      return;
+    }
+    setSaving(true);
+    try {
+      await saveDueDate(dueDate);
+      navigation.navigate("NotificationPermissionScreen");
+    } catch {
+      Alert.alert(t("pregnancy.saveErrorTitle"), t("pregnancy.saveError"));
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <>
       <AppSafeView style={styles.container}>
@@ -50,7 +99,7 @@ const InitialSetupScreen = () => {
               />
             }
             type="LMP"
-            onPress={() => setSelectedMethod("LMP")}
+            onPress={() => selectMethod("LMP")}
             isSelected={selectedMethod === "LMP"}
           />
           <DueDateMethod
@@ -64,22 +113,34 @@ const InitialSetupScreen = () => {
               />
             }
             type="EDD"
-            onPress={() => setSelectedMethod("EDD")}
+            onPress={() => selectMethod("EDD")}
             isSelected={selectedMethod === "EDD"}
           />
           <InputDueDate
+            maximumDate={
+              selectedMethod === "LMP"
+                ? today
+                : addDays(today, PREGNANCY_LENGTH_DAYS)
+            }
+            minimumDate={
+              selectedMethod === "LMP"
+                ? addDays(today, -DATE_ENTRY_RANGE_DAYS)
+                : addDays(today, -14)
+            }
+            onChange={setSelectedDate}
             textEdd={
               selectedMethod === "LMP"
                 ? t("initialSetupScreen.lastPeriodPrompt")
                 : t("initialSetupScreen.dueDatePrompt")
             }
+            value={selectedDate}
           />
         </View>
       </AppSafeView>
       <NavFooter
-        onPressBack={() => navigation.navigate("LanguageSelectionScreen")}
-        // onPressNext={() => navigation.navigate("WelcomeScreen")}
-        onPressNext={() => navigation.getParent()?.replace("MainAppBottomTabs")}
+        nextDisabled={!selectedDate || saving}
+        onPressBack={() => { if (!saving) navigation.navigate("LanguageSelectionScreen"); }}
+        onPressNext={continueToNotifications}
       />
     </>
   );

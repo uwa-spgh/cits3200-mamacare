@@ -1,3 +1,6 @@
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
+import { parseDueDate } from "../pregnancy/progress";
 import { createStackNavigator } from "expo-router/js-stack";
 import AuthStack from "./AuthStak";
 import MainAppBottomTabs from "./MainAppBottomTabs";
@@ -6,6 +9,8 @@ import AddMedicationScreen from "../screens/meds/addMedication";
 import MedicationHistoryScreen from "../screens/meds/history";
 import MedicationDetailsScreen from "../screens/meds/medicationDetails";
 import ProfileScreen from "../screens/profile/ProfileScreen";
+import PersonalInformationScreen from "../screens/profile/PersonalInformationScreen";
+import MedicalHistoryScreen from "../screens/profile/MedicalHistoryScreen";
 import { useTranslation } from "react-i18next";
 import BackBtn from "../components/buttons/BackBtn";
 import { HeaderTitle } from "expo-router/react-navigation";
@@ -14,14 +19,19 @@ import { AppFonts } from "../styles/fonts";
 import { s } from "react-native-size-matters";
 import { Ionicons } from "@expo/vector-icons";
 import ArticleScreen from "../screens/article/[id]"
+import NotificationsScreen from "../screens/notifications/NotificationsScreen";
+import SettingsScreen from "../screens/settings/SettingsScreen";
+
 
 const Stack = createStackNavigator();
 
 export default function MainAppNavStack() {
   const { t } = useTranslation();
+  const edd = useSelector((state: RootState) => state.dataReducer.edd);
 
   return (
     <Stack.Navigator
+      initialRouteName={parseDueDate(edd) ? "MainAppBottomTabs" : "AuthStack"}
       screenOptions={{
         headerShown: false,
         headerBackTitle: t("buttonArrows.back"),
@@ -64,6 +74,77 @@ export default function MainAppNavStack() {
           headerBackImage: () => <Ionicons name="chevron-back" size={s(20)} />,
         }}
       />
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          headerShown: true,
+          headerTitle: t("settingsScreen.title"),
+          headerStyle: { backgroundColor: AppColors.background_primary },
+          headerTitleStyle: {
+            fontFamily: AppFonts.Heading1Bold,
+            color: AppColors.button_primary_accent,
+            fontSize: s(20),
+          },
+          headerBackTitleStyle: { fontFamily: AppFonts.Heading1Bold },
+          headerTintColor: AppColors.text_secondary,
+          headerBackImage: () => <Ionicons name="chevron-back" size={s(20)} />,
+        }}
+      />
+      <Stack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
+        name="PersonalInformation"
+        component={PersonalInformationScreen}
+        options={{
+          headerShown: true,
+          headerTitle: "Personal Information",
+          headerStyle: {
+            backgroundColor: AppColors.background_primary,
+          },
+          headerTitleStyle: {
+            fontFamily: AppFonts.Heading1Bold,
+            color: AppColors.button_primary_accent,
+            fontSize: s(20),
+          },
+          headerBackTitleStyle: {
+            fontFamily: AppFonts.Heading1Bold,
+          },
+          headerTintColor: AppColors.text_secondary,
+          headerBackImage: () => (
+            <Ionicons name="chevron-back" size={s(20)} />
+          ),
+        }}
+      />
+
+      <Stack.Screen
+        name="MedicalHistory"
+        component={MedicalHistoryScreen}
+        options={{
+          headerShown: true,
+          headerTitle: "Medical History",
+          headerStyle: {
+            backgroundColor: AppColors.background_primary,
+          },
+          headerTitleStyle: {
+            fontFamily: AppFonts.Heading1Bold,
+            color: AppColors.button_primary_accent,
+            fontSize: s(20),
+          },
+          headerBackTitleStyle: {
+            fontFamily: AppFonts.Heading1Bold,
+          },
+          headerTintColor: AppColors.text_secondary,
+          headerBackImage: () => (
+            <Ionicons name="chevron-back" size={s(20)} />
+          ),
+        }}
+      />
+
       <Stack.Screen
         name="Article"
         component={ArticleScreen}

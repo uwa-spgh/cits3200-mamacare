@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import React, { FC } from "react";
+import type { FC } from "react";
 import { s, vs } from "react-native-size-matters";
 import { AppColors } from "../../styles/colors";
 import AppText from "../texts/AppText";
@@ -7,19 +7,22 @@ import { AppFonts } from "../../styles/fonts";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTranslation } from "react-i18next";
 import DateInput from "../inputs/DateInput";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store/store";
-import { setEdd } from "../../store/reducers/dataReducers";
-import { formatEdd } from "../../helpers/formatDate";
-import i18n from "../../localization/i18n";
 
 interface InputDueDateInputProps {
+  maximumDate?: Date;
+  minimumDate?: Date;
+  onChange: (value: string) => void;
   textEdd: string;
+  value: string;
 }
 
-const InputDueDate: FC<InputDueDateInputProps> = ({ textEdd }) => {
-  const dispatch = useDispatch();
-  const edd = useSelector((state: RootState) => state.dataReducer.edd);
+const InputDueDate: FC<InputDueDateInputProps> = ({
+  maximumDate,
+  minimumDate,
+  onChange,
+  textEdd,
+  value,
+}) => {
   const { t } = useTranslation();
 
   return (
@@ -35,10 +38,11 @@ const InputDueDate: FC<InputDueDateInputProps> = ({ textEdd }) => {
       </AppText>
       <View style={styles.innerContainer}>
         <DateInput
-          onChange={(iso) => dispatch(setEdd(iso))}
+          maximumDate={maximumDate}
+          minimumDate={minimumDate}
+          onChange={onChange}
           placeholder={t("initialSetupScreen.datePlaceholder")}
-          value={edd}
-          locale={i18n.language}
+          value={value}
         />
         <View style={styles.infoContainer}>
           <MaterialCommunityIcons
@@ -74,13 +78,12 @@ const styles = StyleSheet.create({
   },
 
   infoContainer: {
-    flexDirection: "row",
-    backgroundColor: "#FFF0F1",
-    padding: s(10),
-    borderRadius: s(5),
     alignItems: "flex-start",
+    backgroundColor: "#FFF0F1",
+    borderRadius: s(5),
+    flexDirection: "row",
     height: vs(70),
-    marginTop: s(10)
+    padding: s(10),
   },
 
   infoText: {

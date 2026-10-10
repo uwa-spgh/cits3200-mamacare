@@ -5,6 +5,15 @@ import {
     useEffect,
     useState,
 } from "react";
+import { AppState } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+    MEDICATION_STORAGE_KEY,
+    syncAllNotifications,
+} from "../notifications/notificationService";
+import { localDateKey, parseMedicationTime } from "../notifications/planning";
+
+const ADHERENCE_HISTORY_STORAGE_KEY = "mamacare_adherence_history";
 
 export type Period = "Morning" | "Afternoon" | "Evening";
 
@@ -17,6 +26,8 @@ export type Medication = {
     period: Period;
     taken: boolean;
     missed: boolean;
+    statusDate?: string;
+    createdDate: string;
 };
 
 export type AdherenceRecord = {
@@ -42,7 +53,10 @@ type MedicationContextType = {
 
     addMedication: (medication: NewMedication) => void;
 
-    toggleMedicationTaken: (id: string) => void;
+    toggleMedicationTaken: (
+        id: string,
+        date: string,
+    ) => void;
 
     markMedicationMissed: (id: string) => void;
 
@@ -58,61 +72,15 @@ const MedicationContext = createContext<
     MedicationContextType | undefined
 >(undefined);
 
-const initialMedications: Medication[] = [
-    {
-        id: "1",
-        name: "Iron & Folic Acid",
-        dosage: "1 Pill",
-        instructions: "With food",
-        time: "8:00 AM",
-        period: "Morning",
-        taken: true,
-        missed: false,
-    },
-    {
-        id: "2",
-        name: "Calcium Supplement",
-        dosage: "2 Pills",
-        instructions: "After lunch",
-        time: "1:00 PM",
-        period: "Afternoon",
-        taken: false,
-        missed: false,
-    },
-    {
-        id: "3",
-        name: "Prenatal Vitamin",
-        dosage: "1 Pill",
-        instructions: "Before bed",
-        time: "9:00 PM",
-        period: "Evening",
-        taken: true,
-        missed: false,
-    },
-];
+const initialMedications: Medication[] = [];
 
 function isMedicationPastDue(time: string) {
-    const match = time
-        .trim()
-        .match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
-
-    if (!match) {
+    const parsedTime = parseMedicationTime(time);
+    if (!parsedTime) {
         return false;
     }
 
-    let hour = Number(match[1]);
-    const minute = Number(match[2]);
-    const period = match[3].toUpperCase();
-
-    if (period === "AM" && hour === 12) {
-        hour = 0;
-    }
-
-    if (period === "PM" && hour !== 12) {
-        hour += 12;
-    }
-
-    const scheduledMinutes = hour * 60 + minute;
+    const scheduledMinutes = parsedTime.hour * 60 + parsedTime.minute;
 
     const now = new Date();
     const currentMinutes =
@@ -130,9 +98,48 @@ export function MedicationProvider({
 }: MedicationProviderProps) {
     const [medications, setMedications] =
         useState<Medication[]>(initialMedications);
-    
-        const [adherenceHistory, setAdherenceHistory] =
+    const [hasLoadedState, setHasLoadedState] = useState(false);
+
+    const [hasLoadedHistory, setHasLoadedHistory] = useState(false);
+
+    const [adherenceHistory, setAdherenceHistory] =
         useState<AdherenceRecord[]>([]);
+
+
+    const dateFromKey = (dateKey: string) => {
+        const [year, month, day] = dateKey
+            .split("-")
+            .map(Number);
+
+        return new Date(year, month - 1, day);
+    };
+
+    const normalizeDailyStatus = (items: Medication[]) => {
+        const today = localDateKey(new Date());
+
+        return items.map((medication) =>
+            medication.statusDate &&
+                medication.statusDate !== today
+                ? {
+                    ...medication,
+                    taken: false,
+                    missed: false,
+                    statusDate: today,
+                    createdDate:
+                        medication.createdDate ??
+                        localDateKey(new Date()),
+                }
+                : {
+                    ...medication,
+                    statusDate:
+                        medication.statusDate ?? today,
+                    createdDate:
+                        medication.createdDate ??
+                        localDateKey(new Date()),
+                },
+        );
+    };
+
 
     const addMedication = (medication: NewMedication) => {
         const newMedication: Medication = {
@@ -146,6 +153,8 @@ export function MedicationProvider({
 
             taken: false,
             missed: false,
+            statusDate: localDateKey(new Date()),
+            createdDate: localDateKey(new Date()),
         };
 
         setMedications((currentMedications) => [
@@ -169,50 +178,119 @@ export function MedicationProvider({
         );
     };
 
-    const toggleMedicationTaken = (id: string) => {
+    useEffect(() => {
+        if (!hasLoadedState || !hasLoadedHistory) {
+            return;
+        }
+
+        const today = localDateKey(new Date());
+
+        setAdherenceHistory((currentHistory) => {
+            const updatedHistory = [...currentHistory];
+
+            medications.forEach((medication) => {
+                const currentDate =
+                    dateFromKey(medication.createdDate);
+
+                while (localDateKey(currentDate) < today) {
+                    const dateKey = localDateKey(currentDate);
+
+                    const existingRecord =
+                        updatedHistory.some(
+                            (record) =>
+                                record.medicationId === medication.id &&
+                                record.date === dateKey,
+                        );
+
+                    if (!existingRecord) {
+                        updatedHistory.push({
+                            id: `missed-${medication.id}-${dateKey}`,
+                            medicationId: medication.id,
+                            medicationName: medication.name,
+                            date: dateKey,
+                            time: medication.time,
+                            status: "missed",
+                        });
+                    }
+
+                    currentDate.setDate(
+                        currentDate.getDate() + 1,
+                    );
+                }
+            });
+
+            return updatedHistory;
+        });
+    }, [
+        hasLoadedState,
+        hasLoadedHistory,
+        medications,
+    ]);
+
+    const toggleMedicationTaken = (
+        id: string,
+        selectedDate: string,
+    ) => {
         const medication = medications.find(
-            (item) => item.id === id
+            (item) => item.id === id,
         );
 
         if (!medication) {
             return;
         }
 
-        const newTakenStatus = !medication.taken;
-        const today = new Date().toLocaleDateString();
+        const today = localDateKey(new Date());
+
+        const existingRecord = adherenceHistory.find(
+            (record) =>
+                record.medicationId === medication.id &&
+                record.date === selectedDate,
+        );
+
+        const newTakenStatus =
+            existingRecord?.status !== "taken";
+
+        const isPastDate = selectedDate < today;
 
         const shouldBeMissed =
             !newTakenStatus &&
-            isMedicationPastDue(medication.time);
+            (isPastDate || isMedicationPastDue(medication.time));
 
-        setMedications((currentMedications) =>
-            currentMedications.map((item) =>
-                item.id === id
-                    ? {
-                        ...item,
-                        taken: newTakenStatus,
-                        missed: shouldBeMissed,
-                    }
-                    : item
-            )
-        );
+        // Only update the medication's current-day visual state
+        // when the user is editing today.
+        if (selectedDate === today) {
+            setMedications((currentMedications) =>
+                currentMedications.map((item) =>
+                    item.id === id
+                        ? {
+                            ...item,
+                            taken: newTakenStatus,
+                            missed: shouldBeMissed,
+                            statusDate: today,
+                        }
+                        : item,
+                ),
+            );
+        }
 
         setAdherenceHistory((currentHistory) => {
-            // Remove today's existing status for this medication first.
             const cleanedHistory = currentHistory.filter(
                 (record) =>
                     !(
                         record.medicationId === medication.id &&
-                        record.date === today
-                    )
+                        record.date === selectedDate
+                    ),
             );
 
             if (newTakenStatus) {
                 const takenRecord: AdherenceRecord = {
-                    id: Date.now().toString(),
+                    id:
+                        Date.now().toString() +
+                        medication.id +
+                        selectedDate,
                     medicationId: medication.id,
                     medicationName: medication.name,
-                    date: today,
+                    date: selectedDate,
                     time: medication.time,
                     status: "taken",
                 };
@@ -225,10 +303,13 @@ export function MedicationProvider({
 
             if (shouldBeMissed) {
                 const missedRecord: AdherenceRecord = {
-                    id: Date.now().toString(),
+                    id:
+                        Date.now().toString() +
+                        medication.id +
+                        selectedDate,
                     medicationId: medication.id,
                     medicationName: medication.name,
-                    date: today,
+                    date: selectedDate,
                     time: medication.time,
                     status: "missed",
                 };
@@ -252,7 +333,8 @@ export function MedicationProvider({
             return;
         }
 
-        const today = new Date().toLocaleDateString();
+        const today = localDateKey(new Date());
+        const statusDate = today;
 
         setMedications((currentMedications) =>
             currentMedications.map((item) =>
@@ -261,6 +343,7 @@ export function MedicationProvider({
                         ...item,
                         taken: false,
                         missed: true,
+                        statusDate,
                     }
                     : item
             )
@@ -291,23 +374,116 @@ export function MedicationProvider({
         });
     };
 
+    useEffect(() => {
+        let isMounted = true;
+
+        AsyncStorage.getItem(MEDICATION_STORAGE_KEY)
+            .then((value) => {
+                if (!isMounted) {
+                    return;
+                }
+
+                const stored = value
+                    ? (JSON.parse(value) as Medication[])
+                    : initialMedications;
+                setMedications(normalizeDailyStatus(stored));
+            })
+            .catch(() => undefined)
+            .finally(() => {
+                if (isMounted) {
+                    setHasLoadedState(true);
+                }
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!hasLoadedState) {
+            return;
+        }
+
+        AsyncStorage.setItem(MEDICATION_STORAGE_KEY, JSON.stringify(medications))
+            .then(() => syncAllNotifications())
+            .catch(() => undefined);
+    }, [hasLoadedState, medications]);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        AsyncStorage.getItem(ADHERENCE_HISTORY_STORAGE_KEY)
+            .then((value) => {
+                if (!isMounted) {
+                    return;
+                }
+
+                const storedHistory = value
+                    ? (JSON.parse(value) as AdherenceRecord[])
+                    : [];
+
+                setAdherenceHistory(storedHistory);
+            })
+            .catch(() => undefined)
+            .finally(() => {
+                if (isMounted) {
+                    setHasLoadedHistory(true);
+                }
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!hasLoadedHistory) {
+            return;
+        }
+
+        AsyncStorage.setItem(
+            ADHERENCE_HISTORY_STORAGE_KEY,
+            JSON.stringify(adherenceHistory),
+        ).catch(() => undefined);
+    }, [hasLoadedHistory, adherenceHistory]);
+
+    useEffect(() => {
+        AsyncStorage.setItem(
+            ADHERENCE_HISTORY_STORAGE_KEY,
+            JSON.stringify(adherenceHistory),
+        ).catch(() => undefined);
+    }, [adherenceHistory]);
+
+    useEffect(() => {
+        const resetForNewDay = () => {
+            setMedications((current) => normalizeDailyStatus(current));
+        };
+
+        const appStateListener = AppState.addEventListener("change", (state) => {
+            if (state === "active") {
+                resetForNewDay();
+            }
+        });
+        const interval = setInterval(resetForNewDay, 60000);
+
+        return () => {
+            appStateListener.remove();
+            clearInterval(interval);
+        };
+    }, []);
+
     const removeMedication = (id: string) => {
         setMedications((currentMedications) =>
             currentMedications.filter(
-                (medication) => medication.id !== id
-            )
-        );
-
-        setAdherenceHistory((currentHistory) =>
-            currentHistory.filter(
-                (record) => record.medicationId !== id
-            )
+                (medication) => medication.id !== id,
+            ),
         );
     };
 
     useEffect(() => {
         const checkForMissedMedications = () => {
-            const today = new Date().toLocaleDateString();
+            const today = localDateKey(new Date());
 
             setMedications((currentMedications) => {
                 const newlyMissed = currentMedications.filter(

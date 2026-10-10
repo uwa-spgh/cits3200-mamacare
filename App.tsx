@@ -1,14 +1,21 @@
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import { AppColors } from "./src/styles/colors";
 import MainAppNavStack from "./src/navigation/MainAppNavStack";
-import { NavigationContainer } from "expo-router/react-navigation";
+import {
+  createNavigationContainerRef,
+  NavigationContainer,
+} from "expo-router/react-navigation";
 import { useFonts } from "expo-font";
+import { useState } from "react";
 import { Provider } from "react-redux";
-import { persistor, store } from "./src/store/store";
+import { persistor } from "./src/store/store";
+import { hydrateDueDate, store } from "./src/store/store";
 import i18n from "./src/localization/i18n";
 import { I18nextProvider } from "react-i18next";
 import { MedicationProvider } from "./src/context/MedicationContext";
+import { PersonalInformationProvider } from "./src/context/PersonalInformationContext";
+import { MedicalHistoryProvider } from "./src/context/MedicalHistoryContext";
 import { registerSheet } from "react-native-actions-sheet";
 import LanguageBottomSheet from "./src/components/sheets/LanguageBottomSheet";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -49,8 +56,28 @@ function LanguageSync() {
 
   return null;
 }
+import NotificationCoordinator from "./src/notifications/NotificationCoordinator";
+import { TutorialProvider } from "./src/tutorial";
+import "./src/components/sheets/sheets";
+registerSheet("LANG_SHEET", LanguageBottomSheet);
+
+const navigationRef = createNavigationContainerRef();
 
 export default function App() {
+  const [navigationReady, setNavigationReady] = useState(false);
+  const [pregnancyReady, setPregnancyReady] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  useEffect(() => {
+    let mounted = true;
+    setLoadError(false);
+    hydrateDueDate().then(() => {
+      if (mounted) setPregnancyReady(true);
+    }).catch(() => {
+      if (mounted) setLoadError(true);
+    });
+    return () => { mounted = false; };
+  }, [loadAttempt]);
   const [fontsLoaded] = useFonts({
     "Nunito-Bold": require("./src/assets/fonts/nunito/Nunito-Bold.ttf"),
     "Nunito-ExtraBold": require("./src/assets/fonts/nunito/Nunito-ExtraBold.ttf"),
@@ -70,7 +97,20 @@ export default function App() {
     "Inter-Light": require("./src/assets/fonts/inter/Inter_18pt-Light.ttf"),
   });
 
-  if (!fontsLoaded) {
+  if (loadError) {
+    return (
+      <View style={[styles.container, { padding: 24 }]}>
+        <Text style={{ textAlign: "center", marginBottom: 16 }}>
+          {i18n.t("pregnancy.loadError")}
+        </Text>
+        <Pressable accessibilityRole="button" onPress={() => setLoadAttempt((attempt) => attempt + 1)}>
+          <Text style={{ color: AppColors.button_primary_accent }}>{i18n.t("pregnancy.retry")}</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
+  if (!fontsLoaded || !pregnancyReady) {
     return <ActivityIndicator size={"large"} />;
   }
 
@@ -82,14 +122,27 @@ export default function App() {
             <PersistGate loading={null} persistor={persistor}>
               <PersistenceDebug />
               <LanguageSync />
-              <I18nextProvider i18n={i18n}>
-                <NavigationContainer>
-                  <MedicationProvider>
-                    <FlashMessage position="top" />
-                    <MainAppNavStack />
-                  </MedicationProvider>
-                </NavigationContainer>
-              </I18nextProvider>
+            <I18nextProvider i18n={i18n}>
+              <NavigationContainer
+                onReady={() => setNavigationReady(true)}
+                ref={navigationRef}
+              >
+                <MedicationProvider>
+                  <PersonalInformationProvider>
+                    <MedicalHistoryProvider>
+                      <NotificationCoordinator
+                        navigationReady={navigationReady}
+                        navigationRef={navigationRef}
+                      />
+                      <FlashMessage position="top" />
+                      <TutorialProvider>
+                        <MainAppNavStack />
+                      </TutorialProvider>
+                    </MedicalHistoryProvider>
+                  </PersonalInformationProvider>
+                </MedicationProvider>
+              </NavigationContainer>
+            </I18nextProvider>
             </PersistGate>
           </Provider>
         </SheetProvider>

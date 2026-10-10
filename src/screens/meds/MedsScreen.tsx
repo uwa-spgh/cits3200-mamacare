@@ -1,9 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useRef, useState } from "react"; 
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "expo-router";
 import Svg, { Circle, Path } from "react-native-svg";
 import { Medication, useMedications } from "../../context/MedicationContext";
+import { localDateKey } from "../../notifications/planning";
 import {
   ScrollView,
   StyleSheet,
@@ -14,13 +15,26 @@ import {
 import AppSafeView from "../../components/views/AppSafeView";
 import HomeHeader from "../../components/headers/HomeHeader";
 
-const dates = [
-  { day: "Mon", date: "12" },
-  { day: "Tue", date: "13" },
-  { day: "Wed", date: "14" },
-  { day: "Thu", date: "15" },
-  { day: "Fri", date: "16" },
-];
+const getPreviousFourteenDays = () => {
+  const dates = [];
+  const today = new Date();
+
+  for (let daysAgo = 13; daysAgo >= 0; daysAgo--) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - daysAgo);
+
+    dates.push({
+      key: localDateKey(date),
+      day: date.toLocaleDateString("en-GB", {
+        weekday: "short",
+      }),
+      date: date.getDate().toString(),
+      fullDate: date,
+    });
+  }
+
+  return dates;
+};
 
 const polarToCartesian = (
   centerX: number,
@@ -67,15 +81,53 @@ const describeArc = (
 export default function MedicationScreen() {
   const navigation = useNavigation<any>();
   const { t } = useTranslation();
-  const [selectedDate, setSelectedDate] = useState("14");
-  const { medications, toggleMedicationTaken } = useMedications();
-  const takenCount = medications.filter(
-    (medication) => medication.taken,
+
+  const dates = getPreviousFourteenDays();
+
+  const [selectedDate, setSelectedDate] = useState(
+    localDateKey(new Date()),
+  );
+
+  const dateScrollRef = useRef<ScrollView>(null);
+
+  const {
+    medications,
+    adherenceHistory,
+    toggleMedicationTaken,
+  } = useMedications();
+
+  const visibleMedications = medications.filter(
+    (medication) => medication.createdDate <= selectedDate
+  );
+
+  const selectedDateRecords = adherenceHistory.filter(
+    (record) => record.date === selectedDate,
+  );
+
+  const getMedicationStatusForDate = (medicationId: string) => {
+    const record = adherenceHistory.find(
+      (item) =>
+        item.medicationId === medicationId &&
+        item.date === selectedDate,
+    );
+
+    return record?.status ?? null;
+  };
+
+  const takenCount = selectedDateRecords.filter(
+    (record) =>
+      record.status === "taken" &&
+      visibleMedications.some(
+        (medication) => medication.id === record.medicationId
+      )
   ).length;
-  const totalCount = medications.length;
+
+  const totalCount = visibleMedications.length;
 
   const progressPercent =
-    totalCount === 0 ? 0 : Math.round((takenCount / totalCount) * 100);
+    totalCount === 0
+      ? 0
+      : Math.round((takenCount / totalCount) * 100);
 
   const getPeriodIcon = (period: Medication["period"]) => {
     switch (period) {
@@ -87,6 +139,46 @@ export default function MedicationScreen() {
         return "moon";
     }
   };
+
+  const todayKey = localDateKey(new Date());
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  const yesterdayKey = localDateKey(yesterday);
+
+  const isTodaySelected = selectedDate === todayKey;
+  const isYesterdaySelected = selectedDate === yesterdayKey;
+
+  const selectedDateLabel = dates.find(
+    (item) => item.key === selectedDate,
+  )?.fullDate;
+
+  const progressTitle = isTodaySelected
+    ? "Today's Progress"
+    : isYesterdaySelected
+      ? "Yesterday's Progress"
+      : selectedDateLabel
+        ? `${selectedDateLabel.toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "long",
+        })} Progress`
+        : "Progress";
+
+  const scheduleTitle = isTodaySelected
+    ? "Today's Schedule"
+    : isYesterdaySelected
+      ? "Yesterday's Schedule"
+      : selectedDateLabel
+        ? `${selectedDateLabel.toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "long",
+        })} Schedule`
+        : "Schedule";
+
+  const isSelectedDateEditable =
+    selectedDate === todayKey ||
+    selectedDate === yesterdayKey;
 
   const renderMedicationSection = (
     period: Medication["period"],
@@ -107,71 +199,101 @@ export default function MedicationScreen() {
             </Text>
           </View>
 
-          {items.map((medication) => (
-            <TouchableOpacity
+        {items.map((medication) => {
+          const status = getMedicationStatusForDate(medication.id);
+
+          const isTaken = status === "taken";
+          const isMissed = status === "missed";
+
+          return (
+            <View
               key={medication.id}
               style={[
                 styles.medicationCard,
-                medication.missed && styles.overdueMedicationCard,
+                isMissed && styles.overdueMedicationCard,
               ]}
-              activeOpacity={0.8}
-              onPress={() =>
-                navigation.navigate("MedicationDetails", { id: medication.id })
-              }
             >
-              <View style={styles.medicationIcon}>
-                <Ionicons name="medical" size={18} color="#8B6570" />
-              </View>
+              <TouchableOpacity
+                style={styles.medicationDetailsButton}
+                activeOpacity={0.8}
+                accessibilityRole="button"
+                accessibilityLabel={`${medication.name}, ${medication.dosage}, ${medication.instructions}, ${medication.time}`}
+                onPress={() => navigation.navigate("MedicationDetails", { id: medication.id })}
+              >
+                <View style={styles.medicationIcon}>
+                  <Ionicons name="medical" size={18} color="#8B6570" />
+                </View>
 
-              <View style={styles.medicationContent}>
-                <Text
-                  style={[
-                    styles.medicationName,
-                    medication.taken && styles.takenMedicationName,
-                  ]}
-                >
-                  {medication.name}
-                </Text>
-
-                <Text style={styles.medicationDetails}>
-                  {medication.dosage} • {medication.instructions}
-                </Text>
-
-                {medication.taken ? (
-                  <View style={styles.statusRow}>
-                    <Ionicons
-                      name="checkmark-circle"
-                      size={13}
-                      color="#57A868"
-                    />
-
-                    <Text style={styles.takenStatus}>
-                      {t("medicationScreen.takenAt", { time: medication.time })}
-                    </Text>
-                  </View>
-                ) : medication.missed ? (
-                  <View style={styles.statusRow}>
-                    <Ionicons name="time" size={13} color="#F28C28" />
-
-                    <Text style={styles.overdueStatus}>
-                      {t("medicationScreen.dueAt", { time: medication.time })}
-                    </Text>
-                  </View>
-                ) : (
-                  <Text style={styles.upcomingStatus}>
-                    {t("medicationScreen.dueAt", { time: medication.time })}
+                <View style={styles.medicationContent}>
+                  <Text
+                    style={[
+                      styles.medicationName,
+                      isTaken && styles.takenMedicationName,
+                    ]}
+                  >
+                    {medication.name}
                   </Text>
-                )}
-              </View>
+
+                  <Text style={styles.medicationDetails}>
+                    {medication.dosage} • {medication.instructions}
+                  </Text>
+
+                  {isTaken ? (
+                    <View style={styles.statusRow}>
+                      <Ionicons
+                        name="checkmark-circle"
+                        size={13}
+                        color="#57A868"
+                      />
+
+                      <Text style={styles.takenStatus}>
+                        {t("medicationScreen.takenAt", {
+                          time: medication.time,
+                        })}
+                      </Text>
+                    </View>
+                  ) : isMissed ? (
+                    <View style={styles.statusRow}>
+                      <Ionicons name="time" size={13} color="#F28C28" />
+
+                      <Text style={styles.overdueStatus}>
+                        {t("medicationScreen.dueAt", {
+                          time: medication.time,
+                        })}
+                      </Text>
+                    </View>
+                  ) : (
+                    <Text style={styles.upcomingStatus}>
+                      {t("medicationScreen.dueAt", {
+                        time: medication.time,
+                      })}
+                    </Text>
+                  )}
+                </View>
+              </TouchableOpacity>
 
               <TouchableOpacity
+                accessible
+                accessibilityRole="checkbox"
+                accessibilityLabel={`${medication.name}, ${medication.time}`}
+                accessibilityState={{ checked: isTaken, disabled: !isSelectedDateEditable }}
+                aria-checked={isTaken}
+                aria-disabled={!isSelectedDateEditable}
+                disabled={!isSelectedDateEditable}
                 style={[
                   styles.checkCircle,
-                  medication.taken && styles.checkCircleTaken,
+                  isTaken && styles.checkCircleTaken,
+                  !isSelectedDateEditable && styles.checkCircleDisabled,
                 ]}
                 onPress={(event) => {
                   event.stopPropagation();
-                  toggleMedicationTaken(medication.id);
+
+                  if (isSelectedDateEditable) {
+                    toggleMedicationTaken(
+                      medication.id,
+                      selectedDate,
+                    );
+                  }
                 }}
                 hitSlop={{
                   top: 10,
@@ -180,30 +302,35 @@ export default function MedicationScreen() {
                   right: 10,
                 }}
               >
-                {medication.taken && (
-                  <Ionicons name="checkmark" size={16} color="#FFFFFF" />
+                {isTaken && (
+                  <Ionicons
+                    name="checkmark"
+                    size={16}
+                    color="#FFFFFF"
+                  />
                 )}
               </TouchableOpacity>
-            </TouchableOpacity>
-          ))}
+            </View>
+          );
+        })}
         </View>
     );
   };
 
-  const morningMedications = medications.filter(
-    (medication) => medication.period === "Morning",
+  const morningMedications = visibleMedications.filter(
+    (medication) => medication.period === "Morning"
   );
 
-  const afternoonMedications = medications.filter(
-    (medication) => medication.period === "Afternoon",
+  const afternoonMedications = visibleMedications.filter(
+    (medication) => medication.period === "Afternoon"
   );
 
-  const eveningMedications = medications.filter(
-    (medication) => medication.period === "Evening",
+  const eveningMedications = visibleMedications.filter(
+    (medication) => medication.period === "Evening"
   );
 
   return (
-    <AppSafeView >
+    <AppSafeView includeBottomInset={false}>
       <HomeHeader />
       <ScrollView
         style={styles.screen}
@@ -212,20 +339,36 @@ export default function MedicationScreen() {
       >
         <Text style={styles.title}>{t("medsScreen.title")}</Text>
 
-        <View style={styles.dateRow}>
+        <ScrollView
+          ref={dateScrollRef}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.dateRow}
+          onContentSizeChange={() => {
+            dateScrollRef.current?.scrollToEnd({
+              animated: false,
+            });
+          }}
+        >
           {dates.map((item) => {
-            const selected = selectedDate === item.date;
+            const selected = selectedDate === item.key;
 
             return (
               <TouchableOpacity
-                key={item.date}
-                style={[styles.dateCard, selected && styles.selectedDateCard]}
-                onPress={() => setSelectedDate(item.date)}
+                key={item.key}
+                style={[
+                  styles.dateCard,
+                  selected && styles.selectedDateCard,
+                ]}
+                onPress={() => setSelectedDate(item.key)}
               >
                 <Text
-                  style={[styles.dateDay, selected && styles.selectedDateText]}
+                  style={[
+                    styles.dateDay,
+                    selected && styles.selectedDateText,
+                  ]}
                 >
-                  {t(`medsScreen.${item.day.toLowerCase()}`)}
+                  {item.day}
                 </Text>
 
                 <Text
@@ -239,11 +382,13 @@ export default function MedicationScreen() {
               </TouchableOpacity>
             );
           })}
-        </View>
+        </ScrollView>
 
         <View style={styles.progressCard}>
           <View>
-            <Text style={styles.progressTitle}>{t("medsScreen.todaysProgress")}</Text>
+            <Text style={styles.progressTitle}>
+              {progressTitle}
+            </Text>
 
             <Text style={styles.progressSubtitle}>
               {t("medsScreen.takenCount", { taken: takenCount, total: totalCount })}
@@ -280,21 +425,51 @@ export default function MedicationScreen() {
           </View>
         </View>
 
-        <Text style={styles.scheduleTitle}>{t("medsScreen.todaysSchedule")}</Text>
+        <Text style={styles.scheduleTitle}>
+          {scheduleTitle}
+        </Text>
 
-        {renderMedicationSection("Morning", morningMedications)}
-        {renderMedicationSection("Afternoon", afternoonMedications)}
-        {renderMedicationSection("Evening", eveningMedications)}
+        {visibleMedications.length === 0 ? (
+          <View style={styles.emptyMedicationContainer}>
+            <Ionicons
+              name="medical-outline"
+              size={36}
+              color="#C78A9D"
+            />
 
-        <TouchableOpacity
-          style={styles.primaryButton}
-          onPress={() => {
-            navigation.navigate("AddMedication");
-          }}
-        >
-          <Ionicons name="add" size={20} color="#FFFFFF" />
-          <Text style={styles.primaryButtonText}>{t("medsScreen.addNew")}</Text>
-        </TouchableOpacity>
+            <Text style={styles.emptyMedicationTitle}>
+              {isTodaySelected
+                ? "No medications added yet"
+                : "No medications scheduled"}
+            </Text>
+
+            <Text style={styles.emptyMedicationText}>
+              {isTodaySelected
+                ? "Add your medications to keep track of your daily schedule."
+                : "There were no medications scheduled for this date."}
+            </Text>
+          </View>
+        ) : (
+          <>
+            {renderMedicationSection("Morning", morningMedications)}
+            {renderMedicationSection("Afternoon", afternoonMedications)}
+            {renderMedicationSection("Evening", eveningMedications)}
+          </>
+        )}
+
+        {isTodaySelected && (
+          <TouchableOpacity
+            style={styles.primaryButton}
+            onPress={() => {
+              navigation.navigate("AddMedication");
+            }}
+          >
+            <Ionicons name="add" size={20} color="#FFFFFF" />
+            <Text style={styles.primaryButtonText}>
+              {t("medsScreen.addNew")}
+            </Text>
+          </TouchableOpacity>
+        )}
 
         <TouchableOpacity
           style={styles.secondaryButton}
@@ -331,7 +506,8 @@ const styles = StyleSheet.create({
 
   dateRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    gap: 10,
+    paddingRight: 4,
     marginBottom: 18,
   },
 
@@ -446,6 +622,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 
+  medicationDetailsButton: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
   overdueMedicationCard: {
     borderLeftWidth: 4,
     borderLeftColor: "#F28C28",
@@ -522,6 +704,10 @@ const styles = StyleSheet.create({
     borderColor: "#62A96F",
   },
 
+  checkCircleDisabled: {
+    opacity: 0.5,
+  },
+
   primaryButton: {
     marginTop: 8,
     backgroundColor: "#BE1E50",
@@ -556,5 +742,26 @@ const styles = StyleSheet.create({
     color: "#BE1E50",
     fontSize: 13,
     fontWeight: "700",
+  },
+
+  emptyMedicationContainer: {
+    alignItems: "center",
+    paddingVertical: 28,
+    paddingHorizontal: 20,
+  },
+
+  emptyMedicationTitle: {
+    marginTop: 10,
+    fontSize: 15,
+    fontWeight: "700",
+    color: "#4A373C",
+  },
+
+  emptyMedicationText: {
+    marginTop: 6,
+    fontSize: 12,
+    color: "#78666C",
+    textAlign: "center",
+    lineHeight: 18,
   },
 });
