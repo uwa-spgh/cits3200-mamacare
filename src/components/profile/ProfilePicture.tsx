@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     borderRadius: s(50),
-    backgroundColor: AppColors.bg_button_secondary, // or any color you like
+    backgroundColor: AppColors.bg_button_secondary,
     justifyContent: "center",
     alignItems: "center",
   },
