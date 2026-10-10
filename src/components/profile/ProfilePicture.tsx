@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { s, vs } from "react-native-size-matters";
 import { Image } from "expo-image";
 import React from "react";
@@ -11,6 +11,11 @@ import { setProfilePicture } from "../../store/reducers/dataReducers";
 const ProfilePicture = () => {
   const dispatch = useDispatch();
 
+  const userPicture = useSelector(
+    (state: { dataReducer: { userPicture: string } }) =>
+      state.dataReducer.userPicture,
+  );
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
@@ -20,14 +25,10 @@ const ProfilePicture = () => {
     });
 
     if (!result.canceled) {
-      // Save this URI to your state or Redux store
       dispatch(setProfilePicture(result.assets[0].uri));
     }
   };
 
-  const userPicture = useSelector(
-      (state: { dataReducer: { userPicture: string } }) => state.dataReducer.userPicture
-    );
   return (
     <View style={styles.container}>
       <TouchableOpacity activeOpacity={0.9} style={styles.edit}>
@@ -38,10 +39,18 @@ const ProfilePicture = () => {
           onPress={pickImage}
         />
       </TouchableOpacity>
-      <Image
-        source={userPicture}
-        style={styles.image}
-      />
+
+      {userPicture ? (
+        <Image source={{ uri: userPicture }} style={styles.image} />
+      ) : (
+        <View style={styles.placeholder}>
+          <MaterialIcons
+            name="person"
+            size={s(60)}
+            color={AppColors.white}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -58,6 +67,15 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     borderRadius: s(50),
+  },
+
+  placeholder: {
+    width: "100%",
+    height: "100%",
+    borderRadius: s(50),
+    backgroundColor: AppColors.bg_button_secondary, // or any color you like
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   edit: {

@@ -4,7 +4,7 @@ import type { DataState, GestationSource } from "../../types/types";
 const initialState = {
   language: "en",
   userName: "",
-  userPicture: "../../assets/images/michael-dam-mEZ3PoFGs_k-unsplash.jpg",
+  userPicture: "",
   edd: "",
   lmp: "",
   gestationSource: "auto",
