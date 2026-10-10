@@ -24,7 +24,7 @@ import { localDateKey } from "../../notifications/planning";
 export default function HomeScreen() {
   const { medications, toggleMedicationTaken } = useMedications();
 
-  const priorityMedication = medications.find((medication) => !medication.taken);
+  const allMedicationsTaken = medications.length > 0 && medications.every((medication) => medication.taken);
   const { t, i18n } = useTranslation();
   const navigation = useNavigation<any>();
   const userName = useSelector((state: RootState) => state.dataReducer.userName);
@@ -79,43 +79,46 @@ export default function HomeScreen() {
             <Text style={styles.greenHeading}>{t("homeScreen.medications")}</Text>
           </View>
 
-          {priorityMedication ? (
-  <Pressable
-    style={styles.medicationRow}
-    onPress={() => toggleMedicationTaken(priorityMedication.id, localDateKey(new Date()))}
-  >
-    <View style={styles.checkbox} />
-
-    <View>
-      <Text style={styles.itemTitle}>{priorityMedication.name}</Text>
-      <Text style={styles.itemSubtitle}>
-        {`${priorityMedication.dosage} · ${priorityMedication.instructions}`}
-      </Text>
-    </View>
-  </Pressable>
-) : medications.length > 0 ? (
-  <View style={styles.medicationRow}>
-    <View style={[styles.checkbox, styles.checkboxSelected]}>
-      <Ionicons name="checkmark" size={18} color="#FFFFFF" />
-    </View>
-
-    <View>
-      <Text style={styles.itemTitle}>All medications taken</Text>
-      <Text style={styles.itemSubtitle}>
-        You have completed today&apos;s medications.
-      </Text>
-    </View>
-  </View>
-) : (
-  <Pressable
-    accessibilityRole="button"
-    style={styles.medicationRow}
-    onPress={() => navigation.navigate("AddMedication")}
-  >
-    <Ionicons name="add-circle-outline" size={24} color="#087D67" />
-    <Text style={styles.itemTitle}>{t("medsScreen.addNew")}</Text>
-  </Pressable>
-)}
+          {medications.length > 0 ? (
+            <>
+              {medications.map((medication) => (
+                <Pressable
+                  key={medication.id}
+                  accessibilityRole="checkbox"
+                  accessibilityLabel={`${medication.name}, ${medication.time}`}
+                  accessibilityState={{ checked: medication.taken }}
+                  aria-checked={medication.taken}
+                  style={styles.medicationRow}
+                  onPress={() => toggleMedicationTaken(medication.id, localDateKey(new Date()))}
+                >
+                  <View style={[styles.checkbox, medication.taken && styles.checkboxSelected]}>
+                    {medication.taken ? <Ionicons name="checkmark" size={18} color="#FFFFFF" /> : null}
+                  </View>
+                  <View style={styles.medicationText}>
+                    <Text style={styles.itemTitle}>{medication.name}</Text>
+                    <Text style={styles.itemSubtitle}>
+                      {`${medication.dosage} · ${medication.instructions} · ${medication.time}`}
+                    </Text>
+                  </View>
+                </Pressable>
+              ))}
+              {allMedicationsTaken ? (
+                <View style={styles.medicationSummary}>
+                  <Text style={styles.itemTitle}>All medications taken</Text>
+                  <Text style={styles.itemSubtitle}>You have completed today&apos;s medications.</Text>
+                </View>
+              ) : null}
+            </>
+          ) : (
+            <Pressable
+              accessibilityRole="button"
+              style={styles.medicationRow}
+              onPress={() => navigation.navigate("AddMedication")}
+            >
+              <Ionicons name="add-circle-outline" size={24} color="#087D67" />
+              <Text style={styles.itemTitle}>{t("medsScreen.addNew")}</Text>
+            </Pressable>
+          )}
 
           <View style={styles.divider} />
 
@@ -260,6 +263,12 @@ const styles = StyleSheet.create({
     borderColor: "#D7BEC2",
     borderRadius: 7,
     padding: 14,
+    marginTop: 12,
+  },
+  medicationText: {
+    flex: 1,
+  },
+  medicationSummary: {
     marginTop: 12,
   },
   checkbox: {
