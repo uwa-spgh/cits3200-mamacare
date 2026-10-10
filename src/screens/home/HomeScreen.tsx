@@ -1,3 +1,7 @@
+import { localDateKey } from "../../notifications/planning";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
+import { PLANNER_STORAGE_KEY } from "../../notifications/notificationService";
 import { useSelector } from "react-redux";
 import { useMedications } from "../../context/MedicationContext";
 import type { RootState } from "../../store/store";
@@ -16,58 +20,123 @@ import { useNavigation } from "expo-router/react-navigation";
 import AppSafeView from "../../components/views/AppSafeView";
 import HomeHeader from "../../components/headers/HomeHeader";
 import { useTutorialAutoStart } from "../../tutorial";
+type PlannerSummary = {
+  completedVisits: string[];
+  appointments: Record<string, { date: string; facility: string }>;
+};
 
+const ANC_VISIT_IDS = [
+  "anc-1",
+  "anc-2",
+  "anc-3",
+  "anc-4",
+  "anc-5",
+  "anc-6",
+  "anc-7",
+  "anc-8",
+];
 export default function HomeScreen() {
   const { medications, toggleMedicationTaken } = useMedications();
+  const navigation = useNavigation<any>();
+  const [plannerSummary, setPlannerSummary] =
+    useState<PlannerSummary | null>(null);
+  useEffect(() => {
+    const loadPlannerSummary = async () => {
+      try {
+        const value = await AsyncStorage.getItem(PLANNER_STORAGE_KEY);
+        setPlannerSummary(
+          value ? (JSON.parse(value) as PlannerSummary) : null,
+        );
+      } catch {
+        setPlannerSummary(null);
+      }
+    };
+
+    loadPlannerSummary();
+
+    const unsubscribe = navigation.addListener(
+      "focus",
+      loadPlannerSummary,
+    );
+
+    return unsubscribe;
+  }, [navigation]);
 
   const priorityMedication = medications.find(
-  (medication) => !medication.taken,
-);
+    (medication) => !medication.taken,
+  );
   const { t } = useTranslation();
-  const navigation = useNavigation<any>();
-  const edd = useSelector((state: RootState) => state.dataReducer.edd);
-  const userName = useSelector(
-  (state: RootState) => state.dataReducer.userName,
-);
-const firstName = userName.trim().split(/\s+/)[0] || "Asha";
-  const pregnancyProgress = (() => {
-  if (!edd) return null;
 
-  const dueDate = new Date(edd);
-  if (Number.isNaN(dueDate.getTime())) return null;
+  const completedVisits = plannerSummary?.completedVisits ?? [];
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  dueDate.setHours(0, 0, 0, 0);
-
-  const daysUntilDue = Math.round(
-    (dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+  const nextAncVisitId = ANC_VISIT_IDS.find(
+    (visitId) => !completedVisits.includes(visitId),
   );
 
-  const pregnancyDays = Math.max(0, 280 - daysUntilDue);
+  const nextAncAppointment = nextAncVisitId
+    ? plannerSummary?.appointments?.[nextAncVisitId]
+    : undefined;
+  const nextAncTitle = nextAncVisitId
+    ? t(`plannerScreen.contacts.${nextAncVisitId}.title`)
+    : "All ANC visits completed";
 
-  return {
-    weeks: Math.floor(pregnancyDays / 7),
-    days: pregnancyDays % 7,
-  };
-})();
+  const appointmentDate = nextAncAppointment?.date
+    ? new Date(nextAncAppointment.date)
+    : null;
+
+  const daysUntilAnc =
+    appointmentDate && !Number.isNaN(appointmentDate.getTime())
+      ? Math.max(
+        0,
+        Math.ceil(
+          (appointmentDate.getTime() - Date.now()) /
+          (1000 * 60 * 60 * 24),
+        ),
+      )
+      : null;
+  const edd = useSelector((state: RootState) => state.dataReducer.edd);
+  const userName = useSelector(
+    (state: RootState) => state.dataReducer.userName,
+  );
+  const firstName = userName.trim().split(/\s+/)[0] || "Asha";
+  const pregnancyProgress = (() => {
+    if (!edd) return null;
+
+    const dueDate = new Date(edd);
+    if (Number.isNaN(dueDate.getTime())) return null;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    dueDate.setHours(0, 0, 0, 0);
+
+    const daysUntilDue = Math.round(
+      (dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+    );
+
+    const pregnancyDays = Math.max(0, 280 - daysUntilDue);
+
+    return {
+      weeks: Math.floor(pregnancyDays / 7),
+      days: pregnancyDays % 7,
+    };
+  })();
   useTutorialAutoStart();
   const progressPercentage = pregnancyProgress
-  ? Math.min(
+    ? Math.min(
       ((pregnancyProgress.weeks * 7 + pregnancyProgress.days) / 280) * 100,
       100,
     )
-  : 0;
+    : 0;
   const trimester = pregnancyProgress
-  ? pregnancyProgress.weeks < 14
-    ? "FIRST TRIMESTER"
-    : pregnancyProgress.weeks < 28
-      ? "SECOND TRIMESTER"
-      : "THIRD TRIMESTER"
-  : t("homeScreen.trimester");
+    ? pregnancyProgress.weeks < 14
+      ? "FIRST TRIMESTER"
+      : pregnancyProgress.weeks < 28
+        ? "SECOND TRIMESTER"
+        : "THIRD TRIMESTER"
+    : t("homeScreen.trimester");
   return (
     <AppSafeView includeBottomInset={false}>
-      <HomeHeader/>
+      <HomeHeader />
       <ScrollView
         style={styles.screen}
         contentContainerStyle={styles.content}
@@ -83,22 +152,22 @@ const firstName = userName.trim().split(/\s+/)[0] || "Asha";
 
           <View style={styles.weekRow}>
             <Text style={styles.week}>
-               {pregnancyProgress
-                 ? `${pregnancyProgress.weeks} Weeks`
-                 : t("homeScreen.weeks")}
+              {pregnancyProgress
+                ? `${pregnancyProgress.weeks} Weeks`
+                : t("homeScreen.weeks")}
             </Text>
             <Text style={styles.days}>
-               {pregnancyProgress
-                 ? `, ${pregnancyProgress.days} Days`
-                 : t("homeScreen.days")}
+              {pregnancyProgress
+                ? `, ${pregnancyProgress.days} Days`
+                : t("homeScreen.days")}
             </Text>
-           </View>
+          </View>
 
           <View style={styles.progressTrack}>
             <View
               style={[
-               styles.progressFill,
-               { width: `${progressPercentage}%` },
+                styles.progressFill,
+                { width: `${progressPercentage}%` },
               ]}
             />
           </View>
@@ -127,33 +196,38 @@ const firstName = userName.trim().split(/\s+/)[0] || "Asha";
           </View>
 
           {priorityMedication ? (
-  <Pressable
-    style={styles.medicationRow}
-    onPress={() => toggleMedicationTaken(priorityMedication.id)}
-  >
-    <View style={styles.checkbox} />
+            <Pressable
+              style={styles.medicationRow}
+              onPress={() =>
+                toggleMedicationTaken(
+                  priorityMedication.id,
+                  localDateKey(new Date()),
+                )
+              }
+            >
+              <View style={styles.checkbox} />
 
-    <View>
-      <Text style={styles.itemTitle}>{priorityMedication.name}</Text>
-      <Text style={styles.itemSubtitle}>
-        {`${priorityMedication.dosage} · ${priorityMedication.instructions}`}
-      </Text>
-    </View>
-  </Pressable>
-) : (
-  <View style={styles.medicationRow}>
-    <View style={[styles.checkbox, styles.checkboxSelected]}>
-      <Ionicons name="checkmark" size={18} color="#FFFFFF" />
-    </View>
+              <View>
+                <Text style={styles.itemTitle}>{priorityMedication.name}</Text>
+                <Text style={styles.itemSubtitle}>
+                  {`${priorityMedication.dosage} · ${priorityMedication.instructions}`}
+                </Text>
+              </View>
+            </Pressable>
+          ) : (
+            <View style={styles.medicationRow}>
+              <View style={[styles.checkbox, styles.checkboxSelected]}>
+                <Ionicons name="checkmark" size={18} color="#FFFFFF" />
+              </View>
 
-    <View>
-      <Text style={styles.itemTitle}>All medications taken</Text>
-      <Text style={styles.itemSubtitle}>
-        You have completed today&apos;s medications.
-      </Text>
-    </View>
-  </View>
-)}
+              <View>
+                <Text style={styles.itemTitle}>All medications taken</Text>
+                <Text style={styles.itemSubtitle}>
+                  You have completed today&apos;s medications.
+                </Text>
+              </View>
+            </View>
+          )}
 
           <View style={styles.divider} />
 
@@ -164,12 +238,15 @@ const firstName = userName.trim().split(/\s+/)[0] || "Asha";
 
           <View style={styles.appointmentRow}>
             <View style={styles.appointmentText}>
-              <Text style={styles.itemTitle}>{t("homeScreen.clinicCheckup")}</Text>
-              <Text style={styles.itemSubtitle}>{t("homeScreen.hospital")}</Text>
+              <Text style={styles.itemTitle}>{nextAncTitle}</Text>
+              <Text style={styles.itemSubtitle}>
+                {nextAncAppointment?.facility ?? "Set appointment in Planner"}
+              </Text>
+
             </View>
 
             <View style={styles.daysBadge}>
-              <Text style={styles.daysNumber}>14</Text>
+              <Text style={styles.daysNumber}>{daysUntilAnc ?? "--"}</Text>
               <Text style={styles.daysLabel}>{t("homeScreen.daysLabel")}</Text>
             </View>
           </View>
@@ -260,16 +337,16 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   progressFill: {
-  height: "100%",
-  borderRadius: 10,
-  backgroundColor: "#FFFFFF",
+    height: "100%",
+    borderRadius: 10,
+    backgroundColor: "#FFFFFF",
   },
   progressPercentageText: {
-  color: "#FFFFFF",
-  fontSize: 12,
-  fontWeight: "600",
-  marginTop: 6,
-  textAlign: "right",
+    color: "#FFFFFF",
+    fontSize: 12,
+    fontWeight: "600",
+    marginTop: 6,
+    textAlign: "right",
   },
   babyCard: {
     alignItems: "center",
