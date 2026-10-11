@@ -216,6 +216,7 @@
         "daysLabel": "DAYS",
         "allMedicationsTaken": "All medications taken",
         "allMedicationsCompleted": "You have completed today's medications.",
+        "undoLast": "Undo last",
         "profileAccessibility": "Open profile",
         "quickActions": "Quick Actions",
         "educationLibrary": "Education\nLibrary",

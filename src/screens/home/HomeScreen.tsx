@@ -45,7 +45,11 @@ const ANC_VISIT_IDS = [
   "anc-8",
 ];
 export default function HomeScreen() {
-  const { medications, toggleMedicationTaken } = useMedications();
+  const {
+    medications,
+    adherenceHistory,
+    toggleMedicationTaken,
+  } = useMedications();
   const navigation = useNavigation<any>();
   const [plannerSummary, setPlannerSummary] =
     useState<PlannerSummary | null>(null);
@@ -73,6 +77,16 @@ export default function HomeScreen() {
 
   const priorityMedication = medications.find(
     (medication) => !medication.taken,
+  );
+  const todayKey = localDateKey(new Date());
+
+  const lastTakenRecord = adherenceHistory.find(
+    (record) =>
+      record.date === todayKey &&
+      record.status === "taken" &&
+      medications.some(
+        (medication) => medication.id === record.medicationId,
+      ),
   );
   const { t, i18n } = useTranslation();
   const userName = useSelector(
@@ -104,12 +118,12 @@ export default function HomeScreen() {
   const daysUntilAnc =
     appointmentDate && !Number.isNaN(appointmentDate.getTime())
       ? Math.max(
-          0,
-          Math.ceil(
-            (appointmentDate.getTime() - Date.now()) /
-              (1000 * 60 * 60 * 24),
-          ),
-        )
+        0,
+        Math.ceil(
+          (appointmentDate.getTime() - Date.now()) /
+          (1000 * 60 * 60 * 24),
+        ),
+      )
       : null;
   return (
     <AppSafeView includeBottomInset={false}>
@@ -174,7 +188,7 @@ export default function HomeScreen() {
                   {t("pregnancy.addDueDate")}
                 </Text>
               </Pressable>
-                       </>
+            </>
           )}
         </View>
 
@@ -197,7 +211,7 @@ export default function HomeScreen() {
               onPress={() =>
                 toggleMedicationTaken(
                   priorityMedication.id,
-                  localDateKey(new Date()),
+                  todayKey,
                 )
               }
             >
@@ -218,11 +232,36 @@ export default function HomeScreen() {
                 <Ionicons name="checkmark" size={18} color="#FFFFFF" />
               </View>
 
-              <View>
-                <Text style={styles.itemTitle}>All medications taken</Text>
-                <Text style={styles.itemSubtitle}>
-                  You have completed today&apos;s medications.
+              <View style={styles.medicationDetails}>
+                <Text style={styles.itemTitle}>
+                  {t("homeScreen.allMedicationsTaken")}
                 </Text>
+                <Text style={styles.itemSubtitle}>
+                  {t("homeScreen.allMedicationsCompleted")}
+                </Text>
+
+                {lastTakenRecord ? (
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel={t("homeScreen.undoLast")}
+                    style={styles.undoButton}
+                    onPress={() =>
+                      toggleMedicationTaken(
+                        lastTakenRecord.medicationId,
+                        todayKey,
+                      )
+                    }
+                  >
+                    <Ionicons
+                      name="arrow-undo-outline"
+                      size={17}
+                      color="#B62555"
+                    />
+                    <Text style={styles.undoButtonText}>
+                      {t("homeScreen.undoLast")}
+                    </Text>
+                  </Pressable>
+                ) : null}
               </View>
             </View>
           ) : (
@@ -261,21 +300,21 @@ export default function HomeScreen() {
             </View>
           </View>
         </View>
-          <Text style={styles.sectionTitle}>
-            {t("homeScreen.quickActions")}
-          </Text>
-          <View style={styles.titleUnderline} />
+        <Text style={styles.sectionTitle}>
+          {t("homeScreen.quickActions")}
+        </Text>
+        <View style={styles.titleUnderline} />
 
-          <View style={styles.quickActions}>
-            <Pressable
-              style={styles.actionButton}
-              onPress={() => navigation.navigate("Library")}
-            >
-              <Ionicons name="book" size={32} color="#B62555" />
-              <Text style={styles.educationText}>
-                {t("homeScreen.educationLibrary")}
-              </Text>
-            </Pressable>
+        <View style={styles.quickActions}>
+          <Pressable
+            style={styles.actionButton}
+            onPress={() => navigation.navigate("Library")}
+          >
+            <Ionicons name="book" size={32} color="#B62555" />
+            <Text style={styles.educationText}>
+              {t("homeScreen.educationLibrary")}
+            </Text>
+          </Pressable>
 
           <Pressable
             style={styles.actionButton}
@@ -386,6 +425,22 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     padding: 14,
     marginTop: 12,
+  },
+  medicationDetails: {
+    flex: 1,
+  },
+  undoButton: {
+    alignItems: "center",
+    alignSelf: "flex-start",
+    flexDirection: "row",
+    gap: 6,
+    marginTop: 10,
+    paddingVertical: 4,
+  },
+  undoButtonText: {
+    color: "#B62555",
+    fontSize: 13,
+    fontWeight: "700",
   },
   checkbox: {
     width: 28,
