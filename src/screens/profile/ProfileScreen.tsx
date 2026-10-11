@@ -175,30 +175,6 @@ const ProfileScreen = () => {
                   paddingVertical: 0,
                 }}
               />
-              <View style={styles.separator}></View>
-              <JourneyCards
-                title={t("profileScreen.helpAndSupport")}
-                icon={
-                  <Ionicons
-                    name="help-circle-outline"
-                    size={s(20)}
-                    color={AppColors.text_headings}
-                  />
-                }
-                onPress={() =>
-                  Alert.alert(
-                    t("profileScreen.comingSoon"),
-                    t("profileScreen.featureComingLater"),
-                  )
-                }
-                backgroundColor={AppColors.white}
-                style={{
-                  borderWidth: 0,
-                  marginBottom: 0,
-                  height: s(40),
-                  paddingVertical: 0,
-                }}
-              />
             </View>
           </View>
         </View>

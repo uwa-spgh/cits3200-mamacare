@@ -104,13 +104,21 @@
         "appSettings": "एप सेटिङ",
         "language": "भाषा",
         "notifications": "सूचनाहरू",
-        "helpAndSupport": "सहायता र समर्थन",
         "comingSoon": "चाँडै आउँदैछ",
         "featureComingLater": "यो सुविधा पछि थपिनेछ।",
         "logout": "लग आउट गर्नुहोस्",
         "logoutTitle": "लग आउट",
         "logoutMessage": "के तपाईं लग आउट गर्न निश्चित हुनुहुन्छ?",
         "cancel": "रद्द गर्नुहोस्"
+    },
+
+    "settingsScreen": {
+        "title": "सेटिङहरू",
+        "appSettings": "एप सेटिङहरू",
+        "openAccessibility": "सेटिङहरू खोल्नुहोस्",
+        "language": "भाषा",
+        "notifications": "सूचनाहरू",
+        "replayTutorial": "ट्युटोरियल फेरि चलाउनुहोस्"
     },
 
     "notificationsScreen": {
@@ -219,11 +227,8 @@
         "profileAccessibility": "प्रोफाइल खोल्नुहोस्",
         "quickActions": "द्रुत कार्यहरू",
         "educationLibrary": "शिक्षा\nपुस्तकालय",
-        "trackSymptoms": "लक्षण\nट्र्याक",
         "educationLibraryAlertTitle": "शिक्षा पुस्तकालय",
-        "educationLibraryAlertMessage": "शिक्षा पुस्तकालय स्क्रिन पछि थपिनेछ।",
-        "trackSymptomsAlertTitle": "लक्षण ट्र्याक गर्नुहोस्",
-        "trackSymptomsAlertMessage": "लक्षण ट्र्याकिङ स्क्रिन पछि थपिनेछ।"
+        "educationLibraryAlertMessage": "शिक्षा पुस्तकालय स्क्रिन पछि थपिनेछ।"
     },
 
     "libraryScreen": {

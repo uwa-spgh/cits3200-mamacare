@@ -25,13 +25,11 @@ export const configureNotificationPlatform = async () => {
     Notifications.setNotificationChannelAsync("mamacare-important", {
       name: "Appointments and medication",
       importance: Notifications.AndroidImportance.HIGH,
-      sound: "default",
       vibrationPattern: [0, 250, 150, 250],
     }),
     Notifications.setNotificationChannelAsync("mamacare-education", {
       name: "Pregnancy education",
       importance: Notifications.AndroidImportance.DEFAULT,
-      sound: "default",
     }),
   ]);
 };

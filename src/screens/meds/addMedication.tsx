@@ -50,18 +50,21 @@ export default function AddMedicationScreen() {
             contentContainerStyle={styles.container}
             keyboardShouldPersistTaps="handled"
         >
-            <View style={styles.headerRow}>
                 <TouchableOpacity
-                    style={styles.backButton}
+                    style={styles.backInline}
                     onPress={() => navigation.goBack()}
                     activeOpacity={0.7}
                     hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
                 >
-                    <Ionicons name="arrow-back" size={24} color="#AE214D" />
+                    <Ionicons name="arrow-back" size={20} color="#5F414A" />
+                    <Text style={styles.backInlineText}>
+                        {t("medsScreen.title")}
+                    </Text>
                 </TouchableOpacity>
 
-                <Text style={styles.title}>{t("addMedicationScreen.title")}</Text>
-            </View>
+                <Text style={styles.title}>
+                    {t("addMedicationScreen.title")}
+                </Text>
 
             <Text style={styles.label}>{t("medicationScreen.medicationName")}</Text>
             <TextInput
@@ -254,5 +257,18 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         marginRight: 8,
+    },
+
+    backInline: {
+        alignItems: "center",
+        flexDirection: "row",
+        gap: 8,
+        marginBottom: 16,
+    },
+
+    backInlineText: {
+        color: "#5F414A",
+        fontSize: 15,
+        fontWeight: "700",
     },
 });

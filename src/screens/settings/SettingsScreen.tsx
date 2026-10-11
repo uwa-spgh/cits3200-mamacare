@@ -9,10 +9,11 @@ import {
 import { useTranslation } from "react-i18next";
 import { SheetManager } from "react-native-actions-sheet";
 import { s, vs } from "react-native-size-matters";
-import AppSafeView from "../../components/views/AppSafeView";
 import JourneyCards from "../../components/profile/JourneyCards";
 import { AppColors } from "../../styles/colors";
 import { resetTutorial } from "../../tutorial";
+import AppText from "../../components/texts/AppText";
+import { AppFonts } from "../../styles/fonts";
 
 const SettingsScreen = () => {
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
@@ -24,7 +25,13 @@ const SettingsScreen = () => {
   };
 
   return (
-    <AppSafeView style={styles.container}>
+    <View style={styles.container}>
+      <View style={styles.sectionTitleContainer}>
+        <AppText style={styles.sectionTitle}>
+          {t("settingsScreen.appSettings")}
+        </AppText>
+      </View>
+
       <View style={styles.options}>
         <JourneyCards
           title={t("settingsScreen.language")}
@@ -36,6 +43,20 @@ const SettingsScreen = () => {
             />
           }
           onPress={() => SheetManager.show("LANG_SHEET")}
+          backgroundColor={AppColors.white}
+          style={styles.row}
+        />
+        <View style={styles.separator} />
+        <JourneyCards
+          title={t("settingsScreen.notifications")}
+          icon={
+            <MaterialCommunityIcons
+              name="bell-ring-outline"
+              size={s(20)}
+              color={AppColors.text_headings}
+            />
+          }
+          onPress={() => navigation.navigate("Notifications")}
           backgroundColor={AppColors.white}
           style={styles.row}
         />
@@ -54,7 +75,7 @@ const SettingsScreen = () => {
           style={styles.row}
         />
       </View>
-    </AppSafeView>
+    </View>
   );
 };
 
@@ -63,7 +84,7 @@ export default SettingsScreen;
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    paddingTop: vs(20),
+    paddingTop: vs(25),
   },
   options: {
     backgroundColor: AppColors.white,
@@ -83,5 +104,15 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.stroke_primary,
     height: s(1),
     width: "100%",
+  },
+  sectionTitleContainer: {
+    width: "80%",
+    marginBottom: vs(10),
+  },
+  sectionTitle: {
+    fontFamily: AppFonts.TextBold,
+    fontSize: s(12),
+    color: AppColors.text_headings,
+    textAlign: "left",
   },
 });
