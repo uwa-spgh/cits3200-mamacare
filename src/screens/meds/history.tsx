@@ -54,22 +54,21 @@ export default function MedicationHistoryScreen() {
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.headerRow}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
-            hitSlop={{
-              top: 15,
-              bottom: 15,
-              left: 15,
-              right: 15,
-            }}
-          >
-            <Ionicons name="arrow-back" size={24} color="#AE214D" />
-          </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.backInline}
+          onPress={() => navigation.goBack()}
+          activeOpacity={0.7}
+          hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
+        >
+          <Ionicons name="arrow-back" size={20} color="#5F414A" />
+          <Text style={styles.backInlineText}>
+            {t("medsScreen.title")}
+          </Text>
+        </TouchableOpacity>
 
-          <Text style={styles.title}>{t("medicationHistoryScreen.title")}</Text>
-        </View>
+        <Text style={styles.title}>
+          {t("medicationHistoryScreen.title")}
+        </Text>
 
         {adherenceHistory.length === 0 ? (
           <View style={styles.emptyContainer}>
@@ -260,5 +259,18 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "#4A373C",
     marginBottom: 10,
+  },
+
+  backInline: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 8,
+    marginBottom: 16,
+  },
+
+  backInlineText: {
+    color: "#5F414A",
+    fontSize: 15,
+    fontWeight: "700",
   },
 });
