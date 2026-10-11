@@ -106,12 +106,7 @@ const ProfileScreen = () => {
                   color={AppColors.marron}
                 />
               }
-              onPress={() =>
-                Alert.alert(
-                  t("profileScreen.comingSoon"),
-                  t("profileScreen.featureComingLater"),
-                )
-              }
+              onPress={() => navigation.navigate("EmergencyContacts")}
               backgroundColor={AppColors.icon_bg_emergency}
             />
           </View>
