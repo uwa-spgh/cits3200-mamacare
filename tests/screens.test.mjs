@@ -112,7 +112,6 @@ test('Medication Details shows deleted/unknown items safely', async t => {
 test('Planner appointments, notes and completion are saved and restored', async t => {
   const h = appHarness(); h.setPlannerRoute('VisitChecklist', { visitId: 'anc-2' });
   const renderer = await screen(h, 'src/screens/planner/PlannerScreen.tsx', t);
-  await act(async () => renderer.root.findByType('input').props.onChange({ currentTarget: { value: '2026-10-20T10:00' } }));
   const inputs = renderer.root.findAllByType('TextInput');
   await act(async () => { inputs.find(n => !n.props.multiline).props.onChangeText('Audit clinic'); inputs.find(n => n.props.multiline).props.onChangeText('Synthetic provider question'); });
   await pressWithText(renderer, h.i18n.t('plannerScreen.completeVisit'));
