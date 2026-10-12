@@ -74,7 +74,7 @@ Web is useful for screen checks. Local notifications are deliberately unsupporte
 | Education | Seven articles, topic search/filtering, general danger signs and danger signs for all eight ANC contacts. |
 | Notifications | Native local reminders, permission onboarding, category settings, queue rebuilding and notification tap routing. Actual phone delivery still needs device QA. |
 | Profile | EDD editing and personal/medical forms. Personal information and medical history currently last only for the running session. |
-| Language and tour | English/Nepali selection and a five-step tour with replay. Language does not survive restart; Nepali settings/tour translations are incomplete. |
+| Language and tour | English/Nepali selection is saved locally and restored after restart; a five-step tour can be replayed. Nepali settings/tour translations are incomplete. |
 | Accounts and other tools | Sign-in/signup routes are disabled. Symptom tracking, emergency contacts and help/support show coming-soon messages. Profile picture editing is not wired. |
 
 ## Run checks
