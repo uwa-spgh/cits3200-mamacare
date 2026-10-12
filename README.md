@@ -34,6 +34,28 @@ The development QR contains a custom `exp+mamacare://` link. If the camera repor
 
 The `xcrun simctl` warning concerns the Mac's simulator setup. The server may still run for a physical phone. Simulator testing requires the Xcode setup specified in the versioned Expo docs.
 
+### Create a standalone install for a device
+
+The `preview` profile in `eas.json` uses internal distribution. Build an Android or iOS install with:
+
+```bash
+npx eas-cli build --platform android --profile preview
+npx eas-cli build --platform ios --profile preview
+```
+
+When the build finishes, use the install link on its EAS build page. The Android build is an APK and can be installed directly on a device; Android may ask you to allow installation from that source. The iOS build is an ad hoc IPA, so register each test iPhone with EAS before building. iOS ad hoc distribution requires an Apple Developer account. EAS needs an Expo account and signing credentials for both platforms. These builds run on their own and do not need the development server.
+
+### Create a store build
+
+The `production` profile creates builds for app stores, not direct device installation: Android produces an app bundle for Google Play and iOS produces an App Store build.
+
+```bash
+npx eas-cli build --platform android --profile production
+npx eas-cli build --platform ios --profile production
+```
+
+Submit the builds through Google Play Console or App Store Connect. The `submit.production` section in `eas.json` is empty, so store credentials and submission setup are still required. See Expo's guides for [internal distribution](https://docs.expo.dev/build/internal-distribution/), [APK installs](https://docs.expo.dev/build-reference/apk/), and [production builds](https://docs.expo.dev/deploy/build-project/).
+
 ### Open in a browser
 
 ```bash

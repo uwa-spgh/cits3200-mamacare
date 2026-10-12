@@ -39,17 +39,12 @@ Use the versions already defined in `package.json`.
 
 Do not upgrade Expo, React Native, React, TypeScript, navigation packages, or other major dependencies unless the task explicitly requires it.
 
-## Expo Version
-
-Expo has changed significantly between versions.
-
-Before changing Expo-related configuration, native dependencies, notifications, routing, build settings, or Expo APIs, read the exact Expo SDK 57 documentation:
-
-https://docs.expo.dev/versions/v57.0.0/
-
-Do not rely on instructions written for older Expo versions.
-
 ## Node and Package Manager
+
+- This project uses Expo SDK 57. Before changing code, configuration, package versions, or native integrations, read the exact versioned documentation at <https://docs.expo.dev/versions/v57.0.0/>. Do not substitute the unversioned or latest documentation.
+- Expo SDK 57 requires Node.js 22.13.x or newer. The project has been verified with Node 22.23.2; keep the documented runtime and lockfile in sync when changing dependencies.
+- Use `npx expo install <package>` for Expo SDK packages and native React Native modules so the selected versions match this SDK. Keep `package-lock.json` committed with dependency changes.
+- Native plugin, permission, or app configuration changes may require rebuilding the development client. See `README.md` for setup and platform instructions.
 
 This project uses npm and includes `package-lock.json`.
 
@@ -224,7 +219,7 @@ For an installable internal Android build, the `preview` profile is the relevant
 Example:
 
 ```bash
-eas build --platform android --profile preview
+npx eas-cli build --platform android --profile preview
 ```
 
 For final release work:
@@ -289,6 +284,8 @@ Known persisted application data includes:
 Medical history is currently stored in React Context state rather than AsyncStorage.
 
 When changing logout, account reset, onboarding, persistence, or user switching behaviour, check all relevant state stores.
+
+Persistence is data-specific and some saved-data paths have known defects. Inspect the current storage and hydration code, related tests, and `docs/BUG_REPORT.md` before changing storage or documenting what survives an app restart. Do not imply account sync or server storage unless implementation changes.
 
 ## Logout and User Reset Behaviour
 
@@ -459,6 +456,8 @@ Expo Notifications is configured in `app.json`.
 
 Before changing notification behaviour, check the existing notification service, planning helpers, and notification adapter.
 
+Keep notification planning logic platform-independent where possible. Native delivery adapters are in `src/notifications/notificationAdapter.native.ts`; web intentionally uses a no-op adapter. Read the notification behaviour and platform constraints in `README.md` before changing scheduling.
+
 Do not schedule duplicate notifications.
 
 When medication or planner data changes substantially, consider whether reminders need to be synchronised again.
@@ -502,6 +501,8 @@ src/navigation/MainAppNavStack.tsx
 ```
 
 Check the existing navigation pattern before adding a new route or screen.
+
+Check the current screen and navigation implementation before describing a feature as available; some profile and home actions may remain placeholders or known display defects.
 
 Some screens intentionally hide the native stack header and render their own application header or back navigation.
 
@@ -670,3 +671,9 @@ Do not assume how a feature works from its screen name alone.
 MamaCare has state shared across Redux, Context, AsyncStorage, navigation, and notification services, so changes in one area may affect another.
 
 Prefer understanding and extending the existing implementation over replacing it.
+
+## Documentation and verification
+
+- Keep `README.md` accurate for native development builds, standalone device installs, store builds, web development, and links to the detailed guides under `docs/`.
+- The project test command is `npm test`. When asked to verify changes, run the relevant checks and report what was run and any limitations.
+- Do not add generated native build output or secrets to the repository.
