@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -11,23 +10,22 @@ import {
   View,
 } from "react-native";
 import { useTranslation } from "react-i18next";
-
-const EMERGENCY_CONTACTS_STORAGE_KEY = "@mamacare/emergency-contacts";
-
-type EmergencyContact = {
-  id: string;
-  name: string;
-  relationship: string;
-  phone: string;
-  address: string;
-  isNextOfKin: boolean;
-  contactInEmergency: boolean;
-};
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setEmergencyContacts,
+  type EmergencyContact,
+} from "../../store/reducers/dataReducers";
+import {
+  migrateLegacyEmergencyContacts,
+  type RootState,
+} from "../../store/store";
 
 export default function EmergencyContactsScreen() {
   const { t } = useTranslation();
-
-  const [contacts, setContacts] = useState<EmergencyContact[]>([]);
+  const dispatch = useDispatch();
+  const contacts = useSelector(
+    (state: RootState) => state.dataReducer.emergencyContacts,
+  );
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const [name, setName] = useState("");
@@ -38,28 +36,19 @@ export default function EmergencyContactsScreen() {
   const [contactInEmergency, setContactInEmergency] = useState(true);
 
   useEffect(() => {
-    const loadContacts = async () => {
-      try {
-        const savedContacts = await AsyncStorage.getItem(
-          EMERGENCY_CONTACTS_STORAGE_KEY,
-        );
-
-        if (savedContacts) {
-          const parsedContacts = JSON.parse(savedContacts);
-
-          if (Array.isArray(parsedContacts)) {
-            setContacts(parsedContacts);
-          }
-        }
-      } catch {
+    let mounted = true;
+    migrateLegacyEmergencyContacts().catch(() => {
+      if (mounted) {
         Alert.alert(
           t("emergencyContactsScreen.loadErrorTitle"),
           t("emergencyContactsScreen.loadErrorMessage"),
         );
       }
-    };
+    });
 
-    loadContacts();
+    return () => {
+      mounted = false;
+    };
   }, [t]);
 
   const resetForm = () => {
@@ -72,15 +61,11 @@ export default function EmergencyContactsScreen() {
     setContactInEmergency(true);
   };
 
-  const saveContacts = async (nextContacts: EmergencyContact[]) => {
-    await AsyncStorage.setItem(
-      EMERGENCY_CONTACTS_STORAGE_KEY,
-      JSON.stringify(nextContacts),
-    );
-    setContacts(nextContacts);
+  const saveContacts = (nextContacts: EmergencyContact[]) => {
+    dispatch(setEmergencyContacts(nextContacts));
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     const trimmedName = name.trim();
     const trimmedRelationship = relationship.trim();
     const trimmedPhone = phone.trim();
@@ -134,23 +119,14 @@ export default function EmergencyContactsScreen() {
         )
       : [...contacts, contact];
 
-    try {
-      await saveContacts(nextContacts);
-
-      Alert.alert(
-        editingId
-          ? t("emergencyContactsScreen.contactUpdated")
-          : t("emergencyContactsScreen.contactSaved"),
-        t("emergencyContactsScreen.contactSavedMessage"),
-      );
-
-      resetForm();
-    } catch {
-      Alert.alert(
-        t("emergencyContactsScreen.saveErrorTitle"),
-        t("emergencyContactsScreen.saveErrorMessage"),
-      );
-    }
+    saveContacts(nextContacts);
+    Alert.alert(
+      editingId
+        ? t("emergencyContactsScreen.contactUpdated")
+        : t("emergencyContactsScreen.contactSaved"),
+      t("emergencyContactsScreen.contactSavedMessage"),
+    );
+    resetForm();
   };
 
   const handleEdit = (contact: EmergencyContact) => {
@@ -177,22 +153,15 @@ export default function EmergencyContactsScreen() {
         {
           text: t("emergencyContactsScreen.delete"),
           style: "destructive",
-          onPress: async () => {
-            try {
-              const nextContacts = contacts.filter(
-                (existingContact) => existingContact.id !== contact.id,
-              );
+          onPress: () => {
+            const nextContacts = contacts.filter(
+              (existingContact) => existingContact.id !== contact.id,
+            );
 
-              await saveContacts(nextContacts);
+            saveContacts(nextContacts);
 
-              if (editingId === contact.id) {
-                resetForm();
-              }
-            } catch {
-              Alert.alert(
-                t("emergencyContactsScreen.deleteErrorTitle"),
-                t("emergencyContactsScreen.deleteErrorMessage"),
-              );
+            if (editingId === contact.id) {
+              resetForm();
             }
           },
         },
@@ -286,7 +255,8 @@ export default function EmergencyContactsScreen() {
         </Text>
         <TextInput
           accessibilityLabel={t("emergencyContactsScreen.fullName")}
-          autoCapitalize="words"
+          autoCapitalize="none"
+          autoCorrect={false}
           onChangeText={(text) =>
             setName(text.replace(/[^\p{L}\p{M}' -]/gu, ""))
           }
@@ -300,7 +270,8 @@ export default function EmergencyContactsScreen() {
         </Text>
         <TextInput
           accessibilityLabel={t("emergencyContactsScreen.relationship")}
-          autoCapitalize="words"
+          autoCapitalize="none"
+          autoCorrect={false}
           onChangeText={setRelationship}
           placeholder={t(
             "emergencyContactsScreen.relationshipPlaceholder",
@@ -328,7 +299,8 @@ export default function EmergencyContactsScreen() {
         </Text>
         <TextInput
           accessibilityLabel={t("emergencyContactsScreen.address")}
-          autoCapitalize="words"
+          autoCapitalize="none"
+          autoCorrect={false}
           multiline
           onChangeText={setAddress}
           placeholder={t("emergencyContactsScreen.addressPlaceholder")}

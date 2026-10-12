@@ -12,7 +12,11 @@ import {
   REGISTER,
 } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { setEdd } from "./reducers/dataReducers";
+import {
+  setEdd,
+  setEmergencyContacts,
+  type EmergencyContact,
+} from "./reducers/dataReducers";
 import { createDueDateStorage } from "../pregnancy/storage";
 
 
@@ -52,4 +56,52 @@ export async function saveDueDate(value: string): Promise<void> {
     await hydrateDueDate();
     const edd = await dueDateStorage.save(value);
     store.dispatch(setEdd(edd));
+}
+
+const legacyEmergencyContactsStorageKey = "@mamacare/emergency-contacts";
+let emergencyContactsMigration: Promise<void> | undefined;
+
+function isEmergencyContact(value: unknown): value is EmergencyContact {
+    if (typeof value !== "object" || value === null) return false;
+    const contact = value as Record<string, unknown>;
+    return (
+        typeof contact.id === "string" &&
+        typeof contact.name === "string" &&
+        typeof contact.relationship === "string" &&
+        typeof contact.phone === "string" &&
+        typeof contact.address === "string" &&
+        typeof contact.isNextOfKin === "boolean" &&
+        typeof contact.contactInEmergency === "boolean"
+    );
+}
+
+export function migrateLegacyEmergencyContacts(): Promise<void> {
+    if (!emergencyContactsMigration) {
+        emergencyContactsMigration = (async () => {
+            const savedContacts = await AsyncStorage.getItem(
+                legacyEmergencyContactsStorageKey,
+            );
+            if (savedContacts === null) return;
+
+            if (store.getState().dataReducer.emergencyContacts.length === 0) {
+                const parsedContacts: unknown = JSON.parse(savedContacts);
+                if (
+                    !Array.isArray(parsedContacts) ||
+                    !parsedContacts.every(isEmergencyContact)
+                ) {
+                    throw new Error("Saved emergency contacts have an invalid format.");
+                }
+
+                store.dispatch(setEmergencyContacts(parsedContacts));
+                await persistor.flush();
+            }
+
+            await AsyncStorage.removeItem(legacyEmergencyContactsStorageKey);
+        })().catch((error: unknown) => {
+            emergencyContactsMigration = undefined;
+            throw error;
+        });
+    }
+
+    return emergencyContactsMigration;
 }
