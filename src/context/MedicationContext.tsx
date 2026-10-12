@@ -66,6 +66,8 @@ type MedicationContextType = {
         id: string,
         updates: Partial<Medication>
     ) => void;
+
+    resetMedicationData: () => Promise<void>;
 };
 
 const MedicationContext = createContext<
@@ -142,25 +144,43 @@ export function MedicationProvider({
 
 
     const addMedication = (medication: NewMedication) => {
-        const newMedication: Medication = {
-            id: Date.now().toString(),
+        const today = localDateKey(new Date());
+        const isPastDue = isMedicationPastDue(medication.time);
+        const medicationId = Date.now().toString();
 
+        const newMedication: Medication = {
+            id: medicationId,
             name: medication.name,
             dosage: medication.dosage,
             instructions: medication.instructions,
             time: medication.time,
             period: medication.period,
-
             taken: false,
-            missed: false,
-            statusDate: localDateKey(new Date()),
-            createdDate: localDateKey(new Date()),
+            missed: isPastDue,
+            statusDate: today,
+            createdDate: today,
         };
 
         setMedications((currentMedications) => [
             ...currentMedications,
             newMedication,
         ]);
+
+        if (isPastDue) {
+            const missedRecord: AdherenceRecord = {
+                id: Date.now().toString() + medicationId,
+                medicationId,
+                medicationName: medication.name,
+                date: today,
+                time: medication.time,
+                status: "missed",
+            };
+
+            setAdherenceHistory((currentHistory) => [
+                missedRecord,
+                ...currentHistory,
+            ]);
+        }
     };
 
     const updateMedication = (
@@ -481,6 +501,18 @@ export function MedicationProvider({
         );
     };
 
+    const resetMedicationData = async () => {
+        setMedications([]);
+        setAdherenceHistory([]);
+
+        await Promise.all([
+            AsyncStorage.removeItem(MEDICATION_STORAGE_KEY),
+            AsyncStorage.removeItem(ADHERENCE_HISTORY_STORAGE_KEY),
+        ]);
+
+        await syncAllNotifications();
+    };
+
     useEffect(() => {
         const checkForMissedMedications = () => {
             const today = localDateKey(new Date());
@@ -557,6 +589,7 @@ export function MedicationProvider({
                 toggleMedicationTaken,
                 markMedicationMissed,
                 removeMedication,
+                resetMedicationData,
             }}
         >
             {children}

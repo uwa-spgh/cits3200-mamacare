@@ -70,6 +70,7 @@ export const dataReducer = createSlice({
     setDismissedBirthPromptAt: (state, action: PayloadAction<string>) => {
       state.dismissedBirthPromptAt = action.payload;
     },
+    resetData: () => initialState,
   },
 });
 
@@ -79,6 +80,9 @@ export const {
   setPersonalInformation,
   setEdd,
   setProfilePicture,
+  resetData,
 } = dataReducer.actions;
 
 export default dataReducer.reducer;
+
+

@@ -13,6 +13,7 @@ export type MedicalHistory = {
 type MedicalHistoryContextType = {
     medicalHistory: MedicalHistory;
     saveMedicalHistory: (history: MedicalHistory) => void;
+    resetMedicalHistory: () => void;
 };
 
 const MedicalHistoryContext = createContext<
@@ -40,11 +41,16 @@ export function MedicalHistoryProvider({
         setMedicalHistory(history);
     };
 
+    const resetMedicalHistory = () => {
+        setMedicalHistory(initialMedicalHistory);
+    };
+
     return (
         <MedicalHistoryContext.Provider
             value={{
                 medicalHistory,
                 saveMedicalHistory,
+                resetMedicalHistory,
             }}
         >
             {children}
