@@ -38,6 +38,26 @@ test('Library searches Nepali titles while Nepali is selected', async t => {
   assert.equal(grid.props.topics.length, 1);
   assert.equal(grid.props.topics[0].id, 'healthy-nutrition');
 });
+test('Home greeting renders the first name in English and Nepali', async t => {
+  for (const language of ['en', 'ne']) {
+    const h = appHarness({ language });
+    h.mocks.set('react-redux', {
+      useSelector: selector => selector({ dataReducer: { userName: 'Maya Sharma' } }),
+    });
+    h.mocks.set(resolve(root, 'src/context/MedicationContext.tsx'), {
+      useMedications: () => ({ medications: [], adherenceHistory: [], toggleMedicationTaken() {} }),
+    });
+    h.mocks.set(resolve(root, 'src/pregnancy/usePregnancyProgress.ts'), {
+      usePregnancyProgress: () => null,
+    });
+    h.mocks.set('expo-router/react-navigation', {
+      useNavigation: () => ({ ...h.navigation, addListener: () => () => {} }),
+    });
+
+    const renderer = await screen(h, 'src/screens/home/HomeScreen.tsx', t);
+    assert.ok(text(renderer.toJSON()).includes(h.i18n.t('homeScreen.greeting', { name: 'Maya' })));
+  }
+});
 for (const id of ['healthy-nutrition', 'anc-visits', 'maternal-immunisation', 'birth-preparedness', 'labour-preparation', 'breastfeeding-preparation', 'general-pregnancy-advice']) {
   test(`Article ${id} renders full translated content in both languages`, async t => {
     for (const language of ['en', 'ne']) {

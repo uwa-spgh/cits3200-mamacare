@@ -9,7 +9,7 @@
 - Automated test clock: local 2026-10-09 noon unless a case supplies another time. Browser audit: exported web app served on localhost, synthetic data, including a 390 × 844 viewport.
 - Reviewed startup/navigation, pregnancy, medications/history, Planner, profile, language, Library/Danger Signs, tutorial, notifications, persistence and dependency findings.
 
-This report contains **23 findings**: 17 application defects with automated reproductions, four additional browser/source findings, one inactive-screen type-check failure and one dependency-security triage finding. Priorities reflect potential impact; they are not clinical risk assessments. **BUG-09, BUG-10, BUG-11 and BUG-17 are fixed locally. The critical subfinding of BUG-23 is remediated; its other dependency findings remain open.** Original reproduction descriptions are retained below, with current fix status recorded at each repaired finding.
+This report contains **23 findings**: 17 application defects with automated reproductions, four additional browser/source findings, one inactive-screen type-check failure and one dependency-security triage finding. Priorities reflect potential impact; they are not clinical risk assessments. **BUG-09, BUG-10, BUG-11, BUG-17 and BUG-19 are fixed locally. The critical subfinding of BUG-23 is remediated; its other dependency findings remain open.** Original reproduction descriptions are retained below, with current fix status recorded at each repaired finding.
 
 ## Selected fixes and ownership
 
@@ -265,12 +265,12 @@ Update 2026-10-10: new-user defaults now select contact 1 with no completed visi
 
 ### BUG-19
 
-**P2 — Language returns to English after restart.** Evidence: browser change/reload and source review.
+**P2 — Language returns to English after restart. FIXED LOCALLY.** Regression coverage verifies the Settings language sheet dispatches the selected language and Redux Persist restores it.
 
 - Source: [i18n initialization](../src/localization/i18n.ts), language selection components.
 - Reproduce: select Nepali, reload or terminate/reopen.
-- Expected: retain the chosen language. Actual: initialization always uses `lng: 'en'`; no language storage/hydration exists. Rebuilt reminders can consequently return to English too.
-- Fix direction: versioned saved language, validated supported codes and startup hydration before localized UI/reminder resync.
+- Original issue: the Settings language sheet changed only i18next, bypassing the already-persisted Redux language state.
+- Fix: dispatch `setLanguage` when confirming a language; Redux Persist stores and restores the `dataReducer` slice, and `LanguageSync` applies it to i18next after rehydration.
 
 ### BUG-20
 

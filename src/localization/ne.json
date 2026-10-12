@@ -245,7 +245,7 @@
         "getStartedAccessibility": "सेटअप पूरा गरेर सुरु गर्नुहोस्"
     },
     "homeScreen": {
-        "greeting": "नमस्ते,",
+        "greeting": "नमस्ते, {{name}}!",
         "defaultName": "तपाईं",
         "dailyOverview": "यहाँ तपाईंको दैनिक अवलोकन छ।",
         "todaysPriority": "आजको प्राथमिकता",
