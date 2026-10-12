@@ -68,6 +68,8 @@ export default function AddMedicationScreen() {
 
             <Text style={styles.label}>{t("medicationScreen.medicationName")}</Text>
             <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
                 style={styles.input}
                 placeholder={t("addMedicationScreen.namePlaceholder")}
                 value={name}
@@ -76,6 +78,8 @@ export default function AddMedicationScreen() {
 
             <Text style={styles.label}>{t("medicationScreen.dosage")}</Text>
             <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
                 style={styles.input}
                 placeholder={t("addMedicationScreen.dosagePlaceholder")}
                 value={dosage}
@@ -84,6 +88,8 @@ export default function AddMedicationScreen() {
 
             <Text style={styles.label}>{t("medicationScreen.instructions")}</Text>
             <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
                 style={styles.input}
                 placeholder={t("addMedicationScreen.instructionsPlaceholder")}
                 value={instructions}

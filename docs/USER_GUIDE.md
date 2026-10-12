@@ -14,23 +14,23 @@ Home shows weeks/days, trimester and days remaining from the saved EDD. Open the
 | Planner tab | Open an ANC contact; check items, add notes, change appointment date/time/facility and mark complete |
 | Meds tab | Add medication, open details to edit, mark/unmark taken, and view adherence history |
 | Library tab | Search/filter topics, read articles, and open Danger Signs with contact-specific sections |
-| Top profile icon | Personal Information, Medical History, EDD/baby size, language, Notifications and placeholder support/contact tools |
+| Top profile icon | Personal Information, Medical History, EDD/baby size, emergency contacts, language, Notifications and placeholder support tools |
 | Top bell icon | Permission status, reminder categories and pending-reminder count |
 | Top settings icon | Language selection and replay of the guided tour |
 
-**There are no active sign-in or create-account buttons.** Those routes are disabled and no account/backend is wired. Logout returns to onboarding navigation; it does not currently establish a persistent signed-out session. Help/support, emergency contacts and symptom tracking are coming soon.
+**There are no active sign-in or create-account buttons.** Those routes are disabled and no account/backend is wired. Logout returns to onboarding navigation; it does not currently establish a persistent signed-out session. Help/support and symptom tracking are coming soon. Emergency contacts are stored locally on this device.
 
 ## How to check persistence
 
 Use invented test entries, and test each data type separately:
 
-1. Change the EDD or add a medication/Planner appointment. Save it and leave the screen.
+1. Change the EDD, add a medication/Planner appointment, or save an emergency contact. Save it and leave the screen.
 2. Return to that screen first. This checks only the current session.
 3. Fully close the app and reopen it. On web, reload the page. Stop/restart the development server only if also testing connectivity; that alone does not restart app state on a connected phone.
-4. Check the exact date, medication time/taken status, appointment facility, notes and checkboxes.
+4. Check the exact date, medication time/taken status, appointment facility, notes, checkboxes and emergency-contact details.
 5. Test delayed/error cases using `npm run test:known-bugs`; repeatedly reopening normally may not expose a timing-dependent data loss bug.
 
-The audit found that personal information and medical history disappear at restart, language returns to English, and medication history can be lost during startup. A “Saved” message on those profile forms currently confirms only an in-session update. EDD has durable storage; normal medication and Planner reloads passed, with the failure cases documented in the [bug report](BUG_REPORT.md).
+The audit found that personal information and medical history disappear at restart, language returns to English, and medication history can be lost during startup. A “Saved” message on those profile forms currently confirms only an in-session update. EDD and emergency contacts use durable local storage; normal medication and Planner reloads passed, with the failure cases documented in the [bug report](BUG_REPORT.md).
 
 ## Reminder expectations
 

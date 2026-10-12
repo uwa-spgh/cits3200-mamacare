@@ -325,7 +325,7 @@ Update 2026-10-10: new-user defaults now select contact 1 with no completed visi
 
 ## Planned features versus defects
 
-Disabled account routes, symptom tracking, emergency contacts, help/support and profile-picture editing are visible implementation gaps. They should have an explicit product roadmap; this report does not claim they used to work or classify every coming-soon action as a regression. Accounts, cloud backups, export/restore, secure storage policy and migration support must be designed before release claims about those features.
+Disabled account routes, symptom tracking, help/support and profile-picture editing are visible implementation gaps. They should have an explicit product roadmap; this report does not claim they used to work or classify every coming-soon action as a regression. Emergency contacts are managed in Redux and persisted locally; existing records are migrated from their former storage key. Accounts, cloud backups, export/restore and secure storage policy must be designed before release claims about those features.
 
 ## Remaining repair order
 

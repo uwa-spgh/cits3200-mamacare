@@ -10,6 +10,16 @@ export type PersonalInformation = {
   phoneNumber: string;
 };
 
+export type EmergencyContact = {
+  id: string;
+  name: string;
+  relationship: string;
+  phone: string;
+  address: string;
+  isNextOfKin: boolean;
+  contactInEmergency: boolean;
+};
+
 const initialPersonalInformation: PersonalInformation = {
   fullName: "",
   dateOfBirth: null,
@@ -29,6 +39,7 @@ const initialState = {
   birthDate: "",
   dismissedBirthPromptAt: "",
   personalInformation: initialPersonalInformation,
+  emergencyContacts: [] as EmergencyContact[],
 };
 
 export const dataReducer = createSlice({
@@ -47,6 +58,12 @@ export const dataReducer = createSlice({
     ) => {
       state.personalInformation = action.payload;
       state.userName = action.payload.fullName;
+    },
+    setEmergencyContacts: (
+      state,
+      action: PayloadAction<EmergencyContact[]>,
+    ) => {
+      state.emergencyContacts = action.payload;
     },
     setEdd: (state, action: PayloadAction<string>) => {
       state.edd = action.payload;
@@ -78,11 +95,11 @@ export const {
   setLanguage,
   setUserName,
   setPersonalInformation,
+  setEmergencyContacts,
   setEdd,
   setProfilePicture,
   resetData,
 } = dataReducer.actions;
 
 export default dataReducer.reducer;
-
 

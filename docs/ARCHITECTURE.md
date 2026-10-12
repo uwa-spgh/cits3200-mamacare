@@ -47,6 +47,7 @@ Native storage uses AsyncStorage; web storage is scoped to the browser origin. T
 | Medical history | React state only | Lost when provider restarts (BUG-02). |
 | Display name | Redux `userName` | Demo default; not synchronized with the personal form (BUG-15). |
 | Language | Redux `dataReducer.language`, persisted by Redux Persist in AsyncStorage | Restored after process restart; `LanguageSync` applies the rehydrated value to i18next. |
+| Emergency contacts | Redux `dataReducer.emergencyContacts`, persisted by Redux Persist in AsyncStorage | Restored after process restart. Existing contacts in `@mamacare/emergency-contacts` are migrated after Redux rehydration. |
 | Tour state | Tutorial gate/context | In memory; onboarding completion or explicit Settings replay marks it pending. |
 
 Medication/Planner loaders cast parsed JSON instead of validating its schema. Storage failure recovery and migrations need a defined policy before these are reliable record stores. Never replace unread data with empty defaults as an error-recovery strategy.

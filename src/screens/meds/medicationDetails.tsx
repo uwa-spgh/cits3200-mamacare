@@ -118,11 +118,19 @@ export default function MedicationDetailsScreen() {
 
         <Text style={styles.label}>{t("medicationScreen.medicationName")}</Text>
 
-        <TextInput style={styles.input} value={name} onChangeText={setName} />
+        <TextInput
+          autoCapitalize="none"
+          autoCorrect={false}
+          style={styles.input}
+          value={name}
+          onChangeText={setName}
+        />
 
         <Text style={styles.label}>{t("medicationScreen.dosage")}</Text>
 
         <TextInput
+          autoCapitalize="none"
+          autoCorrect={false}
           style={styles.input}
           value={dosage}
           onChangeText={setDosage}
@@ -131,6 +139,8 @@ export default function MedicationDetailsScreen() {
         <Text style={styles.label}>{t("medicationScreen.instructions")}</Text>
 
         <TextInput
+          autoCapitalize="none"
+          autoCorrect={false}
           style={styles.input}
           value={instructions}
           onChangeText={setInstructions}

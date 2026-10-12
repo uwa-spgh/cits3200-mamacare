@@ -91,13 +91,15 @@ test('Add Medication disables empty/invalid input and saves trimmed valid values
   const save = () => renderer.root.findAllByType('TouchableOpacity').find(n => n.props.accessibilityRole === 'button');
   assert.equal(save().props.disabled, true);
   const inputs = renderer.root.findAllByType('TextInput');
-  await act(async () => { inputs[0].props.onChangeText('  Audit supplement  '); inputs[3].props.onChangeText('25:00 AM'); });
+  assert.equal(inputs[0].props.autoCapitalize, 'none');
+  assert.equal(inputs[0].props.autoCorrect, false);
+  await act(async () => { inputs[0].props.onChangeText('  audit supplement  '); inputs[3].props.onChangeText('25:00 AM'); });
   assert.equal(save().props.disabled, true);
   assert.ok(text(renderer.toJSON()).includes(h.i18n.t('addMedicationScreen.timeError')));
   await act(async () => inputs[3].props.onChangeText(' 8:00 AM '));
   assert.equal(save().props.disabled, false);
   await act(async () => save().props.onPress());
-  assert.equal(saved.name, 'Audit supplement');
+  assert.equal(saved.name, 'audit supplement');
   assert.equal(saved.time, '8:00 AM');
   assert.deepEqual(h.navigationCalls.at(-1), ['back']);
 });
