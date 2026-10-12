@@ -128,6 +128,24 @@
         "pending": "Pending reminders",
         "pendingDescription": "The count includes the nearest medication occurrences in the rolling offline buffer."
     },
+    "notificationsContent": {
+        "medicationTitle": "Medication reminder",
+        "medicationBody": "Time to take {{name}}{{dosage}}.",
+        "ancTitle": "ANC appointment reminder",
+        "ancBody": "{{name}} is {{date}}.",
+        "educationTitle": "A friendly MamaCare reminder",
+        "educationBody": "Take a few minutes to read a pregnancy education topic this week.",
+        "visits": {
+            "anc-1": "1st ANC Visit",
+            "anc-2": "2nd ANC Visit",
+            "anc-3": "3rd ANC Visit",
+            "anc-4": "4th ANC Visit",
+            "anc-5": "5th ANC Visit",
+            "anc-6": "6th ANC Visit",
+            "anc-7": "7th ANC Visit",
+            "anc-8": "8th ANC Visit"
+        }
+    },
     "eddCard": {
         "estimatedDueDate": "Estimated Due Date",
         "progress": "Progress"

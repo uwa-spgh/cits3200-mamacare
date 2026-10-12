@@ -46,7 +46,7 @@ Native storage uses AsyncStorage; web storage is scoped to the browser origin. T
 | Personal information | React state only | Lost when provider restarts (BUG-01). |
 | Medical history | React state only | Lost when provider restarts (BUG-02). |
 | Display name | Redux `userName` | Demo default; not synchronized with the personal form (BUG-15). |
-| Language | Redux `dataReducer.language`, persisted by Redux Persist in AsyncStorage | Restored after process restart; `LanguageSync` applies the rehydrated value to i18next. |
+| Language | Redux `dataReducer.language`, persisted by Redux Persist in AsyncStorage | Restored after process restart; `LanguageSync` applies the rehydrated value to i18next. English and Nepali notification screens, reminder copy and tutorial strings are in localization resources. |
 | Emergency contacts | Redux `dataReducer.emergencyContacts`, persisted by Redux Persist in AsyncStorage | Restored after process restart. Existing contacts in `@mamacare/emergency-contacts` are migrated after Redux rehydration. |
 | Tour state | Tutorial gate/context | In memory; onboarding completion or explicit Settings replay marks it pending. |
 
@@ -74,7 +74,7 @@ Notification responses are processed both from live listeners and from the last 
 
 The seven topics/articles and danger-sign data are bundled. Content tests check IDs, article sections in both languages, all eight ANC contact references, interpolation placeholders and supported icon families. They establish content structure, not clinical accuracy.
 
-English fallback prevents many missing-key crashes, but can conceal incomplete Nepali translation. The audit found 28 missing keys and additional literal English strings. Planner currently stores translated checklist text instead of stable item IDs (BUG-07), so translation affects saved checklist identity.
+English fallback prevents many missing-key crashes, but can conceal incomplete Nepali translation. Tutorial, notification screen, permission and scheduled-reminder copy are localized in English and Nepali. Planner currently stores translated checklist text instead of stable item IDs (BUG-07), so translation affects saved checklist identity.
 
 ## Test design
 

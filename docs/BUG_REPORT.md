@@ -9,7 +9,7 @@
 - Automated test clock: local 2026-10-09 noon unless a case supplies another time. Browser audit: exported web app served on localhost, synthetic data, including a 390 × 844 viewport.
 - Reviewed startup/navigation, pregnancy, medications/history, Planner, profile, language, Library/Danger Signs, tutorial, notifications, persistence and dependency findings.
 
-This report contains **23 findings**: 17 application defects with automated reproductions, four additional browser/source findings, one inactive-screen type-check failure and one dependency-security triage finding. Priorities reflect potential impact; they are not clinical risk assessments. **BUG-09, BUG-10, BUG-11, BUG-17 and BUG-19 are fixed locally. The critical subfinding of BUG-23 is remediated; its other dependency findings remain open.** Original reproduction descriptions are retained below, with current fix status recorded at each repaired finding.
+This report contains **23 findings**: 17 application defects with automated reproductions, four additional browser/source findings, one inactive-screen type-check failure and one dependency-security triage finding. Priorities reflect potential impact; they are not clinical risk assessments. **BUG-09, BUG-10, BUG-11, BUG-13, BUG-17 and BUG-19 are fixed locally. The critical subfinding of BUG-23 is remediated; its other dependency findings remain open.** Original reproduction descriptions are retained below, with current fix status recorded at each repaired finding.
 
 ## Selected fixes and ownership
 
@@ -207,12 +207,12 @@ Update 2026-10-10: new-user defaults now select contact 1 with no completed visi
 
 ### BUG-13
 
-**P2 — Nepali lacks 28 English localization keys.** Evidence: recursive key-parity assertion and browser Settings check.
+**P2 — Nepali lacks 28 English localization keys. FIXED LOCALLY.** Regression coverage verifies English/Nepali key parity and the full tour.
 
 - Source: [English](../src/localization/en.json), [Nepali](../src/localization/ne.json).
-- Reproduce: select Nepali, open Settings or replay the tour. Strict BUG-13 lists every missing key.
-- Expected: translated settings, tour copy and accessibility announcements. Actual: all `settingsScreen.*` and tutorial keys fall back to English.
-- Fix direction: reviewed Nepali translations preserving interpolation tokens. Additional literal English in personal/medical forms and other screens requires a string audit beyond this missing-key test.
+- Reproduce: select Nepali, open Settings or replay the tour.
+- Expected: translated settings, notification screens/reminders, tutorial copy and accessibility announcements. Actual: tutorial copy and announcements previously fell back to English.
+- Fix: add Nepali tutorial translations and move scheduled notification copy into the English/Nepali localization resources. Additional literal English in personal/medical forms and other screens requires a string audit beyond this missing-key test.
 - Screenshot: [Settings after selecting Nepali](screenshots/settings-ne.png).
 
 ### BUG-14
