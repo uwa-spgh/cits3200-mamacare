@@ -14,9 +14,12 @@ import { AppColors } from "../../styles/colors";
 import { resetTutorial } from "../../tutorial";
 import AppText from "../../components/texts/AppText";
 import { AppFonts } from "../../styles/fonts";
+import { useDispatch } from "react-redux";
+import { setLanguage } from "../../store/reducers/dataReducers";
 
 const SettingsScreen = () => {
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const replayTutorial = () => {
@@ -42,7 +45,13 @@ const SettingsScreen = () => {
               color={AppColors.text_headings}
             />
           }
-          onPress={() => SheetManager.show("LANG_SHEET")}
+          onPress={() =>
+            SheetManager.show("LANG_SHEET", {
+              payload: {
+                onConfirm: (language: string) => dispatch(setLanguage(language)),
+              },
+            })
+          }
           backgroundColor={AppColors.white}
           style={styles.row}
         />

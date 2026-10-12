@@ -93,7 +93,7 @@ export default function HomeScreen() {
     (state: { dataReducer: { userName: string } }) =>
       state.dataReducer.userName,
   );
-  const firstName = userName.trim().split(/\s+/)[0] || "Asha";
+  const firstName = userName.trim().split(/\s+/)[0] || t("homeScreen.defaultName");
   const pregnancyProgress = usePregnancyProgress();
   useTutorialAutoStart();
 

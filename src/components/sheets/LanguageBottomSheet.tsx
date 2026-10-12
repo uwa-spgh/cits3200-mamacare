@@ -21,7 +21,7 @@ const LanguageBottomSheet = (props: SheetProps<any>) => {
   const handleConfirm = () => {
     props.payload?.onConfirm?.(selectedLang);
     SheetManager.hide("LANG_SHEET");
-    i18n.changeLanguage(selectedLang);
+    void i18n.changeLanguage(selectedLang);
   };
 
   return (

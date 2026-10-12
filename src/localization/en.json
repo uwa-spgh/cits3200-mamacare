@@ -192,7 +192,7 @@
         "getStartedAccessibility": "Finish setup and get started"
     },
     "homeScreen": {
-        "greeting": "Hello,",
+        "greeting": "Hello, {{name}}!",
         "defaultName": "there",
         "dailyOverview": "Here is your daily overview.",
         "todaysPriority": "Today's Priority",
