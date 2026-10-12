@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { appHarness, root, act, knownBug } from './helpers/app-harness.mjs';
+import { appHarness, root, act } from './helpers/app-harness.mjs';
 import { ARTICLES, estimateReadTime } from '../src/constants/articles.ts';
 import { EDUCATION_TOPICS } from '../src/constants/health-education.ts';
 import { DANGER_SIGNS, GENERAL_DANGER_SIGN_IDS, ANC_CONTACT_DANGER_SIGNS } from '../src/constants/danger-signs.ts';
@@ -58,10 +58,16 @@ test('matching localization keys have the same interpolation variables', () => {
   const variables = value => typeof value === 'string' ? [...value.matchAll(/{{\s*([^},]+)[^}]*}}/g)].map(match => match[1].trim()).sort() : [];
   for (const key of Object.keys(ne)) assert.deepEqual(variables(en[key]), variables(ne[key]), key);
 });
-test('tutorial contains five unique targets with complete English text', () => {
+test('tutorial contains five unique targets with complete copy in both languages', () => {
   assert.equal(TUTORIAL_STEPS.length, 5);
   assert.equal(new Set(TUTORIAL_STEPS.map(step => step.target)).size, 5);
-  for (const step of TUTORIAL_STEPS) for (const key of stepTranslationKeys(step)) assert.ok(get(translations.en, key)?.trim(), key);
+  for (const language of ['en', 'ne']) {
+    for (const step of TUTORIAL_STEPS) {
+      for (const key of stepTranslationKeys(step)) {
+        assert.ok(get(translations[language], key)?.trim(), `${language} ${key}`);
+      }
+    }
+  }
 });
 test('both icon renderers support every AppIcon family and FontAwesome style', async t => {
   const h = appHarness();
@@ -81,7 +87,7 @@ test('both icon renderers support every AppIcon family and FontAwesome style', a
     }
   }
 });
-knownBug(test, 'BUG-13', 'Nepali includes all English localization keys', () => {
+test('Nepali includes every English localization key', () => {
   const missing = Object.keys(leaves(translations.en)).filter(key => get(translations.ne, key) === undefined);
   assert.equal(missing.length, 0, `Missing Nepali keys: ${missing.join(', ')}`);
 });

@@ -95,6 +95,40 @@ test('weekly education is Saturday 10:00 and a language change rebuilds the copy
   assert.equal(pending().length, 1);
   assert.match(pending()[0].title, /[\u0900-\u097F]/);
 });
+test('scheduled reminder titles and bodies use the selected translation resources', async () => {
+  for (const language of ['en', 'ne']) {
+    const appointmentDate = new Date(2026, 9, 20, 10);
+    const { h, service, scheduled } = reminderService({ language });
+    await service.syncMedicationNotifications([medication]);
+    const medicationReminder = scheduled[0];
+    assert.equal(medicationReminder.title, h.i18n.t('notificationsContent.medicationTitle'));
+    assert.equal(
+      medicationReminder.body,
+      h.i18n.t('notificationsContent.medicationBody', {
+        name: medication.name,
+        dosage: ` (${medication.dosage})`,
+      }),
+    );
+
+    await service.syncAncNotifications({
+      completedVisits: [],
+      appointments: { 'anc-2': { date: appointmentDate.toISOString(), facility: 'Fixture' } },
+    });
+    const ancReminder = scheduled.find(reminder => reminder.data.kind === 'anc');
+    const formattedAppointment = appointmentDate.toLocaleString(
+      language === 'ne' ? 'ne-NP' : 'en-US',
+      { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' },
+    );
+    assert.equal(ancReminder.title, h.i18n.t('notificationsContent.ancTitle'));
+    assert.equal(
+      ancReminder.body,
+      h.i18n.t('notificationsContent.ancBody', {
+        name: h.i18n.t('notificationsContent.visits.anc-2'),
+        date: formattedAppointment,
+      }),
+    );
+  }
+});
 test('permission denial schedules nothing, even when reminders are enabled', async () => {
   const { service, scheduled } = reminderService({ permission: 'denied' });
   await service.syncMedicationNotifications([medication]);

@@ -41,53 +41,7 @@ type PlannerNotificationState = {
   appointments?: Record<string, { date: string; facility: string }>;
 };
 
-const visitNames: Record<string, { en: string; ne: string }> = {
-  "anc-1": { en: "1st ANC Visit", ne: "पहिलो एएनसी भ्रमण" },
-  "anc-2": { en: "2nd ANC Visit", ne: "दोस्रो एएनसी भ्रमण" },
-  "anc-3": { en: "3rd ANC Visit", ne: "तेस्रो एएनसी भ्रमण" },
-  "anc-4": { en: "4th ANC Visit", ne: "चौथो एएनसी भ्रमण" },
-  "anc-5": { en: "5th ANC Visit", ne: "पाँचौँ एएनसी भ्रमण" },
-  "anc-6": { en: "6th ANC Visit", ne: "छैटौँ एएनसी भ्रमण" },
-  "anc-7": { en: "7th ANC Visit", ne: "सातौँ एएनसी भ्रमण" },
-  "anc-8": { en: "8th ANC Visit", ne: "आठौँ एएनसी भ्रमण" },
-};
-
 const selectedLanguage = () => (i18n.language.startsWith("ne") ? "ne" : "en");
-
-const copy = {
-  en: {
-    medicationTitle: "Medication reminder",
-    medicationBody: (medication: MedicationForReminder) =>
-      `Time to take ${medication.name}${medication.dosage ? ` (${medication.dosage})` : ""}.`,
-    ancTitle: "ANC appointment reminder",
-    ancBody: (name: string, date: Date) =>
-      `${name} is ${date.toLocaleString(undefined, {
-        weekday: "short",
-        month: "short",
-        day: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-      })}.`,
-    educationTitle: "A friendly MamaCare reminder",
-    educationBody: "Take a few minutes to read a pregnancy education topic this week.",
-  },
-  ne: {
-    medicationTitle: "औषधि सम्झना",
-    medicationBody: (medication: MedicationForReminder) =>
-      `${medication.name}${medication.dosage ? ` (${medication.dosage})` : ""} लिने समय भयो।`,
-    ancTitle: "एएनसी भेटघाट सम्झना",
-    ancBody: (name: string, date: Date) =>
-      `${name} ${date.toLocaleString("ne-NP", {
-        weekday: "short",
-        month: "short",
-        day: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-      })} मा छ।`,
-    educationTitle: "MamaCare को मैत्रीपूर्ण सम्झना",
-    educationBody: "यस हप्ता गर्भावस्था शिक्षाको एउटा विषय पढ्न केही मिनेट निकाल्नुहोस्।",
-  },
-};
 
 export const loadNotificationPreferences = async () => {
   const stored = await AsyncStorage.getItem(NOTIFICATION_PREFERENCES_KEY);
@@ -149,9 +103,13 @@ const performMedicationSync = async (
     now,
     availableMedicationSlots,
   )) {
+    const dosage = medication.dosage ? ` (${medication.dosage})` : "";
     await scheduleReminder({
-      title: copy[language].medicationTitle,
-      body: copy[language].medicationBody(medication),
+      title: i18n.t("notificationsContent.medicationTitle"),
+      body: i18n.t("notificationsContent.medicationBody", {
+        name: medication.name,
+        dosage,
+      }),
       channel: "important",
       date,
       data: {
@@ -187,19 +145,34 @@ const performAncSync = async (state: PlannerNotificationState) => {
       continue;
     }
 
-    const name = visitNames[visitId]?.[language] ?? visitId;
+    const name = i18n.t(`notificationsContent.visits.${visitId}`, {
+      defaultValue: visitId,
+    });
+    const appointmentDateText = appointmentDate.toLocaleString(
+      language === "ne" ? "ne-NP" : "en-US",
+      {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      },
+    );
 
-    for (const date of ancReminderDates(appointment.date, now)) {
+    for (const reminderDate of ancReminderDates(appointment.date, now)) {
       await scheduleReminder({
-        title: copy[language].ancTitle,
-        body: copy[language].ancBody(name, appointmentDate),
+        title: i18n.t("notificationsContent.ancTitle"),
+        body: i18n.t("notificationsContent.ancBody", {
+          name,
+          date: appointmentDateText,
+        }),
         channel: "important",
-        date,
+        date: reminderDate,
         data: {
           mamaCareReminder: true,
           kind: "anc",
           sourceId: visitId,
-          scheduledFor: date.toISOString(),
+          scheduledFor: reminderDate.toISOString(),
         },
       });
     }
@@ -216,8 +189,8 @@ const performEducationSync = async () => {
 
   const language = selectedLanguage();
   await scheduleReminder({
-    title: copy[language].educationTitle,
-    body: copy[language].educationBody,
+    title: i18n.t("notificationsContent.educationTitle"),
+    body: i18n.t("notificationsContent.educationBody"),
     channel: "education",
     weekly: {
       weekday: EDUCATION_WEEKDAY,
