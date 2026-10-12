@@ -1,14 +1,12 @@
 import {
   Alert,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import React from "react";
 import AppSafeView from "../../components/views/AppSafeView";
 import ProfilePicture from "../../components/profile/ProfilePicture";
-import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import AppText from "../../components/texts/AppText";
 import { s, vs } from "react-native-size-matters";
@@ -21,6 +19,17 @@ import { usePregnancyProgress } from "../../pregnancy/usePregnancyProgress";
 import { formatGestation } from "../../pregnancy/format";
 import JourneyCards from "../../components/profile/JourneyCards";
 import { useNavigation } from "expo-router/react-navigation";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch, useSelector } from "react-redux";
+import { resetData } from "../../store/reducers/dataReducers";
+import { persistor } from "../../store/store";
+import { useMedications } from "../../context/MedicationContext";
+import { useMedicalHistory } from "../../context/MedicalHistoryContext";
+import {
+  PLANNER_STORAGE_KEY,
+  syncAllNotifications,
+} from "../../notifications/notificationService";
+import { DUE_DATE_STORAGE_KEY } from "../../pregnancy/storage";
 
 const ProfileScreen = () => {
   const userName = useSelector(
@@ -29,9 +38,39 @@ const ProfileScreen = () => {
   );
 
   const navigation = useNavigation<any>();
+  const dispatch = useDispatch();
+  const { resetMedicationData } = useMedications();
+  const { resetMedicalHistory } = useMedicalHistory();
 
   const { t, i18n } = useTranslation();
   const pregnancyProgress = usePregnancyProgress();
+
+  const handleLogout = async () => {
+    try {
+      await resetMedicationData();
+      resetMedicalHistory();
+
+      await Promise.all([
+        AsyncStorage.removeItem("@mamacare/emergency-contacts"),
+        AsyncStorage.removeItem(PLANNER_STORAGE_KEY),
+        AsyncStorage.removeItem(DUE_DATE_STORAGE_KEY),
+      ]);
+
+      dispatch(resetData());
+
+      await persistor.flush();
+      await persistor.purge();
+
+      await syncAllNotifications();
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "AuthStack" }],
+      });
+    } catch (error) {
+      console.error("Failed to clear user data during logout:", error);
+    }
+  };
 
   return (
     <AppSafeView style={styles.container}>
@@ -118,11 +157,7 @@ const ProfileScreen = () => {
                 {
                   text: t("profileScreen.logout"),
                   style: "destructive",
-                  onPress: () =>
-                    navigation.reset({
-                      index: 0,
-                      routes: [{ name: "AuthStack" }],
-                    }),
+                  onPress: handleLogout,
                 },
               ],
             )

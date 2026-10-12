@@ -66,6 +66,8 @@ type MedicationContextType = {
         id: string,
         updates: Partial<Medication>
     ) => void;
+
+    resetMedicationData: () => Promise<void>;
 };
 
 const MedicationContext = createContext<
@@ -481,6 +483,18 @@ export function MedicationProvider({
         );
     };
 
+    const resetMedicationData = async () => {
+        setMedications([]);
+        setAdherenceHistory([]);
+
+        await Promise.all([
+            AsyncStorage.removeItem(MEDICATION_STORAGE_KEY),
+            AsyncStorage.removeItem(ADHERENCE_HISTORY_STORAGE_KEY),
+        ]);
+
+        await syncAllNotifications();
+    };
+
     useEffect(() => {
         const checkForMissedMedications = () => {
             const today = localDateKey(new Date());
@@ -557,6 +571,7 @@ export function MedicationProvider({
                 toggleMedicationTaken,
                 markMedicationMissed,
                 removeMedication,
+                resetMedicationData,
             }}
         >
             {children}
