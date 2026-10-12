@@ -99,6 +99,25 @@ export default function EmergencyContactsScreen() {
       return;
     }
 
+    const namePattern = /^[\p{L}\p{M}' -]+$/u;
+    const phonePattern = /^[0-9+() -]+$/;
+
+    if (!namePattern.test(trimmedName)) {
+      Alert.alert(
+        t("emergencyContactsScreen.invalidNameTitle"),
+        t("emergencyContactsScreen.invalidNameMessage"),
+      );
+      return;
+    }
+
+    if (!phonePattern.test(trimmedPhone)) {
+      Alert.alert(
+        t("emergencyContactsScreen.invalidPhoneTitle"),
+        t("emergencyContactsScreen.invalidPhoneMessage"),
+      );
+      return;
+    }
+
     const contact: EmergencyContact = {
       id: editingId ?? Date.now().toString(),
       name: trimmedName,
@@ -268,7 +287,9 @@ export default function EmergencyContactsScreen() {
         <TextInput
           accessibilityLabel={t("emergencyContactsScreen.fullName")}
           autoCapitalize="words"
-          onChangeText={setName}
+          onChangeText={(text) =>
+            setName(text.replace(/[^\p{L}\p{M}' -]/gu, ""))
+          }
           placeholder={t("emergencyContactsScreen.namePlaceholder")}
           style={styles.input}
           value={name}
@@ -294,7 +315,9 @@ export default function EmergencyContactsScreen() {
         <TextInput
           accessibilityLabel={t("emergencyContactsScreen.phoneNumber")}
           keyboardType="phone-pad"
-          onChangeText={setPhone}
+          onChangeText={(text) =>
+            setPhone(text.replace(/[^0-9+() -]/g, ""))
+          }
           placeholder={t("emergencyContactsScreen.phonePlaceholder")}
           style={styles.input}
           value={phone}

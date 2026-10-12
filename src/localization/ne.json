@@ -131,7 +131,11 @@
         "cancel": "रद्द गर्नुहोस्",
         "contactSaved": "सम्पर्क सुरक्षित भयो",
         "contactUpdated": "सम्पर्क अद्यावधिक भयो",
-        "contactSavedMessage": "आपतकालीन सम्पर्क यस यन्त्रमा सुरक्षित गरिएको छ।"
+        "contactSavedMessage": "आपतकालीन सम्पर्क यस यन्त्रमा सुरक्षित गरिएको छ।",
+        "invalidNameTitle": "अमान्य नाम",
+        "invalidNameMessage": "कृपया अक्षर, खाली ठाउँ, अपोस्ट्रोफी वा हाइफन मात्र प्रयोग गरेर नाम प्रविष्ट गर्नुहोस्।",
+        "invalidPhoneTitle": "अमान्य फोन नम्बर",
+        "invalidPhoneMessage": "कृपया मान्य फोन नम्बर प्रविष्ट गर्नुहोस्।"
     },
     "profileScreen": {
         "gestationWeek": "हप्ता {{week}}",

@@ -1,8 +1,18 @@
 // Article screen - full content for one Education Library topic.
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { RouteProp, useRoute } from "expo-router/react-navigation";
+import {
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from "expo-router/react-navigation";
 import { useTranslation } from "react-i18next";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArticleHero } from "../../components/health-education/article-hero";
 import { ArticleSection } from "../../components/health-education/article-section";
@@ -19,6 +29,7 @@ type ArticleRouteParams = {
 
 export default function ArticleScreen() {
   const route = useRoute<RouteProp<ArticleRouteParams, "Article">>();
+  const navigation = useNavigation<any>();
   const id = typeof route.params?.id === "string" ? route.params.id : undefined;
   const { t } = useTranslation();
   const topic = EDUCATION_TOPICS.find((item) => item.id === id);
@@ -89,7 +100,19 @@ export default function ArticleScreen() {
   if (!topic || !article) {
     return (
       <SafeAreaView style={styles.safeArea} edges={["top"]}>
-        <HomeHeader/>
+        <HomeHeader />
+
+        <TouchableOpacity
+          style={styles.backInline}
+          onPress={() => navigation.goBack()}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="arrow-back" size={20} color="#5F414A" />
+          <Text style={styles.backInlineText}>
+            {t("libraryScreen.title")}
+          </Text>
+        </TouchableOpacity>
+
         <View style={styles.notFound}>
           <Text style={styles.notFoundText}>{t("articleScreen.notFound")}</Text>
         </View>
@@ -99,7 +122,19 @@ export default function ArticleScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
-      <HomeHeader/>
+      <HomeHeader />
+
+      <TouchableOpacity
+        style={styles.backInline}
+        onPress={() => navigation.goBack()}
+        activeOpacity={0.7}
+      >
+        <Ionicons name="arrow-back" size={20} color="#5F414A" />
+        <Text style={styles.backInlineText}>
+          {t("libraryScreen.title")}
+        </Text>
+      </TouchableOpacity>
+
       <ScrollView contentContainerStyle={styles.content}>
         <ArticleHero icon={topic.icon} tagLabel={topic.tagLabel} category={topic.category} />
 
@@ -166,5 +201,18 @@ const styles = StyleSheet.create({
   notFoundText: {
     fontSize: 15,
     color: colors.textSecondary,
+  },
+  backInline: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 8,
+    marginHorizontal: 16,
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  backInlineText: {
+    color: "#5F414A",
+    fontSize: 15,
+    fontWeight: "700",
   },
 });
