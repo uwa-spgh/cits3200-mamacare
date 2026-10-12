@@ -1038,7 +1038,11 @@
         "cancel": "Cancel",
         "contactSaved": "Contact saved",
         "contactUpdated": "Contact updated",
-        "contactSavedMessage": "The emergency contact has been saved on this device."
+        "contactSavedMessage": "The emergency contact has been saved on this device.",
+        "invalidNameTitle": "Invalid name",
+        "invalidNameMessage": "Please enter a name using letters, spaces, apostrophes or hyphens only.",
+        "invalidPhoneTitle": "Invalid phone number",
+        "invalidPhoneMessage": "Please enter a valid phone number."
     },
     "tutorial": {
         "counter": "{{current}} of {{total}}",

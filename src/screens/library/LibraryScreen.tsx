@@ -101,8 +101,8 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 24,
-    fontWeight: "700",
-    color: colors.textPrimary,
+    fontWeight: "900",
+    color: "#3F3034",
   },
   subheading: {
     fontSize: 14,

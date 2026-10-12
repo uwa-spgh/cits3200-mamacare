@@ -46,10 +46,7 @@ export default function MainAppNavStack() {
       <Stack.Screen
         name="DangerSigns"
         component={DangerSignsScreen}
-        options={{
-          headerShown: true,
-          title: t("libraryScreen.dangerSigns"),
-        }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen name="AddMedication" component={AddMedicationScreen} />
       <Stack.Screen
@@ -173,7 +170,7 @@ export default function MainAppNavStack() {
       <Stack.Screen
         name="Article"
         component={ArticleScreen}
-        options={{ headerShown: true, title: "" }}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

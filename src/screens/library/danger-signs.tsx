@@ -3,7 +3,13 @@
 // Education Library screen
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 
@@ -17,10 +23,13 @@ import {
 } from "../../constants/danger-signs";
 import { colors } from "../../constants/health-education";
 import HomeHeader from "../../components/headers/HomeHeader";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "expo-router";
 
 export default function DangerSignsScreen() {
   const [expandedContact, setExpandedContact] = useState<number | null>(1);
   const { t } = useTranslation();
+  const navigation = useNavigation<any>();
 
   const translateSign = (id: string) => ({
     ...DANGER_SIGNS[id],
@@ -35,7 +44,19 @@ export default function DangerSignsScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
-      <HomeHeader/>
+      <HomeHeader />
+
+      <TouchableOpacity
+        style={styles.backInline}
+        onPress={() => navigation.goBack()}
+        activeOpacity={0.7}
+      >
+        <Ionicons name="arrow-back" size={20} color="#5F414A" />
+        <Text style={styles.backInlineText}>
+          {t("libraryScreen.title")}
+        </Text>
+      </TouchableOpacity>
+
       <ScrollView contentContainerStyle={styles.content}>
         <SeekHelpBanner />
 
@@ -101,5 +122,18 @@ const styles = StyleSheet.create({
   },
   list: {
     gap: 10,
+  },
+  backInline: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 8,
+    marginHorizontal: 16,
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  backInlineText: {
+    color: "#5F414A",
+    fontSize: 15,
+    fontWeight: "700",
   },
 });

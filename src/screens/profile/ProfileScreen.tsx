@@ -1,6 +1,5 @@
 import {
   Alert,
-  Settings,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -9,7 +8,7 @@ import {
 import React from "react";
 import AppSafeView from "../../components/views/AppSafeView";
 import ProfilePicture from "../../components/profile/ProfilePicture";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import AppText from "../../components/texts/AppText";
 import { s, vs } from "react-native-size-matters";
@@ -21,18 +20,14 @@ import EddCard from "../../components/profile/EddCard";
 import { usePregnancyProgress } from "../../pregnancy/usePregnancyProgress";
 import { formatGestation } from "../../pregnancy/format";
 import JourneyCards from "../../components/profile/JourneyCards";
-import { Ionicons } from "@expo/vector-icons";
-import { SheetManager } from "react-native-actions-sheet";
 import { useNavigation } from "expo-router/react-navigation";
-import { setLanguage } from "../../store/reducers/dataReducers";
-import i18n from "../../localization/i18n";
 
 const ProfileScreen = () => {
   const userName = useSelector(
     (state: { dataReducer: { userName: string } }) =>
       state.dataReducer.userName,
   );
-  const dispatch = useDispatch();
+
   const navigation = useNavigation<any>();
 
   const { t, i18n } = useTranslation();
@@ -109,68 +104,6 @@ const ProfileScreen = () => {
               onPress={() => navigation.navigate("EmergencyContacts")}
               backgroundColor={AppColors.icon_bg_emergency}
             />
-          </View>
-        </View>
-        <View style={styles.settings}>
-          <View style={styles.settingsContent}>
-            <AppText
-              style={{
-                fontFamily: AppFonts.TextBold,
-                fontSize: s(12),
-                color: AppColors.text_headings,
-                marginBottom: s(15),
-              }}
-            >
-              {t("profileScreen.appSettings")}
-            </AppText>
-            <View style={styles.settingsOptions}>
-              <JourneyCards
-                title={t("profileScreen.language")}
-                icon={
-                  <Ionicons
-                    name="globe-outline"
-                    size={s(20)}
-                    color={AppColors.text_headings}
-                  />
-                }
-                onPress={() =>
-                  SheetManager.show("LANG_SHEET", {
-                    payload: {
-                      onConfirm: (code: string) => {
-                        dispatch(setLanguage(code));
-                        i18n.changeLanguage(code);
-                      },
-                    },
-                  })
-                }
-                backgroundColor={AppColors.white}
-                style={{
-                  borderWidth: 0,
-                  marginBottom: 0,
-                  height: s(40),
-                  paddingVertical: 0,
-                }}
-              />
-              <View style={styles.separator}></View>
-              <JourneyCards
-                title={t("profileScreen.notifications")}
-                icon={
-                  <MaterialCommunityIcons
-                    name="bell-ring-outline"
-                    size={s(20)}
-                    color={AppColors.text_headings}
-                  />
-                }
-                onPress={() => navigation.navigate("Notifications")}
-                backgroundColor={AppColors.white}
-                style={{
-                  borderWidth: 0,
-                  marginBottom: 0,
-                  height: s(40),
-                  paddingVertical: 0,
-                }}
-              />
-            </View>
           </View>
         </View>
         <TouchableOpacity
@@ -282,30 +215,6 @@ const styles = StyleSheet.create({
 
   contentJourney: {
     width: "80%",
-  },
-
-  settings: {
-    width: "100%",
-    marginBottom: s(15),
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  settingsContent: {
-    width: "80%",
-  },
-
-  settingsOptions: {
-    borderWidth: s(1),
-    borderColor: AppColors.stroke_primary,
-    borderRadius: s(10),
-    backgroundColor: AppColors.white,
-  },
-
-  separator: {
-    height: s(1),
-    width: "100%",
-    backgroundColor: AppColors.stroke_primary,
   },
 
   button: {
