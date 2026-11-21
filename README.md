@@ -6,17 +6,19 @@ MamaCare is a pregnancy support app built with Expo SDK 57, React Native and Typ
 
 ## Start developing
 
-Use the repository in the Code folder:
+Clone the repository and install dependencies:
 
 ```bash
-cd ~/Code/mama-care
+git clone https://github.com/uwa-spgh/cits3200-mamacare.git
+cd cits3200-mamacare
+
 nvm install
 nvm use
 npm ci
 npm start
 ```
 
-`.nvmrc` pins Node 22.23.2. The [versioned Expo SDK 57 documentation](https://docs.expo.dev/versions/v57.0.0/) specifies Node 22.13.x minimum; the package engine range also follows the supported Node 24 minimum. Read those docs when changing Expo code or native configuration.
+`.nvmrc` pins Node 22.23.2. The [versioned Expo SDK 57 documentation](https://docs.expo.dev/versions/v57.0.0/) specifies Node 22.13.x minimum. Read those docs when changing Expo code or native configuration.
 
 ### Open on a phone
 
