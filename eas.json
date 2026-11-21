@@ -1,3 +1,4 @@
+
 {
   "cli": {
     "version": ">= 24.8.0",
@@ -6,13 +7,25 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "APP_VARIANT": "development"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "APP_VARIANT": "production"
+      },
+      "android": {
+        "buildType": "apk"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "APP_VARIANT": "production"
+      }
     }
   },
   "submit": {
