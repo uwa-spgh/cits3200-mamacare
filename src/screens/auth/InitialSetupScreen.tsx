@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import AppSafeView from "../../components/views/AppSafeView";
@@ -61,8 +61,13 @@ const InitialSetupScreen = () => {
   };
 
   return (
-    <>
-      <AppSafeView style={styles.container}>
+    <AppSafeView style={styles.container}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
         <PregnancySetupCard />
         <AppText
           style={{
@@ -122,13 +127,16 @@ const InitialSetupScreen = () => {
             value={selectedDate}
           />
         </View>
-      </AppSafeView>
+      </ScrollView>
+
       <NavFooter
         nextDisabled={!selectedDate || saving}
-        onPressBack={() => { if (!saving) navigation.navigate("LanguageSelectionScreen"); }}
+        onPressBack={() => {
+          if (!saving) navigation.navigate("LanguageSelectionScreen");
+        }}
         onPressNext={continueToNotifications}
       />
-    </>
+    </AppSafeView>
   );
 };
 
@@ -137,9 +145,13 @@ export default InitialSetupScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+  },
+  scrollContent: {
+    flexGrow: 1,
     alignItems: "center",
-    marginTop: s(50),
+    justifyContent: "center",
+    paddingTop: vs(16),
+    paddingBottom: vs(24),
   },
   methodsContainer: {
     paddingVertical: vs(17),

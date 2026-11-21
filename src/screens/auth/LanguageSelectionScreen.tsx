@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native"; 
+import { ScrollView, StyleSheet, View } from "react-native";
 import React from "react";
 import { s, vs } from "react-native-size-matters";
 import AppSafeView from "../../components/views/AppSafeView";
@@ -20,11 +20,15 @@ const LanguageSelectionScreen = () => {
   );
   const dispatch = useDispatch();
 
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   return (
-    <>
-      <AppSafeView style={styles.container}>
+    <AppSafeView style={styles.container}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <AppText style={styles.mainHeading}>{t("languageSelectionScreen.languageSelection")}</AppText>
         <View style={{ paddingHorizontal: s(20) }}>
           <AppText style={styles.secText}>
@@ -70,11 +74,15 @@ const LanguageSelectionScreen = () => {
             }}
           />
         </View>
-      </AppSafeView>
+      </ScrollView>
       <NavFooter
-        onPressNext={() => navigation.navigate("InitialSetupScreen")}
+        onPressNext={() =>
+          navigation.navigate("InitialSetupScreen")
+        }
       />
-    </>
+
+    </AppSafeView>
+
   );
 };
 
@@ -83,9 +91,14 @@ export default LanguageSelectionScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
+
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingBottom: vs(20),
+  },
+
   mainHeading: {
     color: AppColors.button_primary_accent,
     fontFamily: AppFonts.Heading1ExtraBold,
@@ -118,6 +131,6 @@ const styles = StyleSheet.create({
   btsContainer: {
     width: "100%",
     paddingHorizontal: s(20),
-    marginTop: s(50),
+    marginTop: vs(20), // Previously s(50)
   },
 });

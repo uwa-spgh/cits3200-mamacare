@@ -41,3 +41,7 @@ yarn-error.*
 /android
 
 .claude/*.local.json
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
